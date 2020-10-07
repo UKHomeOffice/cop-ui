@@ -1,0 +1,10 @@
+{
+  "short_name": "Workflow UI",
+  "name": "UI for workflow forms and tasks",
+  "icons": [
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "blue",
+  "background_color": "#ffffff"
+}

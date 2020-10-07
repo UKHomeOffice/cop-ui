@@ -1,0 +1,8 @@
+node_modules
+.idea
+.next
+
+.DS_Store
+client/.env
+
+.gradle/

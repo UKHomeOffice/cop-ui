@@ -1,0 +1,50 @@
+spring:
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: ${auth.url:http://localhost:8080/auth}/realms/${auth.realm:elf}
+
+server:
+  tomcat:
+    remote-ip-header: x-forwarded-for
+    protocol-header: x-forwarded-proto
+  ssl:
+    enabled: ${ssl.enabled:false}
+    key-alias: cert
+    key-store: /etc/keystore/keystore.p12
+    key-store-password: changeit
+    key-password: changeit
+    key-store-type: PKCS12
+    trust-store: ${javax.net.ssl.trustStore:/etc/keystore/cacerts}
+    trust-store-password: ${javax.net.ssl.trustStorePassword:changeit}
+    trust-store-type: ${javax.net.ssl.trustStoreType:PKCS12}
+  port: ${server-port:8080}
+  forward-headers-strategy: native
+
+
+zuul:
+  routes:
+    fileupload-service:
+      path: /files/**
+      strip-prefix: false
+      url: ${fileUploadApi.url:http://localhost:9003}
+    refdata-service:
+      path: /refdata/**
+      strip-prefix: true
+      url: ${refData.url:http://localhost:9002}
+    form-service:
+      path: /form/**
+      strip-prefix: false
+      url: ${formApi.url:http://localhost:4000}
+    workflow-service:
+      strip-prefix: false
+      path: /camunda/**
+      url: ${workflowService.url:http://localhost:8000}
+  sensitive-headers: Cookie,Set-Cookie
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "health, info, prometheus, metrics"
