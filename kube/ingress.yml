@@ -2,7 +2,7 @@
 apiVersion: networking.k8s.io/v1beta1
 kind: Ingress
 metadata:
-  name: {{.WORKFLOW_UI_NAME}}
+  name: {{.COP_UI_NAME}}
   labels:
     cert-manager.io/solver: http01
   annotations:
@@ -14,14 +14,14 @@ metadata:
     ingress.kubernetes.io/proxy-read-timeout: "3600"
 spec:
   rules:
-  - host: {{.WORKFLOW_UI_URL}}
+  - host: {{.COP_UI_URL}}
     http:
       paths:
       - backend:
-          serviceName: {{.WORKFLOW_UI_NAME}}
+          serviceName: {{.COP_UI_NAME}}
           servicePort: 10443
         path: /
   tls:
   - hosts:
-    - {{.WORKFLOW_UI_URL}}
-    secretName: {{.WORKFLOW_UI_URL}}-cmio
+    - {{.COP_UI_URL}}
+    secretName: {{.COP_UI_URL}}-cmio

@@ -2,7 +2,7 @@
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
-  name: {{.WORKFLOW_UI_NAME}}
+  name: {{.COP_UI_NAME}}
 spec:
   egress:
   - {}
@@ -16,7 +16,7 @@ spec:
         protocol: TCP
   podSelector:
     matchLabels:
-      name: {{.WORKFLOW_UI_NAME}}
+      name: {{.COP_UI_NAME}}
   policyTypes:
     - Ingress
     - Egress

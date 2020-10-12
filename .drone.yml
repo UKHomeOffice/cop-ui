@@ -44,23 +44,23 @@ pipeline:
       target: NGINX_IMAGE
     - source: NGINX_TAG
       target: NGINX_TAG
-    - source: DEV_WORKFLOW_UI_AWS_ACCESS_KEY_ID
+    - source: DEV_COP_UI_AWS_ACCESS_KEY_ID
       target: AWS_ACCESS_KEY
     - source: AWS_REGION
       target: AWS_REGION
-    - source: DEV_WORKFLOW_UI_AWS_SECRET_ACCESS_KEY
+    - source: DEV_COP_UI_AWS_SECRET_ACCESS_KEY
       target: AWS_SECRET_KEY
-    - source: DEV_WORKFLOW_UI_AWS_SECRETS_MANAGER_ENABLED
+    - source: DEV_COP_UI_AWS_SECRETS_MANAGER_ENABLED
       target: AWS_SECRETS_MANAGER_ENABLED
-    - source: WORKFLOW_UI_NAME
-      target: WORKFLOW_UI_NAME
-    - source: DEV_WORKFLOW_UI_URL
-      target: WORKFLOW_UI_URL
-    - source: WORKFLOW_UI_IMAGE
-      target: WORKFLOW_UI_IMAGE
+    - source: COP_UI_NAME
+      target: COP_UI_NAME
+    - source: DEV_COP_UI_URL
+      target: COP_UI_URL
+    - source: COP_UI_IMAGE
+      target: COP_UI_IMAGE
     commands:
       - export SPRING_PROFILES_ACTIVE="dev"
-      - export WORKFLOW_UI_TAG=$${DRONE_COMMIT_SHA}
+      - export COP_UI_TAG=$${DRONE_COMMIT_SHA}
       - kd --insecure-skip-tls-verify -f kube/cert.yml
       - kd --insecure-skip-tls-verify -f kube/secret.yml
       - kd --insecure-skip-tls-verify -f kube/network-policy.yml
@@ -85,23 +85,23 @@ pipeline:
       target: NGINX_IMAGE
     - source: NGINX_TAG
       target: NGINX_TAG
-    - source: PRODUCTION_WORKFLOW_UI_AWS_ACCESS_KEY_ID
+    - source: PRODUCTION_COP_UI_AWS_ACCESS_KEY_ID
       target: AWS_ACCESS_KEY
     - source: AWS_REGION
       target: AWS_REGION
-    - source: PRODUCTION_WORKFLOW_UI_AWS_SECRET_ACCESS_KEY
+    - source: PRODUCTION_COP_UI_AWS_SECRET_ACCESS_KEY
       target: AWS_SECRET_KEY
-    - source: PRODUCTION_WORKFLOW_UI_AWS_SECRETS_MANAGER_ENABLED
+    - source: PRODUCTION_COP_UI_AWS_SECRETS_MANAGER_ENABLED
       target: AWS_SECRETS_MANAGER_ENABLED
-    - source: WORKFLOW_UI_NAME
-      target: WORKFLOW_UI_NAME
-    - source: PRODUCTION_WORKFLOW_UI_URL
-      target: WORKFLOW_UI_URL
-    - source: WORKFLOW_UI_IMAGE
-      target: WORKFLOW_UI_IMAGE
+    - source: COP_UI_NAME
+      target: COP_UI_NAME
+    - source: PRODUCTION_COP_UI_URL
+      target: COP_UI_URL
+    - source: COP_UI_IMAGE
+      target: COP_UI_IMAGE
     commands:
       - export SPRING_PROFILES_ACTIVE="production"
-      - export WORKFLOW_UI_TAG=$${DRONE_COMMIT_SHA}
+      - export COP_UI_TAG=$${DRONE_COMMIT_SHA}
       - kd --insecure-skip-tls-verify -f kube/cert.yml
       - kd --insecure-skip-tls-verify -f kube/secret.yml
       - kd --insecure-skip-tls-verify -f kube/network-policy.yml

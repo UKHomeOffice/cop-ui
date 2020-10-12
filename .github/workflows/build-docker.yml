@@ -7,8 +7,8 @@ jobs:
   build:
     runs-on: ubuntu-latest
     env:
-      IMAGE: 'workflow-ui'
-      REPO: 'ukhomeofficedigital/workflow-ui'
+      IMAGE: 'cop-ui'
+      REPO: 'ukhomeofficedigital/cop-ui'
     steps:
       - uses: actions/checkout@v2
       - name: Use Node.js ${{ matrix.node-version }}
@@ -30,17 +30,9 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
       - name: Run build
-        run: ./gradlew clean assemble
+        run: ./gradlew clean build
       - name: Build the Docker image
         run: docker build . --file Dockerfile --tag ${{ env.IMAGE }}:latest
-      - uses: anchore/scan-action@master
-        with:
-          image-reference: "${{ env.IMAGE }}:latest"
-          dockerfile-path: "./Dockerfile"
-          fail-build: false
-          include-app-packages: true
-      - name: anchore inline scan JSON results
-        run: cat ./anchore-reports/vulnerabilities.json;
       - name: Publish to Docker Registry
         uses: elgohr/Publish-Docker-Github-Action@master
         with:
