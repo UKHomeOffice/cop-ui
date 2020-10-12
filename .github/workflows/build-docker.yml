@@ -30,7 +30,7 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
       - name: Run build
-        run: ./gradlew clean build
+        run: ./gradlew clean assemble
       - name: Build the Docker image
         run: docker build . --file Dockerfile --tag ${{ env.IMAGE }}:latest
       - name: Publish to Docker Registry
