@@ -9,11 +9,16 @@ describe('TaskList', () => {
   });
 
   it('can click on a task', () => {
-    const wrapper = shallow(<TaskList tasks={[{
-      id: 'id',
-      name: 'name',
-    }]}
-    />);
+    const wrapper = shallow(
+      <TaskList
+        tasks={[
+          {
+            id: 'id',
+            name: 'name',
+          },
+        ]}
+      />
+    );
 
     wrapper.find('a').simulate('click', {
       preventDefault: () => {},

@@ -44,23 +44,21 @@ describe('FormPage', () => {
   });
 
   it('loads form', async () => {
-    mockAxios.onGet('/camunda/engine-rest/process-definition/key/id/startForm')
-      .reply(200, {
-        key: 'formKey',
-      });
+    mockAxios.onGet('/camunda/engine-rest/process-definition/key/id/startForm').reply(200, {
+      key: 'formKey',
+    });
 
-    mockAxios.onGet('/form/name/formKey')
-      .reply(200, {
-        name: 'test',
-        display: 'form',
-        components: [],
-      });
+    mockAxios.onGet('/form/name/formKey').reply(200, {
+      name: 'test',
+      display: 'form',
+      components: [],
+    });
 
     const wrapper = await mount(
       <AlertContextProvider>
         <AlertBanner />
         <FormPage formId="id" />
-      </AlertContextProvider>,
+      </AlertContextProvider>
     );
 
     await act(async () => {
@@ -73,8 +71,7 @@ describe('FormPage', () => {
   });
 
   it('form does not exist handles gracefully', async () => {
-    mockAxios.onGet('/camunda/engine-rest/process-definition/key/id/startForm')
-      .reply(200, null);
+    mockAxios.onGet('/camunda/engine-rest/process-definition/key/id/startForm').reply(200, null);
 
     const wrapper = mount(<FormPage formId="id" />);
 
@@ -88,61 +85,60 @@ describe('FormPage', () => {
   });
 
   it('can submit the form', async () => {
-    mockAxios.onGet('/camunda/engine-rest/process-definition/key/id/startForm')
-      .reply(200, {
-        key: 'formKey',
-      });
+    mockAxios.onGet('/camunda/engine-rest/process-definition/key/id/startForm').reply(200, {
+      key: 'formKey',
+    });
 
-    mockAxios.onGet('/form/name/formKey')
-      .reply(200, {
-        name: 'test',
-        display: 'form',
-        versionId: 'version',
-        title: 'title',
-        components: [
-          {
-            id: 'eoduazt',
-            key: 'textField1',
-            case: '',
-            mask: false,
-            tags: '',
-            type: 'textfield',
-            input: true,
-            label: 'Text Field',
-            logic: [],
-            hidden: false,
-            prefix: '',
-            suffix: '',
-            unique: false,
-            widget: {
-              type: 'input',
-            },
+    mockAxios.onGet('/form/name/formKey').reply(200, {
+      name: 'test',
+      display: 'form',
+      versionId: 'version',
+      title: 'title',
+      components: [
+        {
+          id: 'eoduazt',
+          key: 'textField1',
+          case: '',
+          mask: false,
+          tags: '',
+          type: 'textfield',
+          input: true,
+          label: 'Text Field',
+          logic: [],
+          hidden: false,
+          prefix: '',
+          suffix: '',
+          unique: false,
+          widget: {
+            type: 'input',
           },
-          {
-            id: 'e23op57',
-            key: 'submit',
-            size: 'md',
-            type: 'button',
-            block: false,
-            input: true,
-            label: 'Submit',
-            theme: 'primary',
-            action: 'submit',
-            hidden: false,
-            prefix: '',
-            suffix: '',
-            unique: false,
-            widget: {
-              type: 'input',
-            },
-          }],
-      });
+        },
+        {
+          id: 'e23op57',
+          key: 'submit',
+          size: 'md',
+          type: 'button',
+          block: false,
+          input: true,
+          label: 'Submit',
+          theme: 'primary',
+          action: 'submit',
+          hidden: false,
+          prefix: '',
+          suffix: '',
+          unique: false,
+          widget: {
+            type: 'input',
+          },
+        },
+      ],
+    });
 
     const wrapper = await mount(
       <AlertContextProvider>
         <AlertBanner />
         <FormPage formId="id" />
-      </AlertContextProvider>,
+      </AlertContextProvider>
     );
 
     await act(async () => {
@@ -166,61 +162,60 @@ describe('FormPage', () => {
   });
 
   it('expect form time to be logged', async () => {
-    mockAxios.onGet('/camunda/engine-rest/process-definition/key/id/startForm')
-      .reply(200, {
-        key: 'formKey',
-      });
+    mockAxios.onGet('/camunda/engine-rest/process-definition/key/id/startForm').reply(200, {
+      key: 'formKey',
+    });
 
-    mockAxios.onGet('/form/name/formKey')
-      .reply(200, {
-        name: 'test',
-        display: 'form',
-        versionId: 'version',
-        title: 'title',
-        components: [
-          {
-            id: 'eoduazt',
-            key: 'textField1',
-            case: '',
-            mask: false,
-            tags: '',
-            type: 'textfield',
-            input: true,
-            label: 'Text Field',
-            logic: [],
-            hidden: false,
-            prefix: '',
-            suffix: '',
-            unique: false,
-            widget: {
-              type: 'input',
-            },
+    mockAxios.onGet('/form/name/formKey').reply(200, {
+      name: 'test',
+      display: 'form',
+      versionId: 'version',
+      title: 'title',
+      components: [
+        {
+          id: 'eoduazt',
+          key: 'textField1',
+          case: '',
+          mask: false,
+          tags: '',
+          type: 'textfield',
+          input: true,
+          label: 'Text Field',
+          logic: [],
+          hidden: false,
+          prefix: '',
+          suffix: '',
+          unique: false,
+          widget: {
+            type: 'input',
           },
-          {
-            id: 'e23op57',
-            key: 'submit',
-            size: 'md',
-            type: 'button',
-            block: false,
-            input: true,
-            label: 'Submit',
-            theme: 'primary',
-            action: 'submit',
-            hidden: false,
-            prefix: '',
-            suffix: '',
-            unique: false,
-            widget: {
-              type: 'input',
-            },
-          }],
-      });
+        },
+        {
+          id: 'e23op57',
+          key: 'submit',
+          size: 'md',
+          type: 'button',
+          block: false,
+          input: true,
+          label: 'Submit',
+          theme: 'primary',
+          action: 'submit',
+          hidden: false,
+          prefix: '',
+          suffix: '',
+          unique: false,
+          widget: {
+            type: 'input',
+          },
+        },
+      ],
+    });
 
     const wrapper = await mount(
       <AlertContextProvider>
         <AlertBanner />
         <FormPage formId="id" />
-      </AlertContextProvider>,
+      </AlertContextProvider>
     );
 
     await act(async () => {
@@ -239,74 +234,73 @@ describe('FormPage', () => {
   });
 
   it('renders error on form', async () => {
-    mockAxios.onGet('/camunda/engine-rest/process-definition/key/id/startForm')
-      .reply(200, {
-        key: 'formKey',
-      });
+    mockAxios.onGet('/camunda/engine-rest/process-definition/key/id/startForm').reply(200, {
+      key: 'formKey',
+    });
 
-    mockAxios.onGet('/form/name/formKey')
-      .reply(200, {
-        name: 'test',
-        display: 'form',
-        versionId: 'version',
-        title: 'title',
-        components: [
-          {
-            id: 'eoduazt',
-            key: 'textField1',
-            case: '',
-            mask: false,
-            tags: '',
-            type: 'textfield',
-            input: true,
-            label: 'Text Field',
-            logic: [],
-            hidden: false,
-            prefix: '',
-            suffix: '',
+    mockAxios.onGet('/form/name/formKey').reply(200, {
+      name: 'test',
+      display: 'form',
+      versionId: 'version',
+      title: 'title',
+      components: [
+        {
+          id: 'eoduazt',
+          key: 'textField1',
+          case: '',
+          mask: false,
+          tags: '',
+          type: 'textfield',
+          input: true,
+          label: 'Text Field',
+          logic: [],
+          hidden: false,
+          prefix: '',
+          suffix: '',
+          unique: false,
+          validate: {
+            json: '',
+            custom: '',
             unique: false,
-            validate: {
-              json: '',
-              custom: '',
-              unique: false,
-              pattern: '',
-              multiple: false,
-              required: true,
-              maxLength: '',
-              minLength: '',
-              customMessage: '',
-              customPrivate: false,
-              strictDateValidation: false,
-            },
-            widget: {
-              type: 'input',
-            },
+            pattern: '',
+            multiple: false,
+            required: true,
+            maxLength: '',
+            minLength: '',
+            customMessage: '',
+            customPrivate: false,
+            strictDateValidation: false,
           },
-          {
-            id: 'e23op57',
-            key: 'submit',
-            size: 'md',
-            type: 'button',
-            block: false,
-            input: true,
-            label: 'Submit',
-            theme: 'primary',
-            action: 'submit',
-            hidden: false,
-            prefix: '',
-            suffix: '',
-            unique: false,
-            widget: {
-              type: 'input',
-            },
-          }],
-      });
+          widget: {
+            type: 'input',
+          },
+        },
+        {
+          id: 'e23op57',
+          key: 'submit',
+          size: 'md',
+          type: 'button',
+          block: false,
+          input: true,
+          label: 'Submit',
+          theme: 'primary',
+          action: 'submit',
+          hidden: false,
+          prefix: '',
+          suffix: '',
+          unique: false,
+          widget: {
+            type: 'input',
+          },
+        },
+      ],
+    });
 
     const wrapper = await mount(
       <AlertContextProvider>
         <AlertBanner />
         <FormPage formId="id" />
-      </AlertContextProvider>,
+      </AlertContextProvider>
     );
 
     await act(async () => {
@@ -317,13 +311,15 @@ describe('FormPage', () => {
 
     const form = wrapper.find(Form).at(0);
     await form.instance().createPromise;
-    form.instance().props.onError([{
-      component: {
-        id: 'id',
-        key: 'textField',
+    form.instance().props.onError([
+      {
+        component: {
+          id: 'id',
+          key: 'textField',
+        },
+        message: 'Textfield is required',
       },
-      message: 'Textfield is required',
-    }]);
+    ]);
 
     await act(async () => {
       await wrapper.update();
@@ -333,104 +329,103 @@ describe('FormPage', () => {
   });
 
   it('clears alert box if no more errors', async () => {
-    mockAxios.onGet('/camunda/engine-rest/process-definition/key/id/startForm')
-      .reply(200, {
-        key: 'formKey',
-      });
+    mockAxios.onGet('/camunda/engine-rest/process-definition/key/id/startForm').reply(200, {
+      key: 'formKey',
+    });
 
-    mockAxios.onGet('/form/name/formKey')
-      .reply(200, {
-        name: 'test',
-        display: 'form',
-        versionId: 'version',
-        title: 'title',
-        components: [
-          {
-            id: 'eoduazt',
-            key: 'textField1',
-            case: '',
-            mask: false,
-            tags: '',
-            type: 'textfield',
-            input: true,
-            label: 'Text Field',
-            logic: [],
-            hidden: false,
-            prefix: '',
-            suffix: '',
+    mockAxios.onGet('/form/name/formKey').reply(200, {
+      name: 'test',
+      display: 'form',
+      versionId: 'version',
+      title: 'title',
+      components: [
+        {
+          id: 'eoduazt',
+          key: 'textField1',
+          case: '',
+          mask: false,
+          tags: '',
+          type: 'textfield',
+          input: true,
+          label: 'Text Field',
+          logic: [],
+          hidden: false,
+          prefix: '',
+          suffix: '',
+          unique: false,
+          validate: {
+            json: '',
+            custom: '',
             unique: false,
-            validate: {
-              json: '',
-              custom: '',
-              unique: false,
-              pattern: '',
-              multiple: false,
-              required: true,
-              maxLength: '',
-              minLength: '',
-              customMessage: '',
-              customPrivate: false,
-              strictDateValidation: false,
-            },
-            widget: {
-              type: 'input',
-            },
+            pattern: '',
+            multiple: false,
+            required: true,
+            maxLength: '',
+            minLength: '',
+            customMessage: '',
+            customPrivate: false,
+            strictDateValidation: false,
           },
-          {
-            id: 'eoduazg',
-            key: 'textField2',
-            case: '',
-            mask: false,
-            tags: '',
-            type: 'textfield',
-            input: true,
-            label: 'Text Field',
-            logic: [],
-            hidden: false,
-            prefix: '',
-            suffix: '',
-            unique: false,
-            validate: {
-              json: '',
-              custom: '',
-              unique: false,
-              pattern: '',
-              multiple: false,
-              required: true,
-              maxLength: '',
-              minLength: '',
-              customMessage: '',
-              customPrivate: false,
-              strictDateValidation: false,
-            },
-            widget: {
-              type: 'input',
-            },
+          widget: {
+            type: 'input',
           },
-          {
-            id: 'e23op57',
-            key: 'submit',
-            size: 'md',
-            type: 'button',
-            block: false,
-            input: true,
-            label: 'Submit',
-            theme: 'primary',
-            action: 'submit',
-            hidden: false,
-            prefix: '',
-            suffix: '',
+        },
+        {
+          id: 'eoduazg',
+          key: 'textField2',
+          case: '',
+          mask: false,
+          tags: '',
+          type: 'textfield',
+          input: true,
+          label: 'Text Field',
+          logic: [],
+          hidden: false,
+          prefix: '',
+          suffix: '',
+          unique: false,
+          validate: {
+            json: '',
+            custom: '',
             unique: false,
-            widget: {
-              type: 'input',
-            },
-          }],
-      });
+            pattern: '',
+            multiple: false,
+            required: true,
+            maxLength: '',
+            minLength: '',
+            customMessage: '',
+            customPrivate: false,
+            strictDateValidation: false,
+          },
+          widget: {
+            type: 'input',
+          },
+        },
+        {
+          id: 'e23op57',
+          key: 'submit',
+          size: 'md',
+          type: 'button',
+          block: false,
+          input: true,
+          label: 'Submit',
+          theme: 'primary',
+          action: 'submit',
+          hidden: false,
+          prefix: '',
+          suffix: '',
+          unique: false,
+          widget: {
+            type: 'input',
+          },
+        },
+      ],
+    });
     const wrapper = await mount(
       <AlertContextProvider>
         <AlertBanner />
         <FormPage formId="id" />
-      </AlertContextProvider>,
+      </AlertContextProvider>
     );
 
     await act(async () => {
@@ -442,20 +437,22 @@ describe('FormPage', () => {
     const form = wrapper.find(Form).at(0);
     await form.instance().createPromise;
 
-    form.instance().props.onError([{
-      component: {
-        id: 'eoduazt',
-        key: 'textField1',
+    form.instance().props.onError([
+      {
+        component: {
+          id: 'eoduazt',
+          key: 'textField1',
+        },
+        message: 'Textfield is required',
       },
-      message: 'Textfield is required',
-    },
-    {
-      component: {
-        id: 'eoduazg',
-        key: 'textField2',
+      {
+        component: {
+          id: 'eoduazg',
+          key: 'textField2',
+        },
+        message: 'Textfield is required',
       },
-      message: 'Textfield is required',
-    }]);
+    ]);
 
     await act(async () => {
       await wrapper.update();

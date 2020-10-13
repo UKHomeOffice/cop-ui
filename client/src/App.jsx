@@ -46,7 +46,11 @@ const RouterView = () => {
   }
   initAll();
   return (
-    <Router hashScrollBehavior="smooth" routes={routes} context={{ t, isAuthenticated: keycloak.authenticated }}>
+    <Router
+      hashScrollBehavior="smooth"
+      routes={routes}
+      context={{ t, isAuthenticated: keycloak.authenticated }}
+    >
       <Layout>
         <View />
       </Layout>
@@ -56,10 +60,7 @@ const RouterView = () => {
 const App = () => (
   <Suspense fallback={null}>
     <HelmetProvider>
-      <KeycloakProvider
-        keycloak={keycloakInstance}
-        initConfig={keycloakProviderInitConfig}
-      >
+      <KeycloakProvider keycloak={keycloakInstance} initConfig={keycloakProviderInitConfig}>
         <RouterView />
       </KeycloakProvider>
     </HelmetProvider>

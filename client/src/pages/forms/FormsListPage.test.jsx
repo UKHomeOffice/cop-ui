@@ -9,8 +9,11 @@ import { mockNavigate } from '../../setupTests';
 
 jest.mock('lodash', () => ({
   ...require.requireActual('lodash'),
-  // eslint-disable-next-line no-param-reassign
-  debounce: (fn) => { fn.cancel = jest.fn(); return fn; },
+  debounce: (fn) => {
+    // eslint-disable-next-line no-param-reassign
+    fn.cancel = jest.fn();
+    return fn;
+  },
 }));
 
 describe('FormsListPage', () => {
@@ -25,17 +28,17 @@ describe('FormsListPage', () => {
   });
 
   it('can render list and count', async () => {
-    mockAxios.onGet('/camunda/engine-rest/process-definition')
-      .reply(200, [{
+    mockAxios.onGet('/camunda/engine-rest/process-definition').reply(200, [
+      {
         id: 'id',
         name: 'name',
         key: 'key',
-      }]);
+      },
+    ]);
 
-    mockAxios.onGet('/camunda/engine-rest/process-definition/count')
-      .reply(200, {
-        count: 1,
-      });
+    mockAxios.onGet('/camunda/engine-rest/process-definition/count').reply(200, {
+      count: 1,
+    });
 
     const wrapper = mount(<FormsListPage />);
 
@@ -46,16 +49,18 @@ describe('FormsListPage', () => {
     });
     expect(wrapper.find('h2').at(0).text()).not.toBe('');
 
-    wrapper.find('a').at(0).simulate('click', {
-      preventDefault: () => {},
-    });
+    wrapper
+      .find('a')
+      .at(0)
+      .simulate('click', {
+        preventDefault: () => {},
+      });
 
     expect(mockNavigate).toBeCalledWith('/forms/key');
   });
 
   it('can handle exception in loading', async () => {
-    mockAxios.onGet('/camunda/engine-rest/process-definition')
-      .reply(500);
+    mockAxios.onGet('/camunda/engine-rest/process-definition').reply(500);
 
     const wrapper = mount(<FormsListPage />);
 
@@ -73,19 +78,17 @@ describe('FormsListPage', () => {
     // eslint-disable-next-line no-plusplus
     for (let i = 0; i < 4; i++) {
       mockData.push({
-        id: `id${(Math.random() + Math.random())}`,
+        id: `id${Math.random() + Math.random()}`,
         name: `name${i}`,
         key: `key${i}`,
       });
     }
 
-    mockAxios.onGet('/camunda/engine-rest/process-definition')
-      .reply(200, mockData);
+    mockAxios.onGet('/camunda/engine-rest/process-definition').reply(200, mockData);
 
-    mockAxios.onGet('/camunda/engine-rest/process-definition/count')
-      .reply(200, {
-        count: 4,
-      });
+    mockAxios.onGet('/camunda/engine-rest/process-definition/count').reply(200, {
+      count: 4,
+    });
 
     const wrapper = mount(<FormsListPage />);
 
@@ -103,19 +106,17 @@ describe('FormsListPage', () => {
     // eslint-disable-next-line no-plusplus
     for (let i = 0; i < 10; i++) {
       mockData.push({
-        id: `id${(Math.random() + Math.random())}`,
+        id: `id${Math.random() + Math.random()}`,
         name: `name${i}`,
         key: `key${i}`,
       });
     }
 
-    mockAxios.onGet('/camunda/engine-rest/process-definition')
-      .reply(200, mockData);
+    mockAxios.onGet('/camunda/engine-rest/process-definition').reply(200, mockData);
 
-    mockAxios.onGet('/camunda/engine-rest/process-definition/count')
-      .reply(200, {
-        count: 40,
-      });
+    mockAxios.onGet('/camunda/engine-rest/process-definition/count').reply(200, {
+      count: 40,
+    });
 
     const wrapper = mount(<FormsListPage />);
 
@@ -136,13 +137,11 @@ describe('FormsListPage', () => {
   });
 
   it('can perform a search', async () => {
-    mockAxios.onGet('/camunda/engine-rest/process-definition')
-      .reply(200, []);
+    mockAxios.onGet('/camunda/engine-rest/process-definition').reply(200, []);
 
-    mockAxios.onGet('/camunda/engine-rest/process-definition/count')
-      .reply(200, {
-        count: 0,
-      });
+    mockAxios.onGet('/camunda/engine-rest/process-definition/count').reply(200, {
+      count: 0,
+    });
 
     const wrapper = mount(<FormsListPage />);
 
@@ -163,7 +162,10 @@ describe('FormsListPage', () => {
       await wrapper.update();
     });
 
-    const queryAxiosCall = _.find(mockAxios.history.get, (call) => call.params.nameLike === '%test%');
+    const queryAxiosCall = _.find(
+      mockAxios.history.get,
+      (call) => call.params.nameLike === '%test%'
+    );
 
     expect(queryAxiosCall).toBeDefined();
   });

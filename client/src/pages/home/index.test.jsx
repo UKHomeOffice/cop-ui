@@ -18,15 +18,13 @@ describe('Home', () => {
   });
 
   it('renders forms and tasks panels', async () => {
-    mockAxios.onGet('/camunda/engine-rest/process-definition/count')
-      .reply(200, {
-        count: 10,
-      });
+    mockAxios.onGet('/camunda/engine-rest/process-definition/count').reply(200, {
+      count: 10,
+    });
 
-    mockAxios.onPost('/camunda/engine-rest/task/count')
-      .reply(200, {
-        count: 10,
-      });
+    mockAxios.onPost('/camunda/engine-rest/task/count').reply(200, {
+      count: 10,
+    });
 
     const wrapper = mount(<Home />);
 
@@ -45,11 +43,9 @@ describe('Home', () => {
   });
 
   it('handles errors and sets it to zero', async () => {
-    mockAxios.onGet('/camunda/engine-rest/process-definition/count')
-      .reply(500, {});
+    mockAxios.onGet('/camunda/engine-rest/process-definition/count').reply(500, {});
 
-    mockAxios.onPost('/camunda/engine-rest/task/count')
-      .reply(500, {});
+    mockAxios.onPost('/camunda/engine-rest/task/count').reply(500, {});
 
     const wrapper = mount(<Home />);
 
@@ -68,15 +64,13 @@ describe('Home', () => {
   });
 
   it('can handle onlick', async () => {
-    mockAxios.onGet('/camunda/engine-rest/process-definition/count')
-      .reply(200, {
-        count: 10,
-      });
+    mockAxios.onGet('/camunda/engine-rest/process-definition/count').reply(200, {
+      count: 10,
+    });
 
-    mockAxios.onPost('/camunda/engine-rest/task/count')
-      .reply(200, {
-        count: 10,
-      });
+    mockAxios.onPost('/camunda/engine-rest/task/count').reply(200, {
+      count: 10,
+    });
     const wrapper = await mount(<Home />);
 
     await act(async () => {

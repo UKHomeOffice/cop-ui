@@ -112,7 +112,7 @@ describe('Display form', () => {
           handleOnCancel={jest.fn()}
           handleOnSubmit={jest.fn()}
         />
-      </AlertContextProvider>,
+      </AlertContextProvider>
     );
 
     await act(async () => {
@@ -129,100 +129,102 @@ describe('Display form', () => {
 
   it('scrolls to the top on next', async () => {
     window.scrollTo = jest.fn();
-    const wrapper = await mount(<DisplayForm
-      form={{
-        name: 'test',
-        display: 'form',
-        id: 'id',
-        versionId: 'version',
-        title: 'title',
-        components: [
-          {
-            id: 'eoduazt',
-            key: 'textField1',
-            case: '',
-            mask: false,
-            tags: '',
-            type: 'textfield',
-            input: true,
-            label: 'Text Field',
-            logic: [],
-            hidden: false,
-            prefix: '',
-            suffix: '',
-            unique: false,
-            validate: {
-              json: '',
-              custom: '',
+    const wrapper = await mount(
+      <DisplayForm
+        form={{
+          name: 'test',
+          display: 'form',
+          id: 'id',
+          versionId: 'version',
+          title: 'title',
+          components: [
+            {
+              id: 'eoduazt',
+              key: 'textField1',
+              case: '',
+              mask: false,
+              tags: '',
+              type: 'textfield',
+              input: true,
+              label: 'Text Field',
+              logic: [],
+              hidden: false,
+              prefix: '',
+              suffix: '',
               unique: false,
-              pattern: '',
-              multiple: false,
-              required: true,
-              maxLength: '',
-              minLength: '',
-              customMessage: '',
-              customPrivate: false,
-              strictDateValidation: false,
+              validate: {
+                json: '',
+                custom: '',
+                unique: false,
+                pattern: '',
+                multiple: false,
+                required: true,
+                maxLength: '',
+                minLength: '',
+                customMessage: '',
+                customPrivate: false,
+                strictDateValidation: false,
+              },
+              widget: {
+                type: 'input',
+              },
             },
-            widget: {
-              type: 'input',
-            },
-          },
-          {
-            id: 'eoduazg',
-            key: 'textField2',
-            case: '',
-            mask: false,
-            tags: '',
-            type: 'textfield',
-            input: true,
-            label: 'Text Field',
-            logic: [],
-            hidden: false,
-            prefix: '',
-            suffix: '',
-            unique: false,
-            validate: {
-              json: '',
-              custom: '',
+            {
+              id: 'eoduazg',
+              key: 'textField2',
+              case: '',
+              mask: false,
+              tags: '',
+              type: 'textfield',
+              input: true,
+              label: 'Text Field',
+              logic: [],
+              hidden: false,
+              prefix: '',
+              suffix: '',
               unique: false,
-              pattern: '',
-              multiple: false,
-              required: true,
-              maxLength: '',
-              minLength: '',
-              customMessage: '',
-              customPrivate: false,
-              strictDateValidation: false,
+              validate: {
+                json: '',
+                custom: '',
+                unique: false,
+                pattern: '',
+                multiple: false,
+                required: true,
+                maxLength: '',
+                minLength: '',
+                customMessage: '',
+                customPrivate: false,
+                strictDateValidation: false,
+              },
+              widget: {
+                type: 'input',
+              },
             },
-            widget: {
-              type: 'input',
+            {
+              id: 'e23op57',
+              key: 'submit',
+              size: 'md',
+              type: 'button',
+              block: false,
+              input: true,
+              label: 'Submit',
+              theme: 'primary',
+              action: 'submit',
+              hidden: false,
+              prefix: '',
+              suffix: '',
+              unique: false,
+              widget: {
+                type: 'input',
+              },
             },
-          },
-          {
-            id: 'e23op57',
-            key: 'submit',
-            size: 'md',
-            type: 'button',
-            block: false,
-            input: true,
-            label: 'Submit',
-            theme: 'primary',
-            action: 'submit',
-            hidden: false,
-            prefix: '',
-            suffix: '',
-            unique: false,
-            widget: {
-              type: 'input',
-            },
-          },
-        ],
-      }}
-      submitting={false}
-      handleOnCancel={jest.fn()}
-      handleOnSubmit={jest.fn()}
-    />);
+          ],
+        }}
+        submitting={false}
+        handleOnCancel={jest.fn()}
+        handleOnSubmit={jest.fn()}
+      />
+    );
 
     const form = wrapper.find(Form).at(0);
     form.props().onNextPage();

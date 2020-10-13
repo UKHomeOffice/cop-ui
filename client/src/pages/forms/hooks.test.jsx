@@ -18,22 +18,23 @@ describe('hooks', () => {
       .onPost('/camunda/engine-rest/process-definition/key/formId/submit-form')
       .reply(200, {});
     // eslint-disable-next-line react/prop-types
-    const wrapper = ({ children }) => (
-      <AlertContextProvider>
-        {children}
-      </AlertContextProvider>
-    );
+    const wrapper = ({ children }) => <AlertContextProvider>{children}</AlertContextProvider>;
     const { result } = renderHook(() => apiHooks(), { wrapper });
     await act(async () => {
-      result.current.submitForm({
-        data: {
-          test: 'test',
+      result.current.submitForm(
+        {
+          data: {
+            test: 'test',
+          },
         },
-      }, {
-        data: {
-          name: 'test',
+        {
+          data: {
+            name: 'test',
+          },
         },
-      }, 'formId', () => {});
+        'formId',
+        () => {}
+      );
     });
     expect(mockNavigate).toBeCalled();
   });
@@ -43,23 +44,24 @@ describe('hooks', () => {
       .onPost('/camunda/engine-rest/process-definition/key/formId/submit-form')
       .reply(500, {});
     // eslint-disable-next-line react/prop-types
-    const wrapper = ({ children }) => (
-      <AlertContextProvider>
-        {children}
-      </AlertContextProvider>
-    );
+    const wrapper = ({ children }) => <AlertContextProvider>{children}</AlertContextProvider>;
     const handleFailure = jest.fn();
     const { result } = renderHook(() => apiHooks(), { wrapper });
     await act(async () => {
-      result.current.submitForm({
-        data: {
-          test: 'test',
+      result.current.submitForm(
+        {
+          data: {
+            test: 'test',
+          },
         },
-      }, {
-        data: {
-          name: 'test',
+        {
+          data: {
+            name: 'test',
+          },
         },
-      }, 'formId', handleFailure);
+        'formId',
+        handleFailure
+      );
     });
 
     expect(handleFailure).toBeCalled();

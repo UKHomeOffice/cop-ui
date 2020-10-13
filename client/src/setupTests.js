@@ -69,9 +69,12 @@ jest.mock('react-i18next', () => ({
   useTranslation: () => ({ t: (key) => key }),
 }));
 
-config.set({
-  serviceUrl: 'bar',
-}, { freeze: false });
+config.set(
+  {
+    serviceUrl: 'bar',
+  },
+  { freeze: false }
+);
 
 global.MutationObserver = class {
   // eslint-disable-next-line no-useless-constructor,no-unused-vars,no-empty-function

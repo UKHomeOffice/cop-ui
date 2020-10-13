@@ -1,4 +1,4 @@
-@import "../../../../node_modules/govuk-frontend/govuk/helpers/colour";
+@import '../../../../node_modules/govuk-frontend/govuk/helpers/colour';
 
 @media only screen and (max-width: 600px) {
   .__card {
@@ -13,14 +13,13 @@
   display: block;
   float: left;
   margin-bottom: 30px;
-
 }
 
 .card__body {
   display: block;
-  background-color: govuk-colour("mid-grey");
+  background-color: govuk-colour('mid-grey');
   padding: 1em;
-  color: govuk-colour("black");
+  color: govuk-colour('black');
   text-decoration: none;
 
   span {
@@ -31,9 +30,10 @@
 a.card__body {
   color: #005ea5;
 
-  &:hover, &:focus {
+  &:hover,
+  &:focus {
     cursor: pointer;
-    background-color: govuk-colour("light-grey");
+    background-color: govuk-colour('light-grey');
     color: #2b8cc4;
     text-decoration: none;
   }
@@ -41,7 +41,7 @@ a.card__body {
 
 .card__footer {
   display: block;
-  background-color: govuk-colour("light-grey");
+  background-color: govuk-colour('light-grey');
   padding: 1em;
   height: 4em;
 }

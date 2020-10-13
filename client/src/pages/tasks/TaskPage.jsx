@@ -1,6 +1,4 @@
-import React, {
-  useEffect, useState,
-} from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import axios from 'axios';
 import { useTranslation } from 'react-i18next';
@@ -39,11 +37,14 @@ const TaskPage = ({ taskId }) => {
           });
           if (isMounted.current) {
             const {
-              variables, form, processInstance, processDefinition, task: taskInfo,
+              variables,
+              form,
+              processInstance,
+              processDefinition,
+              task: taskInfo,
             } = taskDataResponse.data;
             let formSubmission = {};
-            const formVariableSubmissionName = form ? `${form.name}::submissionData`
-              : null;
+            const formVariableSubmissionName = form ? `${form.name}::submissionData` : null;
 
             if (taskInfo.variables) {
               Object.keys(taskInfo.variables).forEach((key) => {
@@ -65,10 +66,14 @@ const TaskPage = ({ taskId }) => {
               });
 
               formSubmission = variables[formVariableSubmissionName]
-                ? variables[formVariableSubmissionName] : variables.submissionData;
+                ? variables[formVariableSubmissionName]
+                : variables.submissionData;
             }
 
-            const updatedVariables = _.omit(variables || {}, ['submissionData', formVariableSubmissionName]);
+            const updatedVariables = _.omit(variables || {}, [
+              'submissionData',
+              formVariableSubmissionName,
+            ]);
             setTask({
               isLoading: false,
               data: {
@@ -111,16 +116,17 @@ const TaskPage = ({ taskId }) => {
 
   if (!taskAssignee) {
     assignee = t('pages.task.unassigned');
-  } else if (
-    taskAssignee
-    && taskAssignee !== tokenParsed.email
-  ) {
+  } else if (taskAssignee && taskAssignee !== tokenParsed.email) {
     assignee = tokenParsed.email;
   }
 
   const {
-    form, processInstance, task: taskInfo, processDefinition,
-    formSubmission, variables,
+    form,
+    processInstance,
+    task: taskInfo,
+    processDefinition,
+    formSubmission,
+    variables,
   } = task.data;
 
   const handleOnFailure = () => {
@@ -131,31 +137,25 @@ const TaskPage = ({ taskId }) => {
     <>
       <div className="govuk-grid-row">
         <div className="govuk-grid-column-full" id="taskName">
-          <span className="govuk-caption-l">
-            {processInstance.businessKey}
-          </span>
-          <h2 className="govuk-heading-l">
-            {taskInfo.name}
-          </h2>
+          <span className="govuk-caption-l">{processInstance.businessKey}</span>
+          <h2 className="govuk-heading-l">{taskInfo.name}</h2>
         </div>
       </div>
       <div className="govuk-grid-row">
         <div className="govuk-grid-column-one-quarter" id="category">
           <span className="govuk-caption-m govuk-!-font-size-19">{t('pages.task.category')}</span>
-          <h4 className="govuk-heading-m govuk-!-font-size-19">
-            {processDefinition.category}
-          </h4>
+          <h4 className="govuk-heading-m govuk-!-font-size-19">{processDefinition.category}</h4>
         </div>
         <div className="govuk-grid-column-one-quarter" id="taskDueDate">
           <span className="govuk-caption-m govuk-!-font-size-19">{t('pages.task.due')}</span>
           <h4 className="govuk-heading-m govuk-!-font-size-19">
-            { moment().to(moment(taskInfo.due)) }
+            {moment().to(moment(taskInfo.due))}
           </h4>
         </div>
         <div className="govuk-grid-column-one-quarter" id="taskPriority">
           <span className="govuk-caption-m govuk-!-font-size-19">{t('pages.task.priority')}</span>
           <h4 className="govuk-heading-m govuk-!-font-size-19">
-            { determinePriority(taskInfo.priority)}
+            {determinePriority(taskInfo.priority)}
           </h4>
         </div>
         <div className="govuk-grid-column-one-quarter" id="taskAssignee">
@@ -168,77 +168,75 @@ const TaskPage = ({ taskId }) => {
           <p className="govuk-body">{taskInfo.description}</p>
         </div>
       </div>
-      {form
-        ? (
+      {form ? (
+        <div className="govuk-grid-row">
+          <div className="govuk-grid-column-full" id="form">
+            <DisplayForm
+              submitting={submitting}
+              form={form}
+              handleOnCancel={async () => {
+                await navigation.navigate('/tasks');
+              }}
+              existingSubmission={formSubmission}
+              interpolateContext={{
+                processContext: {
+                  variables,
+                  instance: processInstance,
+                  definition: processDefinition,
+                },
+                taskContext: taskInfo,
+              }}
+              handleOnSubmit={(submission) => {
+                setSubmitting(true);
+                submitForm({
+                  submission,
+                  form,
+                  taskId,
+                  businessKey: processInstance.businessKey,
+                  handleOnFailure,
+                });
+              }}
+            />
+          </div>
+        </div>
+      ) : (
+        <>
           <div className="govuk-grid-row">
-            <div className="govuk-grid-column-full" id="form">
-              <DisplayForm
-                submitting={submitting}
-                form={form}
-                handleOnCancel={async () => {
-                  await navigation.navigate('/tasks');
-                }}
-                existingSubmission={formSubmission}
-                interpolateContext={
-                  {
-                    processContext: {
-                      variables,
-                      instance: processInstance,
-                      definition: processDefinition,
-                    },
-                    taskContext: taskInfo,
-                  }
-                }
-                handleOnSubmit={(submission) => {
-                  setSubmitting(true);
+            <div className="govuk-grid-column-full">
+              <div className="govuk-warning-text">
+                <span className="govuk-warning-text__icon" aria-hidden="true">
+                  !
+                </span>
+                <strong className="govuk-warning-text__text">
+                  <span className="govuk-warning-text__assistive">{t('warning')}</span>
+                  {t('pages.task.no-form')}
+                </strong>
+              </div>
+            </div>
+          </div>
+          <div className="govuk-grid-row">
+            <div className="govuk-grid-column-full">
+              <button
+                className="govuk-button"
+                type="button"
+                onClick={() => {
                   submitForm({
-                    submission,
-                    form,
+                    submission: {},
+                    form: {
+                      name: 'no-form',
+                    },
                     taskId,
                     businessKey: processInstance.businessKey,
                     handleOnFailure,
                   });
                 }}
-              />
+              >
+                {t('pages.task.actions.complete')}
+              </button>
             </div>
           </div>
-        ) : (
-          <>
-            <div className="govuk-grid-row">
-              <div className="govuk-grid-column-full">
-                <div className="govuk-warning-text">
-                  <span className="govuk-warning-text__icon" aria-hidden="true">!</span>
-                  <strong className="govuk-warning-text__text">
-                    <span className="govuk-warning-text__assistive">{t('warning')}</span>
-                    {t('pages.task.no-form')}
-                  </strong>
-                </div>
-              </div>
-            </div>
-            <div className="govuk-grid-row">
-              <div className="govuk-grid-column-full">
-                <button
-                  className="govuk-button"
-                  type="button"
-                  onClick={() => {
-                    submitForm({
-                      submission: {},
-                      form: {
-                        name: 'no-form',
-                      },
-                      taskId,
-                      businessKey: processInstance.businessKey,
-                      handleOnFailure,
-                    });
-                  }}
-                >
-                  {t('pages.task.actions.complete')}
-                </button>
-              </div>
-            </div>
-          </>
-
-        ) }
+        </>
+      )}
     </>
   );
 };

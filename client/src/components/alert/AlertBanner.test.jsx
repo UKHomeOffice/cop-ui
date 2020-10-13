@@ -12,7 +12,7 @@ describe('AlertBanner', () => {
     const wrapper = await mount(
       <AlertContextProvider>
         <AlertBanner />
-      </AlertContextProvider>,
+      </AlertContextProvider>
     );
     expect(wrapper.find('div').exists()).toBe(false);
   });
@@ -43,7 +43,7 @@ describe('AlertBanner', () => {
       <AlertContextProvider>
         <AlertBanner />
         <TestComponent />
-      </AlertContextProvider>,
+      </AlertContextProvider>
     );
     await act(async () => {
       await wrapper.find('button').at(0).simulate('click');
@@ -79,7 +79,7 @@ describe('AlertBanner', () => {
       <AlertContextProvider>
         <AlertBanner />
         <TestComponent />
-      </AlertContextProvider>,
+      </AlertContextProvider>
     );
     expect(wrapper.find('.govuk-panel--confirmation').exists()).toBe(false);
 
@@ -108,11 +108,13 @@ describe('AlertBanner', () => {
             onClick={() => {
               setAlertContext({
                 type: 'api-error',
-                errors: [{
-                  status: 400,
-                  message: 'missing',
-                  path: '/api/test',
-                }],
+                errors: [
+                  {
+                    status: 400,
+                    message: 'missing',
+                    path: '/api/test',
+                  },
+                ],
               });
             }}
           >
@@ -125,7 +127,7 @@ describe('AlertBanner', () => {
       <AlertContextProvider>
         <AlertBanner />
         <TestComponent />
-      </AlertContextProvider>,
+      </AlertContextProvider>
     );
     await act(async () => {
       await wrapper.find('button').at(0).simulate('click');
@@ -140,13 +142,15 @@ describe('AlertBanner', () => {
       <Form
         form={{
           display: 'form',
-          components: [{
-            key: 'textField',
-            type: 'textfield',
-            id: 'id',
-          }],
+          components: [
+            {
+              key: 'textField',
+              type: 'textfield',
+              id: 'id',
+            },
+          ],
         }}
-      />,
+      />
     );
 
     await act(async () => {
@@ -167,13 +171,15 @@ describe('AlertBanner', () => {
               setAlertContext({
                 type: 'form-error',
                 form: form.instance(),
-                errors: [{
-                  component: {
-                    id: 'id',
-                    key: 'textField',
+                errors: [
+                  {
+                    component: {
+                      id: 'id',
+                      key: 'textField',
+                    },
+                    message: 'Textfield is required',
                   },
-                  message: 'Textfield is required',
-                }],
+                ],
               });
             }}
           >
@@ -186,7 +192,7 @@ describe('AlertBanner', () => {
       <AlertContextProvider>
         <AlertBanner />
         <TestComponent />
-      </AlertContextProvider>,
+      </AlertContextProvider>
     );
     await act(async () => {
       await wrapper.find('button').at(0).simulate('click');

@@ -25,7 +25,7 @@ const ApplicationSpinner = ({ translationKey, args, colour }) => {
 };
 
 const SpinnerContainer = styled.div`
-position: fixed;
+  position: fixed;
   top: 50%;
   left: 50%;
   display: flex;
@@ -34,28 +34,36 @@ position: fixed;
   transform: translate(-50%, -50%);
 `;
 const Spinner = styled.div`
- text-align: center;
-  border: 12px solid #DEE0E2;
+  text-align: center;
+  border: 12px solid #dee0e2;
   border-radius: 50%;
-  border-top-color: #005EA5;
+  border-top-color: #005ea5;
   width: 80px;
   height: 80px;
   -webkit-animation: spin 2s linear infinite;
   animation: spin 2s linear infinite;
   @-webkit-keyframes spin {
-  0% { -webkit-transform: rotate(0deg); }
-  100% { -webkit-transform: rotate(360deg); }
-}
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
+    0% {
+      -webkit-transform: rotate(0deg);
+    }
+    100% {
+      -webkit-transform: rotate(360deg);
+    }
+  }
+  @keyframes spin {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
 `;
 
 const SpinnerText = styled.div`
   line-height: 2;
   text-align: center;
-  color: ${(props) => (props.colour ? props.colour : BLACK)}
+  color: ${(props) => (props.colour ? props.colour : BLACK)};
 `;
 
 ApplicationSpinner.defaultProps = {

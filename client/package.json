@@ -50,12 +50,13 @@
     "eslint-plugin-jsx-a11y": "^6.2.3",
     "eslint-plugin-react": "^7.19.0",
     "eslint-plugin-react-hooks": "^4.0.0",
-    "husky": "^4.2.5",
+    "husky": "^4.3.0",
+    "lint-staged": "^10.4.0",
     "sinon": "^9.0.2"
   },
   "husky": {
     "hooks": {
-      "pre-commit": "npm run lint",
+      "pre-commit": "lint-staged",
       "pre-push": "CI=true react-scripts test"
     }
   },
@@ -80,6 +81,12 @@
       }
     }
   },
+  "lint-staged": {
+    "./src/**/*.{js,jsx}": [
+      "npx prettier --write",
+      "npm run lint"
+    ]
+  },
   "proxy": "http://localhost:8004",
   "scripts": {
     "start": "react-scripts start",
@@ -88,7 +95,7 @@
     "test-coverage": "react-scripts test \"--coverage\" \"--watchAll=false\"",
     "test-coverage-watch": "react-scripts test \"--coverage\" \"--watchAll=true\"",
     "eject": "react-scripts eject",
-    "lint": "eslint --ignore-pattern node_modules/ --ext .js --ext .jsx --fix src"
+    "lint": "eslint --ext .js,.jsx --fix src"
   },
   "eslintConfig": {
     "extends": [

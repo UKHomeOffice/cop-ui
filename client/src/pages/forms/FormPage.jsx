@@ -1,6 +1,4 @@
-import React, {
-  useEffect, useState,
-} from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import axios from 'axios';
 import { useNavigation } from 'react-navi';
@@ -30,9 +28,12 @@ const FormPage = ({ formId }) => {
     const loadForm = async () => {
       if (axiosInstance) {
         try {
-          const formKey = await axiosInstance.get(`/camunda/engine-rest/process-definition/key/${formId}/startForm`, {
-            cancelToken: source.token,
-          });
+          const formKey = await axiosInstance.get(
+            `/camunda/engine-rest/process-definition/key/${formId}/startForm`,
+            {
+              cancelToken: source.token,
+            }
+          );
           if (formKey && formKey.data) {
             const { key } = formKey.data;
             const formResponse = await axiosInstance.get(`/form/name/${key}`);
@@ -80,11 +81,9 @@ const FormPage = ({ formId }) => {
       handleOnCancel={async () => {
         await navigation.navigate('/forms');
       }}
-      interpolateContext={
-        {
-          businessKey: businessKeyComponent ? businessKeyComponent.defaultValue : null,
-        }
-      }
+      interpolateContext={{
+        businessKey: businessKeyComponent ? businessKeyComponent.defaultValue : null,
+      }}
       form={form.data}
       handleOnSubmit={(data) => {
         setSubmitting(true);

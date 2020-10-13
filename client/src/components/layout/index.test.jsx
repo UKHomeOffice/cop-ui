@@ -13,7 +13,11 @@ describe('Layout', () => {
     jest.spyOn(console, 'error').mockImplementation(() => {});
   });
   it('renders without crashing', () => {
-    shallow(<Layout><div>Hello</div></Layout>);
+    shallow(
+      <Layout>
+        <div>Hello</div>
+      </Layout>
+    );
   });
 
   it('can click reset', async () => {
@@ -21,7 +25,11 @@ describe('Layout', () => {
       throw new Error('Failed');
     };
 
-    const wrapper = await mount(<Layout><ErrorComponent /></Layout>);
+    const wrapper = await mount(
+      <Layout>
+        <ErrorComponent />
+      </Layout>
+    );
     expect(wrapper.find('.govuk-error-summary').length).toBe(1);
     // eslint-disable-next-line no-console
     expect(console.error).toBeCalled();
@@ -32,10 +40,17 @@ describe('Layout', () => {
   });
 
   it('can click on back button', () => {
-    const wrapper = shallow(<Layout><div>Hello</div></Layout>);
-    wrapper.find('a').at(0).simulate('click', {
-      preventDefault: () => {},
-    });
+    const wrapper = shallow(
+      <Layout>
+        <div>Hello</div>
+      </Layout>
+    );
+    wrapper
+      .find('a')
+      .at(0)
+      .simulate('click', {
+        preventDefault: () => {},
+      });
     expect(mockGoBack).toBeCalled();
   });
 });

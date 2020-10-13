@@ -17,7 +17,6 @@ const TasksListPage = () => {
     page: 0,
     maxResults: 20,
     search: '',
-
   });
   const isMounted = useIsMounted();
   const axiosInstance = useAxios();
@@ -32,10 +31,12 @@ const TasksListPage = () => {
             url: '/camunda/engine-rest/task/count',
             cancelToken: source.token,
             data: {
-              orQueries: [{
-                candidateGroups: keycloak.tokenParsed.groups,
-                assignee: keycloak.tokenParsed.email,
-              }],
+              orQueries: [
+                {
+                  candidateGroups: keycloak.tokenParsed.groups,
+                  assignee: keycloak.tokenParsed.email,
+                },
+              ],
             },
           });
 
@@ -48,15 +49,18 @@ const TasksListPage = () => {
               firstResult: data.page,
             },
             data: {
-              orQueries: [{
-                candidateGroups: keycloak.tokenParsed.groups,
-                assignee: keycloak.tokenParsed.email,
-              }],
+              orQueries: [
+                {
+                  candidateGroups: keycloak.tokenParsed.groups,
+                  assignee: keycloak.tokenParsed.email,
+                },
+              ],
             },
           });
 
-          const processDefinitionIds = _.uniq(tasksResponse
-            .data.map((task) => task.processDefinitionId));
+          const processDefinitionIds = _.uniq(
+            tasksResponse.data.map((task) => task.processDefinitionId)
+          );
 
           const definitionResponse = await axiosInstance({
             method: 'GET',
@@ -67,13 +71,16 @@ const TasksListPage = () => {
           });
 
           if (isMounted.current) {
-            const merged = _.values(_.merge(_.keyBy(dataRef.current, 'id'),
-              _.keyBy(tasksResponse.data, 'id')));
+            const merged = _.values(
+              _.merge(_.keyBy(dataRef.current, 'id'), _.keyBy(tasksResponse.data, 'id'))
+            );
 
             if (definitionResponse.data && definitionResponse.data.length !== 0) {
               merged.forEach((task) => {
-                const processDefinition = _.find(definitionResponse.data,
-                  (definition) => definition.id === task.processDefinitionId);
+                const processDefinition = _.find(
+                  definitionResponse.data,
+                  (definition) => definition.id === task.processDefinitionId
+                );
                 if (processDefinition) {
                   // eslint-disable-next-line no-param-reassign
                   task.category = processDefinition.category;
@@ -99,7 +106,6 @@ const TasksListPage = () => {
             page: data.page,
             maxResults: data.maxResults,
             search: '',
-
           });
         }
       }
@@ -108,8 +114,16 @@ const TasksListPage = () => {
     return () => {
       source.cancel('Cancelling request');
     };
-  }, [setData, axiosInstance, data.maxResults,
-    data.page, keycloak.tokenParsed.email, keycloak.tokenParsed.groups, isMounted, data.search]);
+  }, [
+    setData,
+    axiosInstance,
+    data.maxResults,
+    data.page,
+    keycloak.tokenParsed.email,
+    keycloak.tokenParsed.groups,
+    isMounted,
+    data.search,
+  ]);
 
   if (data.isLoading) {
     return <ApplicationSpinner />;
@@ -119,38 +133,35 @@ const TasksListPage = () => {
       <div className="govuk-grid-row">
         <div className="govuk-grid-column-two-thirds">
           <span className="govuk-caption-l">{t('pages.tasks.list.caption')}</span>
-          <h2 className="govuk-heading-l">
-            {t('pages.tasks.list.size', { count: data.total })}
-          </h2>
+          <h2 className="govuk-heading-l">{t('pages.tasks.list.size', { count: data.total })}</h2>
         </div>
       </div>
       <div className="govuk-grid-row">
         <div className="govuk-grid-column-full">
           <TaskList tasks={data.tasks} />
-          {
-            data.total > data.maxResults && data.tasks.length < (data.total)
-              ? (
-                <ul className="govuk-list">
-                  <li>
-                    <a
-                      id="loadMore"
-                      onClick={async (e) => {
-                        e.preventDefault();
-                        const page = data.page + data.maxResults;
-                        setData({
-                          ...data,
-                          page,
-                        });
-                      }}
-                      className="govuk-link"
-                      href={`/tasks?firstResult=${data.page + data.maxResults}&maxResults=${data.maxResults}`}
-                    >
-                      {t('pages.forms.list.load-more')}
-                    </a>
-                  </li>
-                </ul>
-              ) : null
-          }
+          {data.total > data.maxResults && data.tasks.length < data.total ? (
+            <ul className="govuk-list">
+              <li>
+                <a
+                  id="loadMore"
+                  onClick={async (e) => {
+                    e.preventDefault();
+                    const page = data.page + data.maxResults;
+                    setData({
+                      ...data,
+                      page,
+                    });
+                  }}
+                  className="govuk-link"
+                  href={`/tasks?firstResult=${data.page + data.maxResults}&maxResults=${
+                    data.maxResults
+                  }`}
+                >
+                  {t('pages.forms.list.load-more')}
+                </a>
+              </li>
+            </ul>
+          ) : null}
         </div>
       </div>
     </>
