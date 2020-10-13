@@ -16,12 +16,14 @@ describe('FormErrorsAlert', () => {
       <Form
         form={{
           display: 'form',
-          components: [{
-            key: 'textField',
-            type: 'textfield',
-          }],
+          components: [
+            {
+              key: 'textField',
+              type: 'textfield',
+            },
+          ],
         }}
-      />,
+      />
     );
     mount(<FormErrorsAlert errors={[]} form={form.instance()} />);
   });
@@ -31,13 +33,15 @@ describe('FormErrorsAlert', () => {
       <Form
         form={{
           display: 'form',
-          components: [{
-            key: 'textField',
-            type: 'textfield',
-            id: 'id',
-          }],
+          components: [
+            {
+              key: 'textField',
+              type: 'textfield',
+              id: 'id',
+            },
+          ],
         }}
-      />,
+      />
     );
 
     await act(async () => {
@@ -46,16 +50,20 @@ describe('FormErrorsAlert', () => {
       await form.update();
     });
 
-    const wrapper = mount(<FormErrorsAlert
-      errors={[{
-        component: {
-          id: 'id',
-          key: 'textField',
-        },
-        message: 'Textfield is required',
-      }]}
-      form={form.instance()}
-    />);
+    const wrapper = mount(
+      <FormErrorsAlert
+        errors={[
+          {
+            component: {
+              id: 'id',
+              key: 'textField',
+            },
+            message: 'Textfield is required',
+          },
+        ]}
+        form={form.instance()}
+      />
+    );
 
     const message = wrapper.find('div[id="message"]').at(0);
     expect(message.text()).toBe('Textfield is required');

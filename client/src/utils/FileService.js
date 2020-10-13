@@ -75,15 +75,18 @@ class FileService {
   async deleteFile(fileInfo) {
     const token = await this.getToken();
     return new Promise((resolve, reject) => {
-      axios.delete(fileInfo.url, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }).then(() => {
-        resolve('File deleted');
-      }).catch((e) => {
-        reject(e.message || 'Failed to delete file');
-      });
+      axios
+        .delete(fileInfo.url, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        .then(() => {
+          resolve('File deleted');
+        })
+        .catch((e) => {
+          reject(e.message || 'Failed to delete file');
+        });
     });
   }
 
@@ -98,18 +101,20 @@ class FileService {
         headers: {
           Authorization: `Bearer ${token}`,
         },
-      }).then((response) => {
-        const file = new Blob([response.data]);
-        const fileURL = URL.createObjectURL(file);
-        const link = document.createElement('a');
-        link.href = fileURL;
-        link.setAttribute('download', `${fileInfo.originalName}`);
-        document.body.appendChild(link);
-        link.click();
-        resolve();
-      }).catch((e) => {
-        reject(e);
-      });
+      })
+        .then((response) => {
+          const file = new Blob([response.data]);
+          const fileURL = URL.createObjectURL(file);
+          const link = document.createElement('a');
+          link.href = fileURL;
+          link.setAttribute('download', `${fileInfo.originalName}`);
+          document.body.appendChild(link);
+          link.click();
+          resolve();
+        })
+        .catch((e) => {
+          reject(e);
+        });
     });
   }
 }

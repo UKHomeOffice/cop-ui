@@ -11,7 +11,8 @@ describe('FileService', () => {
 
   let fileService = beforeEach(() => {
     const keycloak = {
-      token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c',
+      token:
+        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c',
       clientId: 'clientId',
       refreshToken: 'refreshToken',
       realm: 'realm',
@@ -26,9 +27,12 @@ describe('FileService', () => {
   it('can upload file', async () => {
     mockAxios.onPost('/files/TEST').reply((config) => {
       config.onUploadProgress({ loaded: 1, total: 1 });
-      return [200, {
-        url: 'url',
-      }];
+      return [
+        200,
+        {
+          url: 'url',
+        },
+      ];
     });
 
     const result = await fileService.uploadFile(
@@ -41,7 +45,7 @@ describe('FileService', () => {
       null,
       () => {},
       '/files/TEST',
-      {},
+      {}
     );
 
     expect(result).toBeDefined();
@@ -49,7 +53,8 @@ describe('FileService', () => {
   });
 
   it('can request new token if token expired', async () => {
-    fileService.keycloak.token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyLCJleHAiOjE1OTE1OTk3OTZ9.Ffv7hdB55i6ksTd9NFCWjaSIaMVhNyZMVHA6uuUA7RU';
+    fileService.keycloak.token =
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyLCJleHAiOjE1OTE1OTk3OTZ9.Ffv7hdB55i6ksTd9NFCWjaSIaMVhNyZMVHA6uuUA7RU';
 
     mockAxios.onPost('/files/TEST').reply(201, {
       url: 'url',
@@ -69,7 +74,7 @@ describe('FileService', () => {
       null,
       {},
       '/files/TEST',
-      {},
+      {}
     );
 
     expect(result).toBeDefined();
@@ -77,7 +82,8 @@ describe('FileService', () => {
   });
 
   it('logs console error if refresh token fails', async () => {
-    fileService.keycloak.token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyLCJleHAiOjE1OTE1OTk3OTZ9.Ffv7hdB55i6ksTd9NFCWjaSIaMVhNyZMVHA6uuUA7RU';
+    fileService.keycloak.token =
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyLCJleHAiOjE1OTE1OTk3OTZ9.Ffv7hdB55i6ksTd9NFCWjaSIaMVhNyZMVHA6uuUA7RU';
 
     mockAxios.onPost('/files/TEST').reply(201, {
       url: 'url',
@@ -97,7 +103,7 @@ describe('FileService', () => {
       null,
       {},
       '/files/TEST',
-      {},
+      {}
     );
 
     expect(consoleError).toBeCalled();
@@ -135,26 +141,30 @@ describe('FileService', () => {
       url: 'url',
     });
 
-    fileService.downloadFile({
-      url: 'file',
-      originalName: 'file',
-    }).then(() => {
-      expect(mockAxios.history.get.length).toBe(1);
-      done();
-    });
+    fileService
+      .downloadFile({
+        url: 'file',
+        originalName: 'file',
+      })
+      .then(() => {
+        expect(mockAxios.history.get.length).toBe(1);
+        done();
+      });
   });
   it('error thrown if cannot download file', (done) => {
     mockAxios.onGet('/file').reply(500, {
       url: 'url',
     });
 
-    fileService.downloadFile({
-      url: 'file',
-      originalName: 'file',
-    }).catch((e) => {
-      expect(mockAxios.history.get.length).toBe(1);
-      expect(e.message).toBe('Request failed with status code 500');
-      done();
-    });
+    fileService
+      .downloadFile({
+        url: 'file',
+        originalName: 'file',
+      })
+      .catch((e) => {
+        expect(mockAxios.history.get.length).toBe(1);
+        expect(e.message).toBe('Request failed with status code 500');
+        done();
+      });
   });
 });

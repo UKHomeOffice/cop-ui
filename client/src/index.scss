@@ -1,24 +1,23 @@
 $govuk-page-width: 1400px;
 
-@import "~formiojs/dist/formio.form.css";
-@import "~govuk-frontend/govuk/all";
+@import '~formiojs/dist/formio.form.css';
+@import '~govuk-frontend/govuk/all';
 
 a {
-    cursor: pointer;
+  cursor: pointer;
 }
 
 body {
-    overscroll-behavior-y: none;
-    font-family: "nta", Arial, sans-serif;
+  overscroll-behavior-y: none;
+  font-family: 'nta', Arial, sans-serif;
 }
 
-
 .app-container {
-    @include govuk-width-container(1400px);
-    min-height: calc(100vh - 70px);
+  @include govuk-width-container(1400px);
+  min-height: calc(100vh - 70px);
 }
 
 .field-required:after {
-    content: " *";
-    color: red;
+  content: ' *';
+  color: red;
 }

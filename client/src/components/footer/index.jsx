@@ -24,7 +24,6 @@ const Footer = () => {
                   }}
                 >
                   {t('footer.privacy')}
-
                 </a>
               </li>
               <li className="govuk-footer__inline-list-item">
@@ -41,23 +40,30 @@ const Footer = () => {
                 </a>
               </li>
               <li className="govuk-footer__inline-list-item">
-                <a className="govuk-footer__link" href={`${config.get('serviceDeskUrl')}`} target="_blank" rel="noopener noreferrer">{t('footer.help')}</a>
+                <a
+                  className="govuk-footer__link"
+                  href={`${config.get('serviceDeskUrl')}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  {t('footer.help')}
+                </a>
               </li>
             </ul>
           </div>
           <hr className="govuk-footer__section-break" />
           <div className="govuk-footer__meta-item">
-            <a className="govuk-footer__link govuk-footer__copyright-logo" href="https://www.nationalarchives.gov.uk/information-management/re-using-public-sector-information/uk-government-licensing-framework/crown-copyright/">
+            <a
+              className="govuk-footer__link govuk-footer__copyright-logo"
+              href="https://www.nationalarchives.gov.uk/information-management/re-using-public-sector-information/uk-government-licensing-framework/crown-copyright/"
+            >
               {t('footer.copyright')}
             </a>
           </div>
-          <div className="govuk-footer__meta-item">
-            {t('footer.powered-by')}
-          </div>
+          <div className="govuk-footer__meta-item">{t('footer.powered-by')}</div>
         </div>
       </div>
     </footer>
-
   );
 };
 

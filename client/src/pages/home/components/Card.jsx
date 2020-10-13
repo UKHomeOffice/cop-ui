@@ -3,9 +3,7 @@ import PropTypes from 'prop-types';
 import './_card.scss';
 import { useTranslation } from 'react-i18next';
 
-const Card = ({
-  href, handleClick, footer, count, isLoading,
-}) => {
+const Card = ({ href, handleClick, footer, count, isLoading }) => {
   const { t } = useTranslation();
   return (
     <div className="govuk-grid-row">
@@ -18,22 +16,16 @@ const Card = ({
           }}
           className="card__body"
         >
-          {
-          isLoading ? (
-            <span className="govuk-!-font-size-19 govuk-!-font-weight-bold">
-              {t('loading')}
-            </span>
+          {isLoading ? (
+            <span className="govuk-!-font-size-19 govuk-!-font-weight-bold">{t('loading')}</span>
           ) : (
             <span id="count" className="govuk-!-font-size-48 govuk-!-font-weight-bold">
               {count}
             </span>
-          )
-        }
+          )}
         </a>
         <div className="card__footer">
-          <span className="govuk-!-font-size-19">
-            {footer}
-          </span>
+          <span className="govuk-!-font-size-19">{footer}</span>
         </div>
       </div>
     </div>

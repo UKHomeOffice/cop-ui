@@ -14,15 +14,9 @@ describe('hooks', () => {
   const mockAxios = new MockAdapter(axios);
 
   it('can handle submit', async () => {
-    mockAxios
-      .onPost('/camunda/engine-rest/task/taskId/submit-form')
-      .reply(200, {});
+    mockAxios.onPost('/camunda/engine-rest/task/taskId/submit-form').reply(200, {});
     // eslint-disable-next-line react/prop-types
-    const wrapper = ({ children }) => (
-      <AlertContextProvider>
-        {children}
-      </AlertContextProvider>
-    );
+    const wrapper = ({ children }) => <AlertContextProvider>{children}</AlertContextProvider>;
     const { result } = renderHook(() => apiHooks(), { wrapper });
 
     const submission = {
@@ -39,22 +33,20 @@ describe('hooks', () => {
 
     await act(async () => {
       result.current.submitForm({
-        submission, form, taskId, businessKey, handleOnFailure: () => {},
+        submission,
+        form,
+        taskId,
+        businessKey,
+        handleOnFailure: () => {},
       });
     });
     expect(mockNavigate).toBeCalled();
   });
 
   it('can handle failure', async () => {
-    mockAxios
-      .onPost('/camunda/engine-rest/task/taskId/submit-form')
-      .reply(500, {});
+    mockAxios.onPost('/camunda/engine-rest/task/taskId/submit-form').reply(500, {});
     // eslint-disable-next-line react/prop-types
-    const wrapper = ({ children }) => (
-      <AlertContextProvider>
-        {children}
-      </AlertContextProvider>
-    );
+    const wrapper = ({ children }) => <AlertContextProvider>{children}</AlertContextProvider>;
     const { result } = renderHook(() => apiHooks(), { wrapper });
 
     const submission = {
@@ -72,7 +64,11 @@ describe('hooks', () => {
 
     await act(async () => {
       result.current.submitForm({
-        submission, form, taskId, businessKey, handleOnFailure,
+        submission,
+        form,
+        taskId,
+        businessKey,
+        handleOnFailure,
       });
     });
 

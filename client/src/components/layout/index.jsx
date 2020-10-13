@@ -24,12 +24,16 @@ const ErrorFallback = ({ resetErrorBoundary }) => {
         {t('render.error.title')}
       </h2>
       <div className="govuk-error-summary__body">
-        <button type="button" className="govuk-button govuk-button--warning" data-module="govuk-button" onClick={resetErrorBoundary}>
+        <button
+          type="button"
+          className="govuk-button govuk-button--warning"
+          data-module="govuk-button"
+          onClick={resetErrorBoundary}
+        >
           {t('render.error.retry')}
         </button>
       </div>
     </div>
-
   );
 };
 
@@ -68,7 +72,7 @@ const Layout = ({ children }) => {
             <AlertContextProvider>
               <AlertBanner />
               {route.url.pathname !== '/' ? (
-              // eslint-disable-next-line jsx-a11y/anchor-is-valid
+                // eslint-disable-next-line jsx-a11y/anchor-is-valid
                 <a
                   href="#"
                   onClick={async (e) => {
@@ -84,10 +88,8 @@ const Layout = ({ children }) => {
             </AlertContextProvider>
           </main>
         </ErrorBoundary>
-
       </div>
       <Footer />
-
     </>
   );
 };

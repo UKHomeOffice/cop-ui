@@ -14,17 +14,11 @@ const TaskList = ({ tasks }) => {
   return (
     <div>
       <ol className="app-task-list">
-
         {Object.keys(groupedByCategory).map((key, index) => (
           <div key={key}>
             <li>
               <h2 className="app-task-list__section">
-                <span className="app-task-list__section-number">
-                  {index + 1}
-                  .
-                </span>
-                {' '}
-                {key}
+                <span className="app-task-list__section-number">{index + 1}.</span> {key}
               </h2>
               <ul className="app-task-list__items">
                 {groupedByCategory[key].map((task) => (
@@ -41,9 +35,7 @@ const TaskList = ({ tasks }) => {
                         {task.name}
                       </a>
                     </span>
-                    <strong
-                      className="govuk-tag app-task-list__task-open"
-                    >
+                    <strong className="govuk-tag app-task-list__task-open">
                       {t('pages.tasks.list.status')}
                     </strong>
                   </li>
@@ -62,10 +54,12 @@ TaskList.defaultProps = {
 };
 
 TaskList.propTypes = {
-  tasks: PropTypes.arrayOf(PropTypes.shape({
-    id: PropTypes.string.isRequired,
-    name: PropTypes.string.isRequired,
-  })),
+  tasks: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.string.isRequired,
+      name: PropTypes.string.isRequired,
+    })
+  ),
 };
 
 export default TaskList;

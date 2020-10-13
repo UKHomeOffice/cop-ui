@@ -27,23 +27,26 @@ describe('TaskPage', () => {
   });
 
   it('renders task data', async () => {
-    mockAxios.onGet('/ui/tasks/taskId')
-      .reply(200, {
-        task: {
-          id: 'taskId',
-          name: 'task name',
-          due: moment(),
-          priority: '1000',
-          assignee: null,
-        },
-        processDefinition: {
-          category: 'test',
-        },
-        processInstance: {
-          businessKey: 'BUSINESS KEY',
-        },
-      });
-    const wrapper = await mount(<AlertContextProvider><TaskPage taskId="taskId" /></AlertContextProvider>);
+    mockAxios.onGet('/ui/tasks/taskId').reply(200, {
+      task: {
+        id: 'taskId',
+        name: 'task name',
+        due: moment(),
+        priority: '1000',
+        assignee: null,
+      },
+      processDefinition: {
+        category: 'test',
+      },
+      processInstance: {
+        businessKey: 'BUSINESS KEY',
+      },
+    });
+    const wrapper = await mount(
+      <AlertContextProvider>
+        <TaskPage taskId="taskId" />
+      </AlertContextProvider>
+    );
 
     await act(async () => {
       await Promise.resolve(wrapper);
@@ -65,52 +68,55 @@ describe('TaskPage', () => {
   });
 
   it('renders task data with variables', async () => {
-    mockAxios.onGet('/ui/tasks/taskId')
-      .reply(200, {
-        form: {
-          name: 'testForm',
-          display: 'form',
-          components: [],
-        },
-        task: {
-          id: 'taskId',
-          name: 'task name',
-          due: moment(),
-          priority: '1000',
-          assignee: 'test',
-          variables: {
-            taskVariableA: {
-              type: 'Json',
-              value: JSON.stringify({ data: { text: 'test' } }),
-            },
-            testEmail: {
-              value: 'test',
-              type: 'string',
-            },
-          },
-        },
+    mockAxios.onGet('/ui/tasks/taskId').reply(200, {
+      form: {
+        name: 'testForm',
+        display: 'form',
+        components: [],
+      },
+      task: {
+        id: 'taskId',
+        name: 'task name',
+        due: moment(),
+        priority: '1000',
+        assignee: 'test',
         variables: {
-          email: {
+          taskVariableA: {
+            type: 'Json',
+            value: JSON.stringify({ data: { text: 'test' } }),
+          },
+          testEmail: {
             value: 'test',
             type: 'string',
           },
-          test: {
-            type: 'Json',
-            value: JSON.stringify({ data: { text: 'test' } }),
-          },
-          'testForm::submissionData': {
-            type: 'Json',
-            value: JSON.stringify({ data: { text: 'test' } }),
-          },
         },
-        processDefinition: {
-          category: 'test',
+      },
+      variables: {
+        email: {
+          value: 'test',
+          type: 'string',
         },
-        processInstance: {
-          businessKey: 'BUSINESS KEY',
+        test: {
+          type: 'Json',
+          value: JSON.stringify({ data: { text: 'test' } }),
         },
-      });
-    const wrapper = await mount(<AlertContextProvider><TaskPage taskId="taskId" /></AlertContextProvider>);
+        'testForm::submissionData': {
+          type: 'Json',
+          value: JSON.stringify({ data: { text: 'test' } }),
+        },
+      },
+      processDefinition: {
+        category: 'test',
+      },
+      processInstance: {
+        businessKey: 'BUSINESS KEY',
+      },
+    });
+    const wrapper = await mount(
+      <AlertContextProvider>
+        <TaskPage taskId="taskId" />
+      </AlertContextProvider>
+    );
 
     await act(async () => {
       await Promise.resolve(wrapper);
@@ -132,43 +138,45 @@ describe('TaskPage', () => {
   });
 
   it('can submit task', async () => {
-    mockAxios.onGet('/ui/tasks/taskId')
-      .reply(200, {
-        form: {
-          name: 'testForm',
-          display: 'form',
-          components: [],
+    mockAxios.onGet('/ui/tasks/taskId').reply(200, {
+      form: {
+        name: 'testForm',
+        display: 'form',
+        components: [],
+      },
+      task: {
+        id: 'taskId',
+        name: 'task name',
+        due: moment(),
+        priority: '1000',
+        assignee: 'apples',
+      },
+      variables: {
+        email: 'test',
+        test: {
+          type: 'Json',
+          value: JSON.stringify({ data: { text: 'test' } }),
         },
-        task: {
-          id: 'taskId',
-          name: 'task name',
-          due: moment(),
-          priority: '1000',
-          assignee: 'apples',
+        submissionData: {
+          type: 'Json',
+          value: JSON.stringify({ data: { text: 'test' } }),
         },
-        variables: {
-          email: 'test',
-          test: {
-            type: 'Json',
-            value: JSON.stringify({ data: { text: 'test' } }),
-          },
-          submissionData: {
-            type: 'Json',
-            value: JSON.stringify({ data: { text: 'test' } }),
-          },
-        },
-        processDefinition: {
-          category: 'test',
-        },
-        processInstance: {
-          businessKey: 'BUSINESS KEY',
-        },
-      });
+      },
+      processDefinition: {
+        category: 'test',
+      },
+      processInstance: {
+        businessKey: 'BUSINESS KEY',
+      },
+    });
 
-    mockAxios.onPost('/camunda/engine-rest/task/taskId/submit-form')
-      .reply(200, {});
+    mockAxios.onPost('/camunda/engine-rest/task/taskId/submit-form').reply(200, {});
 
-    const wrapper = await mount(<AlertContextProvider><TaskPage taskId="taskId" /></AlertContextProvider>);
+    const wrapper = await mount(
+      <AlertContextProvider>
+        <TaskPage taskId="taskId" />
+      </AlertContextProvider>
+    );
 
     await act(async () => {
       await Promise.resolve(wrapper);
@@ -202,39 +210,41 @@ describe('TaskPage', () => {
   });
 
   it('adds complete button if form is not present', async () => {
-    mockAxios.onGet('/ui/tasks/taskId')
-      .reply(200, {
-        form: null,
-        task: {
-          id: 'taskId',
-          name: 'task name',
-          due: moment(),
-          priority: '1000',
-          assignee: 'apples',
+    mockAxios.onGet('/ui/tasks/taskId').reply(200, {
+      form: null,
+      task: {
+        id: 'taskId',
+        name: 'task name',
+        due: moment(),
+        priority: '1000',
+        assignee: 'apples',
+      },
+      variables: {
+        email: 'test',
+        test: {
+          type: 'Json',
+          value: JSON.stringify({ data: { text: 'test' } }),
         },
-        variables: {
-          email: 'test',
-          test: {
-            type: 'Json',
-            value: JSON.stringify({ data: { text: 'test' } }),
-          },
-          submissionData: {
-            type: 'Json',
-            value: JSON.stringify({ data: { text: 'test' } }),
-          },
+        submissionData: {
+          type: 'Json',
+          value: JSON.stringify({ data: { text: 'test' } }),
         },
-        processDefinition: {
-          category: 'test',
-        },
-        processInstance: {
-          businessKey: 'BUSINESS KEY',
-        },
-      });
+      },
+      processDefinition: {
+        category: 'test',
+      },
+      processInstance: {
+        businessKey: 'BUSINESS KEY',
+      },
+    });
 
-    mockAxios.onPost('/camunda/engine-rest/task/taskId/submit-form')
-      .reply(200, {});
+    mockAxios.onPost('/camunda/engine-rest/task/taskId/submit-form').reply(200, {});
 
-    const wrapper = await mount(<AlertContextProvider><TaskPage taskId="taskId" /></AlertContextProvider>);
+    const wrapper = await mount(
+      <AlertContextProvider>
+        <TaskPage taskId="taskId" />
+      </AlertContextProvider>
+    );
 
     await act(async () => {
       await Promise.resolve(wrapper);

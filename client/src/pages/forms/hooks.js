@@ -10,30 +10,36 @@ export default () => {
   const { setAlertContext } = useContext(AlertContext);
   const navigation = useNavigation();
 
-  const submitForm = useCallback((submission, formInfo, id, handleOnFailure) => {
-    if (formInfo) {
-      const variables = {
-        [formInfo.name]: {
-          value: JSON.stringify(submission.data),
-          type: 'json',
-        },
-      };
-      axiosInstance.post(`/camunda/engine-rest/process-definition/key/${id}/submit-form`, {
-        variables,
-        businessKey: submission.data.businessKey,
-      }).then(async () => {
-        setAlertContext({
-          type: 'form-submission',
-          status: 'successful',
-          message: t('pages.form.submission.success-message'),
-          reference: `${submission.data.businessKey}`,
-        });
-        await navigation.navigate('/');
-      }).catch(() => {
-        handleOnFailure();
-      });
-    }
-  }, [axiosInstance, navigation, setAlertContext, t]);
+  const submitForm = useCallback(
+    (submission, formInfo, id, handleOnFailure) => {
+      if (formInfo) {
+        const variables = {
+          [formInfo.name]: {
+            value: JSON.stringify(submission.data),
+            type: 'json',
+          },
+        };
+        axiosInstance
+          .post(`/camunda/engine-rest/process-definition/key/${id}/submit-form`, {
+            variables,
+            businessKey: submission.data.businessKey,
+          })
+          .then(async () => {
+            setAlertContext({
+              type: 'form-submission',
+              status: 'successful',
+              message: t('pages.form.submission.success-message'),
+              reference: `${submission.data.businessKey}`,
+            });
+            await navigation.navigate('/');
+          })
+          .catch(() => {
+            handleOnFailure();
+          });
+      }
+    },
+    [axiosInstance, navigation, setAlertContext, t]
+  );
 
   return {
     submitForm,

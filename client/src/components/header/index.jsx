@@ -64,12 +64,15 @@ const Header = () => {
             </strong>
           </span>
           <span className="govuk-phase-banner__text">
-            {t('header.new-service-1')}
-            {' '}
-            <a className="govuk-link" href={config.get('serviceDeskUrl')} target="_blank" rel="noopener noreferrer">
+            {t('header.new-service-1')}{' '}
+            <a
+              className="govuk-link"
+              href={config.get('serviceDeskUrl')}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               {t('header.new-service-2')}
-            </a>
-            {' '}
+            </a>{' '}
             {t('header.new-service-3')}
           </span>
         </p>
@@ -80,20 +83,19 @@ const Header = () => {
 
 const StyledCol = styled.div`
   @includes govuk-grid-column-one-half;
-   font-weight: bold;
-    padding-top: 5px;
-    text-align: right;
-    padding-bottom: 10px;
-  
+  font-weight: bold;
+  padding-top: 5px;
+  text-align: right;
+  padding-bottom: 10px;
 `;
 
 const NavLink = styled.a`
-    margin-left: 20px;
+  margin-left: 20px;
 `;
 
 const HeaderContent = styled.div`
   @includes: govuk-header__content;
-   width: 100%;
+  width: 100%;
 `;
 
 export default Header;

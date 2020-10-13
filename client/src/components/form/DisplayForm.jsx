@@ -1,6 +1,4 @@
-import React, {
-  useContext, useEffect, useRef, useState,
-} from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import { useKeycloak } from '@react-keycloak/web';
 import { Formio, Form } from 'react-formio';
 import moment from 'moment';
@@ -18,23 +16,25 @@ import FileService from '../../utils/FileService';
 Formio.use(gds);
 
 const DisplayForm = ({
-  form, handleOnCancel, handleOnSubmit, existingSubmission,
+  form,
+  handleOnCancel,
+  handleOnSubmit,
+  existingSubmission,
   interpolateContext,
   submitting,
 }) => {
   const { alertContext, setAlertContext } = useContext(AlertContext);
   const [submissionData, setSubmissionData] = useState(null);
   const formRef = useRef();
-  const host = `${window.location.protocol}//${window.location.hostname}${window.location.port
-    ? `:${window.location.port}` : ''}`;
+  const host = `${window.location.protocol}//${window.location.hostname}${
+    window.location.port ? `:${window.location.port}` : ''
+  }`;
 
   const [keycloak] = useKeycloak();
   /* istanbul ignore next */
   Formio.baseUrl = host;
   Formio.projectUrl = host;
-  Formio.plugins = [
-    augmentRequest(keycloak, form.id),
-  ];
+  Formio.plugins = [augmentRequest(keycloak, form.id)];
 
   const fileService = new FileService(keycloak);
 
@@ -45,7 +45,7 @@ const DisplayForm = ({
   });
 
   useEffect(() => {
-    if ((form && form.name) && time.end) {
+    if (form && form.name && time.end) {
       Logger.info({
         token: keycloak.token,
         path: `/form/${form.id}`,
@@ -54,8 +54,9 @@ const DisplayForm = ({
           name: form.name,
           submitted: time.submitted,
           ...time,
-          completionTimeInSeconds: moment.duration(moment(time.end)
-            .diff(moment(time.start))).asSeconds(),
+          completionTimeInSeconds: moment
+            .duration(moment(time.end).diff(moment(time.start)))
+            .asSeconds(),
         },
       });
     }
@@ -77,9 +78,10 @@ const DisplayForm = ({
     if (instance && instance.isValid(data.value, true)) {
       setAlertContext(null);
     } else {
-      const errors = _.filter(alertContext.errors,
-        (error) => data.changed
-              && (error.component.key !== data.changed.component.key));
+      const errors = _.filter(
+        alertContext.errors,
+        (error) => data.changed && error.component.key !== data.changed.component.key
+      );
 
       if (errors.length === 0) {
         setAlertContext(null);
@@ -106,7 +108,6 @@ const DisplayForm = ({
       realm: keycloak.realm,
       roles: keycloak.tokenParsed.realm_access.roles,
       groups: keycloak.tokenParsed.groups,
-
     },
     ...interpolateContext,
   });
@@ -174,10 +175,8 @@ const DisplayForm = ({
               showCancel: true,
             },
             beforeSubmit: (submission, next) => {
-              const {
-                versionId, id, title, name,
-              } = form;
-                // eslint-disable-next-line no-param-reassign
+              const { versionId, id, title, name } = form;
+              // eslint-disable-next-line no-param-reassign
               submission.data.form = {
                 formVersionId: versionId,
                 formId: id,

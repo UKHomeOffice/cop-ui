@@ -1,6 +1,4 @@
-import {
-  useState, useEffect, useRef, useContext,
-} from 'react';
+import { useState, useEffect, useRef, useContext } from 'react';
 import axios from 'axios';
 
 import { useKeycloak } from '@react-keycloak/web';
@@ -23,24 +21,29 @@ export const useAxios = () => {
       },
     });
 
-    instance.interceptors.response.use((response) => response, async (error) => {
-      Logger.error({
-        token: keycloak.token,
-        message: error.response.data,
-        path: routeRef.current.url.pathname,
-      });
+    instance.interceptors.response.use(
+      (response) => response,
+      async (error) => {
+        Logger.error({
+          token: keycloak.token,
+          message: error.response.data,
+          path: routeRef.current.url.pathname,
+        });
 
-      setAlertRef.current({
-        type: 'api-error',
-        errors: [{
-          status: error.response.status,
-          message: error.message,
-          path: error.response.config.url,
-        }],
-      });
+        setAlertRef.current({
+          type: 'api-error',
+          errors: [
+            {
+              status: error.response.status,
+              message: error.message,
+              path: error.response.config.url,
+            },
+          ],
+        });
 
-      return Promise.reject(error);
-    });
+        return Promise.reject(error);
+      }
+    );
 
     setAxiosInstance({ instance });
 
