@@ -1,8 +1,7 @@
 {
-  "short_name": "Workflow UI",
+  "short_name": "Central Operations Platform",
   "name": "UI for workflow forms and tasks",
-  "icons": [
-  ],
+  "icons": [],
   "start_url": ".",
   "display": "standalone",
   "theme_color": "blue",

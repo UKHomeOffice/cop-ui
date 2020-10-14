@@ -29,7 +29,7 @@
     }
   },
   "header": {
-    "service-name" : "eForms Platform",
+    "service-name" : "Central Operations Platform",
     "sign-out" : "Sign out",
     "support" : "Support",
     "new-service-1" : "This is a new service - your",
@@ -38,7 +38,6 @@
   },
   "footer" : {
     "help" : "Help",
-    "powered-by" : "Powered by COP technology",
     "accessibility" : "Accessibility Statement",
     "privacy" : "Privacy and Cookie Policy",
     "support-links" : "Support links",
@@ -46,14 +45,14 @@
   },
   "pages" : {
     "accessibility" : {
-      "title":  "Accessibility Statement | eForms"
+      "title":  "Accessibility Statement | Central Operations Platform"
     },
     "privacy" : {
-      "title" : "Privacy and Cookie Policy | eForms"
+      "title" : "Privacy and Cookie Policy | Central Operations Platform"
     },
     "home" : {
-      "title": "eForms",
-      "header": "eForms/Tasks Dashboard",
+      "title": "Central Operations Platform",
+      "header": "Operational dashboard",
       "card" : {
         "forms": {
           "footer": "Submit a form"
@@ -65,7 +64,7 @@
       }
     },
     "form": {
-      "title" : "eForm",
+      "title" : "Form | Central Operations Platform",
       "submission" : {
         "success-message": "Your form was successfully submitted",
         "your-reference" : "Your reference is {{reference}}",
@@ -79,9 +78,9 @@
     },
     "forms": {
       "list": {
-        "caption" : "eForms",
+        "caption" : "Operational forms",
         "size" : "{{count}} forms",
-        "title" : "eForms list",
+        "title" : "Operational forms | Central Operations Platform",
         "load-more" : "Load more",
         "search" : "Search for a form",
         "search-placeholder" : "Search form name",
