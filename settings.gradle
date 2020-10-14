@@ -4,7 +4,7 @@ pluginManagement {
 	}
 }
 
-rootProject.name = "eForms"
+rootProject.name = "cop-ui"
 
 include 'client'
 include 'server'

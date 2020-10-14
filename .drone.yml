@@ -36,9 +36,9 @@ pipeline:
     secrets:
     - source: DEV_KUBE_SERVER
       target: KUBE_SERVER
-    - source: DEV_EFORMS_KUBE_TOKEN
+    - source: DEV_KUBE_TOKEN
       target: KUBE_TOKEN
-    - source: DEV_KUBE_NAMESPACE_COP_EFORMS
+    - source: DEV_KUBE_NAMESPACE_PRIVATE_COP
       target: KUBE_NAMESPACE
     - source: NGINX_IMAGE
       target: NGINX_IMAGE
@@ -77,9 +77,9 @@ pipeline:
     secrets:
     - source: PRODUCTION_KUBE_SERVER
       target: KUBE_SERVER
-    - source: PRODUCTION_EFORMS_KUBE_TOKEN
+    - source: PRODUCTION_KUBE_TOKEN
       target: KUBE_TOKEN
-    - source: PRODUCTION_KUBE_NAMESPACE_COP_EFORMS
+    - source: PRODUCTION_KUBE_NAMESPACE_PRIVATE_COP
       target: KUBE_NAMESPACE
     - source: NGINX_IMAGE
       target: NGINX_IMAGE
