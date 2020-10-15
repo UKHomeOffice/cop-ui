@@ -6,294 +6,371 @@ const AccessibilityStatement = () => (
       <div className="govuk-grid-row">
         <div className="govuk-grid-column-two-thirds">
           <h1 className="govuk-heading-xl">
-            Accessibility statement for internal Home Office systems
+            Accessibility statement for Central Operations Platform (COP)
           </h1>
           <p className="govuk-body">
-            We want everyone to be able to do what they need to do with our internal systems,
-            regardless of their access needs, due to a disability or condition.
+            We want everyone to be able to get and do what they need with this service, regardless
+            of access needs, due to a disability or condition.
           </p>
-          <p className="govuk-body">This page describes:</p>
-          <ul className="govuk-list govuk-list--bullet">
-            <li>
-              how accessible our internal systems are, including tools and intranets and extranets
-            </li>
-            <li>what do if you have a problem</li>
-            <li>what we are doing to meet the regulations</li>
-          </ul>
           <p className="govuk-body">
-            This accessibility statement applies to Home Office internal systems.
-          </p>
-
-          <h2 className="govuk-heading-l">Using our internal systems</h2>
-          <p className="govuk-body">
-            We want as many people as possible to be able to use our internal systems. For example,
-            on many of our systems you should be able to:
-          </p>
-          <ul className="govuk-list govuk-list--bullet">
-            <li>change colours, contrast levels, zoom and fonts</li>
-            <li>
-              complete tasks without a mouse by using input controls such as speech or a keyboard
-            </li>
-            <li>listen using a screen reader</li>
-          </ul>
-          <p className="govuk-body">We’ve also tried to make the content simple to understand.</p>
-          <p className="govuk-body">
-            There are many ways of making your device easier to use if you have access needs. Find
-            out more on the
-            <a href="https://mcmw.abilitynet.org.uk/" target="_blank" rel="noopener noreferrer">
-              My Computer My Way site by Abilitynet
+            This accessibility statement contains information about the Central Operations Platform,
+            available at{' '}
+            <a href="https://www.cop.homeoffice.gov.uk" target="_blank" rel="noopener noreferrer">
+              https://www.cop.homeoffice.gov.uk (opens in new tab)
             </a>
             .
           </p>
-
-          <h2 className="govuk-heading-l">How accessible our internal systems are</h2>
           <p className="govuk-body">
-            We aim to meet international accessibility guidelines, however this may not always be
+            This website is run by Border Force. We want as many people as possible to be able to
+            use this website. For example, that means you should be able to:
+          </p>
+          <ul className="govuk-list govuk-list--bullet">
+            <li>Zoom in up to 300%, without the text spilling off the screen.</li>
+            <li>Navigate most of the website using just a keyboard.</li>
+            <li>Reach the main dashboard from every form on COP.</li>
+            <li>Read and navigate the order on COP as it is logical and intuitive/clear.</li>
+            <li>Tab through questions in the form whilst always having the focus visible.</li>
+          </ul>
+          <p className="govuk-body">
+            We’ve also made the website text as simple as possible to understand.
+          </p>
+          <p className="govuk-body">
+            <a href="https://mcmw.abilitynet.org.uk/" target="_blank" rel="noopener noreferrer">
+              Abilitynet (opens in new tab)
+            </a>{' '}
+            has advice on making your device easier to use if you have a disability.
+          </p>
+
+          <h2 className="govuk-heading-l">How accessible this website is</h2>
+          <p className="govuk-body">
+            We aim to meet international accessibility guidelines. However, this may not always be
             possible, or we may have missed a problem.
           </p>
-
-          <h2 className="govuk-heading-l">What to do if you have difficulty using these systems</h2>
           <p className="govuk-body">
-            If you have difficulty using one of our internal systems, first use the contact details
-            provided on the internal system to ask for help. If you cannot contact the internal
-            system’s team directly:
+            Some people may find parts of this service difficult to use because:
           </p>
+
           <ul className="govuk-list govuk-list--bullet">
             <li>
-              if you are on POISE contact
-              <a
-                href="https://horizon.fcos.gsi.gov.uk/section/it-services"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                IT Now
-              </a>
+              Drop down lists may require users to “type to search” for their options as not all
+              options will be displayed initially.
             </li>
             <li>
-              if you are in Her Majesty’s Passport Office, contact
+              Adding additional instances of a response, such as a second passport number/adding a
+              new staff grade in Operational Activity Reporting (OAR), may make the form tab to the
+              top of the page for keyboard only users.
+            </li>
+            <li>
+              The JAWS screen reader is not compatible with the Edge Chromium browser, which is the
+              Home Office standard.
+            </li>
+            <li>Skip to content does not highlight the body of text that it skips to.</li>
+            <li>
+              Questions on the form and some labels in names, such as the forms page, are unable to
+              be identified by the screen reader. The NVDA screen reader is able to read text
+              fields, tabs, links and radio buttons.
+            </li>
+            <li>
+              Fields are only auto completed from information in the user’s profile on COP and not
+              from their browser.
+            </li>
+            <li>
+              Headings and titles on COP forms and pages do not get read out by the screen reader.
+            </li>
+            <li>The main headings on each page are h2 and not h1.</li>
+            <li>Images on COP product pages do not have a text description of the image.</li>
+            <li>There are some images of text.</li>
+            <li>
+              Videos in the Help pages about Mandatory Declarations and COP reports do not contain
+              sound, video descriptions or captions.
+            </li>
+          </ul>
+
+          <p className="govuk-body">
+            We know some parts of this website are not fully accessible. You can see a full list of
+            any issues we currently know about in the Non-accessible content section of this
+            statement.
+          </p>
+
+          <h2 className="govuk-heading-l">Feedback and contact information</h2>
+          <p className="govuk-body">If you have difficulty using this service, contact us by:</p>
+          <ul className="govuk-list govuk-list--bullet">
+            <li>
+              Selecting{' '}
               <a
-                href="https://horizon.fcos.gsi.gov.uk/section/it-services/her-majestys-passport-office-admin-it-services"
+                href="https://support.cop.homeoffice.gov.uk/servicedesk/customer/portal/3"
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                Admin IT services
+                Help (opens in new tab)
               </a>
+              .
             </li>
+            <li>Using the chat service on ITNow.</li>
+            <li>Reporting an issue on ITNow.</li>
+            <li>Calling the service desk on 0845 000 0050.</li>
           </ul>
+
+          <h2 className="govuk-heading-l">Reporting accessibility problems with this website</h2>
           <p className="govuk-body">
-            As part of providing this service in another way, we may need to send you messages or
-            documents. Tell us how you want us to send messages or documents to you. Tell us if you
-            need them in a different format, for example large print, audio recording or braille.
+            As part of providing this service, we may need to send you messages or documents. Tell
+            us how you want us to send messages or documents to you. Tell us if you need them in a
+            different format, for example large print, audio recording or braille.
           </p>
           <p className="govuk-body">
-            We’re always looking to improve the accessibility of our internal systems. If you find
-            any problems or think we’re not meeting accessibility requirements, use the contact
-            details above to tell us.
-          </p>
-          <p className="govuk-body">
-            Read
-            <a
-              href="https://www.w3.org/WAI/teach-advocate/contact-inaccessible-websites/"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              tips on contacting organisations about inaccessible sites
-            </a>
-            .
+            We’re always looking to improve the accessibility of our websites and services. If you
+            find any problems or think we’re not meeting accessibility requirements, use the contact
+            details above (in feedback and contact information section) to tell us.
           </p>
 
-          <h2 className="govuk-heading-l">If you are unhappy with how we respond to your report</h2>
+          <h2 className="govuk-heading-l">Enforcement procedure</h2>
           <p className="govuk-body">
-            In England, Wales and Scotland, the Equality and Human Rights Commission (EHRC) is
-            responsible for enforcing the Public Sector Bodies (Websites and Mobile Applications)
-            (No. 2) Accessibility Regulations 2018 (the ‘accessibility regulations’). If you’re not
-            happy with how we respond to your complaint, contact the
+            The Equality and Human Rights Commission (EHRC) is responsible for enforcing the Public
+            Sector Bodies (Websites and Mobile Applications) (No. 2) Accessibility Regulations 2018
+            (the ‘accessibility regulations’). If you’re not happy with how we respond to your
+            complaint,{' '}
             <a
               href="https://www.equalityadvisoryservice.com/"
               target="_blank"
               rel="noopener noreferrer"
             >
-              Equality Advisory and Support Service (EASS)
+              contact the Equality Advisory and Support Service (EASS) (opens in new tab)
             </a>
             .
           </p>
           <p className="govuk-body">
-            In Northern Ireland, the Equality Commission for Northern Ireland is responsible for
-            enforcing the Public Sector Bodies (Websites and Mobile Applications) (No. 2)
-            Accessibility Regulations 2018 (the ‘accessibility regulations’). If you’re not happy
-            with how we respond to your complaint, contact the
-            <a href="https://www.equalityni.org/help" target="_blank" rel="noopener noreferrer">
-              Equality Commission for Northern Ireland
-            </a>
-            .
+            If you are in Northern Ireland and are not happy with how we respond to your complaint
+            you can contact the{' '}
+            <a href="https://www.equalityni.org/home" target="_blank" rel="noopener noreferrer">
+              Equality Commission for Northern Ireland (opens in new tab)
+            </a>{' '}
+            who are responsible for enforcing the Public Sector Bodies (Websites and Mobile
+            Applications) (No. 2) Accessibility Regulations 2018 (the ‘accessibility regulations’)
+            in Northern Ireland.
           </p>
 
           <h2 className="govuk-heading-l">
-            Technical information about these systems accessibility
+            Technical information about this website’s accessibility
           </h2>
           <p className="govuk-body">
-            Home Office is committed to making our internal systems accessible, in accordance with
-            the Public Sector Bodies (Websites and Mobile Applications) (No. 2) Accessibility
+            The Home Office is committed to making its website accessible, in accordance with the
+            Public Sector Bodies (Websites and Mobile Applications) (No. 2) Accessibility
             Regulations 2018.
           </p>
+
+          <h2 className="govuk-heading-l">Compliance status</h2>
           <p className="govuk-body">
-            Some of our internal systems are either partially compliant or are not compliant with
-            the
+            This website is not compliant with the{' '}
             <a href="https://www.w3.org/TR/WCAG21/" target="_blank" rel="noopener noreferrer">
-              Web Content Accessibility Guidelines version 2.1 AA standard
-            </a>
-            , due to the non-compliances and exceptions listed below.
-          </p>
-          <p className="govuk-body">
-            Some of our internal systems are not compliant with the
-            <a href="https://www.w3.org/TR/WCAG21/" target="_blank" rel="noopener noreferrer">
-              Web Content Accessibility Guidelines version 2.1 AA standard
-            </a>
-            . The non-compliances and exceptions are listed below.
+              Web Content Accessibility Guidelines version 2.1 AA standard (opens in new tab)
+            </a>{' '}
+            AA standard. The non-compliances are listed below.
           </p>
 
-          <h2 className="govuk-heading-l">Non accessible content</h2>
+          <h2 className="govuk-heading-l">Non-accessible content</h2>
           <p className="govuk-body">
             The content listed below is non-accessible for the following reasons.
           </p>
 
-          <h2 className="govuk-heading-l">Non-compliance with the accessibility regulations</h2>
-          <p className="govuk-body">
-            Some people may find parts of our internal systems difficult to use because:
-          </p>
+          <h3 className="govuk-heading-m">Non-compliance with the accessibility regulations</h3>
           <ul className="govuk-list govuk-list--bullet">
-            <li>the design cannot be overridden by personal settings for colours and fonts</li>
             <li>
-              the design does not adapt effectively to changes in the window size or level of zoom
+              Pre-recorded Audio-only and Video-only (1.2.1) – there is no transcript or audio
+              description provided for Mandatory Declarations and COP reports in the Help pages.
             </li>
             <li>
-              there are parts that are difficult or impossible to understand or use with a screen
-              reader
+              Captions pre-recorded (1.2.2) – captions are not provided for Mandatory Declarations
+              and COP reports in the Help pages so users unable to read the demo in these videos.
             </li>
             <li>
-              there are parts that are difficult or impossible to reach or use without a mouse or by
-              touching the screen
+              Audio descriptions or media alternative pre-recorded (1.2.3) and Audio Description
+              (Pre-recorded) (1.2.5) – transcript and audio are not provided to the Mandatory
+              Declarations and COP reports in the Help pages so users are unable to follow the demo
+              via audio/transcripts.
             </li>
-            <li>the text is not written in plain English</li>
-            <li>the design is confusing or inconsistent</li>
             <li>
-              audio/video elements may not have captions, transcripts, signing or audio description
+              Reflow (1.4.10) – Mobile users may need to scroll left to right to see some of the COP
+              pages and longer text may spill in drop down lists. Ensure that text does not spill in
+              drop down lists.
+            </li>
+            <li>
+              Info and relationship (1.3.1) – the Dashboard page contains elements other than list
+              items within a set of list elements so screen readers cannot inform the listener that
+              they are listening to items within the list.
+            </li>
+            <li>
+              Identify input purpose (1.3.5) – we autocomplete from information in the user’s
+              profile in our forms, not from the browser.
+            </li>
+            <li>
+              Contrast (1.4.3) – the charts displayed in the Reports section that display from
+              PowerBI don’t provide effective contrast.
+            </li>
+            <li>
+              Keyboard (2.1.1) – adding additional instances of a response, such as a second
+              passport number/adding a new staff grade in OAR, may make the form tab to the top of
+              the page for keyboard only users.
+            </li>
+            <li>
+              Keyboard trap (2.1.2) – the screen reader does not read out all the options in the
+              drop-down list in the port list for Record Border Event and Intelligence Referral
+              forms as not all options are displayed so users will need to use the “type to search”
+              function to find the correct port.
+            </li>
+            <li>
+              Keyboard trap (2.1.2.) – Help for Events at the Border (EaB) and OAR have pages with
+              tables/collapsible fields that are not read by the screen reader and keyboard only
+              users will be unable to access these.
+            </li>
+            <li>
+              Bypass block (2.4.1) – the skip to content doesn’t highlight the body of text. Frames
+              must have title attribute for screen readers.
+            </li>
+            <li>
+              Focus visible (2.4.7) – Command brief report scrollable region not accessible by
+              keyboard.
+            </li>
+            <li>
+              Label in name (2.5.3) – form page reading label of buttons as the same button as they
+              are all called ‘Start’, on the tasks assigned to you page all buttons are read as
+              “actions” and on the tasks assigned to your team page all buttons are read as “Claim”.
+            </li>
+            <li>
+              Language of Page (3.1.1) – Single sign-on page lang attribute is required for screen
+              reader to set the language.
+            </li>
+            <li>
+              Labels or instructions (3.3.2) – Effective form labels are required to make forms
+              accessible.
+            </li>
+            <li>
+              Parsing (4.1.1) – ID must be unique to differentiate each element from another in
+              single sign-on, reports and forms page.
+            </li>
+            <li>
+              Name, Role, Value (4.1.2) – Keycloak page aria-hidden attribute on an element removes
+              the element and all its child nodes from the accessibility API.
+            </li>
+            <li>
+              Link purpose in context (2.4.4) – command brief have case links inside which have
+              missing link names this is may not be visible to screen reader users.
+            </li>
+            <li>
+              Status Message (4.1.3) – status messages/validation errors can be read by screen
+              readers, however screen readers are unable to read questions within the form.
             </li>
           </ul>
+
+          <h3 className="govuk-heading-m">What we’re doing to improve accessibility</h3>
           <p className="govuk-body">
-            These issues mean that our internal systems may not meet some WCAG 2.1 success criteria.
+            Our plan below describes how and when we plan to improve the accessibility of this
+            service:
           </p>
+          <ul className="govuk-list govuk-list--bullet">
+            <li>We will train our staff to create accessible services.</li>
+            <li>
+              We will implement automated and manual accessibility testing in our development
+              process.
+            </li>
+            <li>We will conduct user research and testing with users who have access needs.</li>
+            <li>
+              We will put in place alternative arrangements for those who need them and be willing
+              to make additional adjustments if these are not enough.
+            </li>
+          </ul>
+
           <p className="govuk-body">
-            We are working on identifying and resolving as many of these issues as soon as possible.
-            As we do this we will publish accessibility statements for separate systems.
+            We plan to identify and fix the following areas to be fully compliant by the dates set:
           </p>
 
-          <h2 className="govuk-heading-l">Disproportionate burden</h2>
+          <p className="govuk-body">By end October 2020</p>
+          <ul className="govuk-list govuk-list--bullet">
+            <li>
+              (2.1.2) Add in tool tip to prompt users to type in 3 letters in long port drop-down
+              lists to more easily find their selection.
+            </li>
+            <li>
+              (2.4.1) Skip to content to highlight the body of text that it skips to, ensuring all
+              frame and iframe elements have valid title attribute values.
+            </li>
+          </ul>
+
+          <p className="govuk-body">By end December 2020</p>
+          <ul className="govuk-list govuk-list--bullet">
+            <li>
+              (1.2.1, 1.2.2, 1.2.3, 1.2.5) Add a soundtrack and transcript to the videos in the Help
+              section on the Product Page.
+            </li>
+            <li>
+              (1.3.1) Lists marked up so that they don’t contain content elements other than list
+              elements.
+            </li>
+            <li>
+              (2.1.1) Ensure use of data grids to add additional instances of a response, doesn’t
+              make the form tab to the top of the page for keyboard only users.
+            </li>
+            <li>
+              (2.1.2) Change the presentation of tabular information/collapsible fields in the Help
+              section on the Product Page to be accessible.
+            </li>
+            <li>
+              (2.5.3) Ensure all labels in names are distinguishable by the screen reader through
+              updating the User Interface.
+            </li>
+            <li>Text descriptions will be added to any images in the Product page.</li>
+            <li>Heading consistency resolved to assist readout by screen readers.</li>
+            <li>
+              (3.1.1) Every HTML document to have a lang attribute applied and that the attribute's
+              value is valid value.
+            </li>
+            <li>(3.3.2) Every form element to have had a label applied.</li>
+            <li>
+              (4.1.1) The value assigned to an ARIA ID to be made unique to prevent the second
+              instance from being overlooked by assistive technology.
+            </li>
+            <li>(4.1.2) Aria-hidden elements updated so they do not contain focusable elements.</li>
+            <li>(4.1.3) Screen readers to identify and read questions on the COP forms.</li>
+          </ul>
+
+          <p className="govuk-body">By March 2021</p>
+          <ul className="govuk-list govuk-list--bullet">
+            <li>(1.4.3) Identify how Power BI charts can provide effective contrast.</li>
+            <li>(2.4.7) Ensure that scrollable region has keyboard access.</li>
+          </ul>
+
+          <h3 className="govuk-heading-m">Disproportionate burden</h3>
           <p className="govuk-body">
-            We have not yet identified internal systems where it would be a disproportionate burden
-            on the Home Office to resolve the non-compliance. If this is the case with some of our
-            internal systems, we will publish full details explaining our decision.
+            The National Security (CT) referral form on COP currently has a list of accessibility
+            issues. The COP team are aware of this and will not be making changes due to descoping
+            this form soon, if you need any help with this form please contact us (please see
+            feedback and contact information section).
           </p>
 
-          <h2 className="govuk-heading-l">
+          <h3 className="govuk-heading-m">
             Content that’s not within the scope of the accessibility regulations
-          </h2>
+          </h3>
+          <h4 className="govuk-heading-s">PDFs</h4>
           <p className="govuk-body">
-            The accessibility regulations
-            <a
-              href="http://www.legislation.gov.uk/uksi/2018/952/regulation/4/made"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              do not require internal systems published before 23 September 2019 to be compliant
-              until they undergo a substantial revision
-            </a>
-            .
+            Some forms on COP will send a PDF to your email or require you to generate a PDF, these
+            are essential to providing our services.
           </p>
           <p className="govuk-body">
-            Some of our old PDF and Word documents may not be accessible in various ways.
+            At this time, we have not identified any content that is not within scope of the
+            accessibility regulations.
+          </p>
+          <h2 className="govuk-heading-l">Preparation of this accessibility statement</h2>
+          <p className="govuk-body">
+            This statement was prepared on 17th September 2020. It was last reviewed on 17th
+            September 2020.
           </p>
           <p className="govuk-body">
-            For example, some may not be properly tagged, or do not use headings. This means that
-            they may be hard to navigate using assistive technology such as screen readers. This
-            does not meet
-            <a
-              href="https://www.w3.org/TR/2008/REC-WCAG20-20081211/#navigation-mechanisms"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Web Content Accessibility Guidelines 2.1 success criterion 1.3.1 (Info and
-              Relationships) 2.4.6 (Headings and Labels)
-            </a>
-            .
+            This website was last tested on 11th September 2020. The test was carried out by the
+            Home Office’s Quality Assurance and Testing team.
           </p>
           <p className="govuk-body">
-            The accessibility regulations
-            <a
-              href="http://www.legislation.gov.uk/uksi/2018/952/regulation/4/made"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              do not require us to fix PDFs or other documents published before 23 September 2018
-            </a>{' '}
-            if they’re not essential to providing our services.
+            We tested the service based on a user's ability to complete key journeys. All parts of
+            the chosen journeys were tested.
           </p>
-          <p className="govuk-body">The accessibility regulations do not apply to:</p>
-          <ul className="govuk-list govuk-list--bullet">
-            <li>pre-recorded time-based media such as video and audio</li>
-            <li>
-              online maps and mapping services, as long as essential information is provided in an
-              accessible digital manner for maps intended for navigational use
-            </li>
-            <li>
-              third-party content that is neither funded nor developed by, nor under the control of
-              Home Office
-            </li>
-            <li>
-              reproductions of items in heritage collections that cannot be made fully accessible
-            </li>
-            <li>archived content</li>
-          </ul>
-          <p className="govuk-body">
-            We do not plan to fix this content. However, requests can be made to make specific
-            content accessible for those who need it. For more information use the contact details
-            above.
-          </p>
-
-          <h2 className="govuk-heading-l">How we tested</h2>
-          <p className="govuk-body">
-            Some of our internal systems have had more testing than others. Testing has been
-            conducted by Home Office staff and by contracted agencies. Where they have been checked
-            for compliance, it has been against WCAG 2.0 AA and more recently WCAG 2.1 AA. We also
-            increasingly test for compatibility and usability with assistive technologies such as
-            screen readers.
-          </p>
-
-          <h2 className="govuk-heading-l">What we’re doing to improve accessibility</h2>
-          <p className="govuk-body">
-            We are reviewing our approach and working towards meeting the regulations by:
-          </p>
-          <ul className="govuk-list govuk-list--bullet">
-            <li>developing our accessibility capability across the department</li>
-            <li>
-              building teams to test for accessibility issues and recommend fixes to suppliers and
-              delivery teams
-            </li>
-            <li>continuing to train our staff to create accessible internal systems</li>
-            <li>
-              increasing the use of automated and manual accessibility testing in our development
-              process
-            </li>
-            <li>continuing to conduct user research with people who have access needs</li>
-            <li>
-              putting in place alternative arrangements for those who need them and where feasible
-              making additional adjustments if these are not enough
-            </li>
-            <li>
-              putting in place stronger measures to make accessibility a key part of our procurement
-              processes and contracts
-            </li>
-          </ul>
         </div>
       </div>
     </main>
