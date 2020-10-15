@@ -60,7 +60,6 @@ const Footer = () => {
               {t('footer.copyright')}
             </a>
           </div>
-          <div className="govuk-footer__meta-item">{t('footer.powered-by')}</div>
         </div>
       </div>
     </footer>
