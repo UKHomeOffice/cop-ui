@@ -8,7 +8,7 @@ const SubmissionSuccessAlert = ({ message, reference, handleOnClose }) => {
     <div className="govuk-grid-row">
       <div className="govuk-grid-column-full">
         <div className="govuk-panel govuk-panel--confirmation">
-          <h2 className="govuk-panel__title">{message}</h2>
+          <h1 className="govuk-panel__title">{message}</h1>
           {reference ? (
             <div className="govuk-panel__body">
               <strong>{t('pages.form.submission.your-reference', { reference })}</strong>

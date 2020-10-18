@@ -3,7 +3,6 @@ import { useTranslation } from 'react-i18next';
 import PropType from 'prop-types';
 import { v4 as uuidv4 } from 'uuid';
 import config from 'react-global-configuration';
-import { ERROR_COLOUR } from 'govuk-colours';
 
 const ApiErrorAlert = ({ errors }) => {
   const { t } = useTranslation();
@@ -34,9 +33,9 @@ const ApiErrorAlert = ({ errors }) => {
     }
     return (
       <li key={uuidv4()}>
-        <h4 style={{ color: ERROR_COLOUR }} className="govuk-heading-s">
+        <p className="govuk-error-message">
           {errorMessage}
-        </h4>
+        </p>
       </li>
     );
   };
@@ -49,13 +48,13 @@ const ApiErrorAlert = ({ errors }) => {
       tabIndex="-1"
       data-module="govuk-error-summary"
     >
-      <h2 className="govuk-error-summary__title" id="error-summary-title">
+      <h1 className="govuk-error-summary__title" id="error-summary-title">
         {t('error.title')}
-      </h2>
+      </h1>
       <div className="govuk-error-summary__body">
         <ul className="govuk-list govuk-error-summary__list">{errors.map(buildMessage)}</ul>
       </div>
-      <h4 className="govuk-heading-s">
+      <p className="govuk-body">
         {t('error.contact-support')}{' '}
         <a
           className="govuk-link"
@@ -63,9 +62,9 @@ const ApiErrorAlert = ({ errors }) => {
           target="_blank"
           href={config.get('serviceDeskUrl')}
         >
-          here
-        </a>
-      </h4>
+          contact support
+        </a>.
+      </p>
       <details className="govuk-details">
         <summary className="govuk-details__summary">
           <span className="govuk-details__summary-text">{t('error.details')}</span>

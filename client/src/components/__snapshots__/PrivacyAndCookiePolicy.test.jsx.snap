@@ -14,7 +14,7 @@ exports[`Privacy Policy page matches snapshot 1`] = `
         className="govuk-grid-column-two-thirds"
       >
         <h1
-          className="govuk-heading-xl"
+          className="govuk-heading-l"
         >
           Privacy notice for Home Office Workforce
         </h1>
@@ -34,7 +34,7 @@ exports[`Privacy Policy page matches snapshot 1`] = `
           This privacy policy applies only to the actions of COP and users of COP. It does not extend to any websites that can be accessed from COP.
         </p>
         <h2
-          className="govuk-heading-l"
+          className="govuk-heading-m"
         >
           What data we need
         </h2>
@@ -104,7 +104,7 @@ exports[`Privacy Policy page matches snapshot 1`] = `
           All information added to the platform is linked to your unique user ID for audit purposes.
         </p>
         <h2
-          className="govuk-heading-l"
+          className="govuk-heading-m"
         >
           Cookies
         </h2>
@@ -159,7 +159,7 @@ exports[`Privacy Policy page matches snapshot 1`] = `
           A user can remove cookies by deleting them from the browser. This can be done by clicking Ctrl+H and navigating to the option to clear history, of which cookies can usually be found as a subset.
         </p>
         <h2
-          className="govuk-heading-l"
+          className="govuk-heading-m"
         >
           Why we need this data
         </h2>
@@ -189,7 +189,7 @@ exports[`Privacy Policy page matches snapshot 1`] = `
           We use a service called Matomo to collect information about how you use the COP. We do this to help make sure that the site is meeting the needs of its users and help us to make improvements to the site and service that we provide.
         </p>
         <h2
-          className="govuk-heading-l"
+          className="govuk-heading-m"
         >
           What we do with your data
         </h2>
@@ -224,7 +224,7 @@ exports[`Privacy Policy page matches snapshot 1`] = `
           Information captured via cookies within Matomo includes a unique visitor ID, information to initially identify a user when a website is visited, analytical information and session data temporarily stored for the visit.
         </p>
         <h2
-          className="govuk-heading-l"
+          className="govuk-heading-m"
         >
           How long we keep your data
         </h2>
@@ -249,7 +249,7 @@ exports[`Privacy Policy page matches snapshot 1`] = `
           In general, this means that we will only hold your personal data for the time you are a member of Border Force and then for a maximum of 5 years after you leave the Force.
         </p>
         <h2
-          className="govuk-heading-l"
+          className="govuk-heading-m"
         >
           Where your data is processed and stored
         </h2>
@@ -264,7 +264,7 @@ exports[`Privacy Policy page matches snapshot 1`] = `
           We use GOV.UK Notify, a service provided by Cabinet Office to send you notifications about the COP. Any information included in the notification email or SMS is stored in Notify for a maximum of 7 days; this is stored within the European Economic Area (EEA).
         </p>
         <h2
-          className="govuk-heading-l"
+          className="govuk-heading-m"
         >
           How we protect your data and keep it secure
         </h2>
@@ -279,7 +279,7 @@ exports[`Privacy Policy page matches snapshot 1`] = `
           We also make sure that any third parties that we deal with keep all personal data they process on our behalf secure.
         </p>
         <h2
-          className="govuk-heading-l"
+          className="govuk-heading-m"
         >
           What are your rights?
         </h2>
@@ -349,7 +349,7 @@ exports[`Privacy Policy page matches snapshot 1`] = `
           .
         </p>
         <h2
-          className="govuk-heading-l"
+          className="govuk-heading-m"
         >
           Changes to this notice
         </h2>

@@ -47,7 +47,7 @@ describe('FormsListPage', () => {
       await new Promise((resolve) => setImmediate(resolve));
       await wrapper.update();
     });
-    expect(wrapper.find('h2').at(0).text()).not.toBe('');
+    expect(wrapper.find('h1').at(0).text()).not.toBe('');
 
     wrapper
       .find('a')
@@ -70,7 +70,7 @@ describe('FormsListPage', () => {
       await wrapper.update();
     });
 
-    expect(wrapper.find('h2').at(0).text()).not.toBe('');
+    expect(wrapper.find('h1').at(0).text()).not.toBe('');
   });
 
   it('load more does not exist if results less than 20', async () => {

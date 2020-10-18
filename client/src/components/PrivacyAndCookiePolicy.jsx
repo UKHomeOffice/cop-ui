@@ -6,7 +6,7 @@ const PrivacyAndCookiePolicy = () => {
       <main className="govuk-main-wrapper">
         <div className="govuk-grid-row">
           <div className="govuk-grid-column-two-thirds">
-            <h1 className="govuk-heading-xl">Privacy notice for Home Office Workforce</h1>
+            <h1 className="govuk-heading-l">Privacy notice for Home Office Workforce</h1>
             <p className="govuk-body">
               Provision of the Central Operations Platform (COP) is from Borders Systems and the
               Digital, Data and Technology directorate, both of which are part of the Home Office.
@@ -20,7 +20,7 @@ const PrivacyAndCookiePolicy = () => {
               This privacy policy applies only to the actions of COP and users of COP. It does not
               extend to any websites that can be accessed from COP.
             </p>
-            <h2 className="govuk-heading-l">What data we need</h2>
+            <h2 className="govuk-heading-m">What data we need</h2>
             <p className="govuk-body">The personal data we collect from you on COP may include:</p>
             <ul className="govuk-list govuk-list--bullet">
               <li>your full name</li>
@@ -54,7 +54,7 @@ const PrivacyAndCookiePolicy = () => {
               All information added to the platform is linked to your unique user ID for audit
               purposes.
             </p>
-            <h2 className="govuk-heading-l">Cookies</h2>
+            <h2 className="govuk-heading-m">Cookies</h2>
             <p className="govuk-body">
               COP uses cookies and you cannot access COP from a non-Home Office device.
             </p>
@@ -96,7 +96,7 @@ const PrivacyAndCookiePolicy = () => {
               clicking Ctrl+H and navigating to the option to clear history, of which cookies can
               usually be found as a subset.
             </p>
-            <h2 className="govuk-heading-l">Why we need this data</h2>
+            <h2 className="govuk-heading-m">Why we need this data</h2>
             <p className="govuk-body">
               We use cookie information to enable you to log into the service that we provide and to
               link information you add into COP to your account.
@@ -123,7 +123,7 @@ const PrivacyAndCookiePolicy = () => {
               this to help make sure that the site is meeting the needs of its users and help us to
               make improvements to the site and service that we provide.
             </p>
-            <h2 className="govuk-heading-l">What we do with your data</h2>
+            <h2 className="govuk-heading-m">What we do with your data</h2>
             <p className="govuk-body">
               The data we collect may be shared with supplier organisations, other government
               departments, agencies and public bodies, but only when there is an appropriate Border
@@ -145,7 +145,7 @@ const PrivacyAndCookiePolicy = () => {
               information to initially identify a user when a website is visited, analytical
               information and session data temporarily stored for the visit.
             </p>
-            <h2 className="govuk-heading-l">How long we keep your data</h2>
+            <h2 className="govuk-heading-m">How long we keep your data</h2>
             <p className="govuk-body">We will only retain your personal data for as long as:</p>
             <ul className="govuk-list govuk-list--bullet">
               <li>it is needed for the purposes set out in this document</li>
@@ -155,7 +155,7 @@ const PrivacyAndCookiePolicy = () => {
               In general, this means that we will only hold your personal data for the time you are
               a member of Border Force and then for a maximum of 5 years after you leave the Force.
             </p>
-            <h2 className="govuk-heading-l">Where your data is processed and stored</h2>
+            <h2 className="govuk-heading-m">Where your data is processed and stored</h2>
             <p className="govuk-body">
               We design, build and run our systems to make sure that your data is as safe as
               possible while it is being processed or stored. We store your data on an assured
@@ -167,7 +167,7 @@ const PrivacyAndCookiePolicy = () => {
               Notify for a maximum of 7 days; this is stored within the European Economic Area
               (EEA).
             </p>
-            <h2 className="govuk-heading-l">How we protect your data and keep it secure</h2>
+            <h2 className="govuk-heading-m">How we protect your data and keep it secure</h2>
             <p className="govuk-body">
               We are committed to doing all that we can to keep your data secure. We have set up
               systems and processes to prevent unauthorised access or disclosure of your data—for
@@ -177,7 +177,7 @@ const PrivacyAndCookiePolicy = () => {
               We also make sure that any third parties that we deal with keep all personal data they
               process on our behalf secure.
             </p>
-            <h2 className="govuk-heading-l">What are your rights?</h2>
+            <h2 className="govuk-heading-m">What are your rights?</h2>
             <p className="govuk-body">You have the right to request:</p>
             <ul className="govuk-list govuk-list--bullet">
               <li>information about how your personal data is processed</li>
@@ -224,7 +224,7 @@ const PrivacyAndCookiePolicy = () => {
               </a>
               .
             </p>
-            <h2 className="govuk-heading-l">Changes to this notice</h2>
+            <h2 className="govuk-heading-m">Changes to this notice</h2>
             <p className="govuk-body">
               We may modify or amend this privacy notice at our discretion at any time. When we make
               changes to this notice, we will amend the last modified date at the top of this page.
