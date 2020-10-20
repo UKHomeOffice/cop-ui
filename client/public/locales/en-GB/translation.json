@@ -79,7 +79,7 @@
     },
     "forms": {
       "list": {
-        "caption": "Operational forms",
+        "heading": "Operational forms",
         "size": "{{count}} forms",
         "title": "Operational forms | Central Operations Platform",
         "load-more": "Load more",

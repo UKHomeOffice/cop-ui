@@ -108,7 +108,7 @@ const FormsListPage = () => {
           <span className="govuk-caption-l">
             {t('pages.forms.list.size', { count: forms.total })}
           </span>
-          <h1 className="govuk-heading-l">{t('pages.forms.list.caption')}</h1>
+          <h1 className="govuk-heading-l">{t('pages.forms.list.heading')}</h1>
         </div>
         <div className="govuk-grid-column-one-third">
           <div className="govuk-form-group">
