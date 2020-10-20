@@ -12,8 +12,9 @@
     "409": "The form has already been submitted",
     "401/403": "Unable to complete your request due to authorization issues.",
     "400": "Unable to complete your request due to form submission issues.",
-    "50x": "Internal system error.",
-    "contact-support": "Please contact support by clicking",
+    "50x": "Internal system error",
+    "contact-support-prefix": "Please",
+    "contact-support-link-text": "contact support",
     "error-info": "URL {{path}} - Code: {{status}}"
   },
   "render": {
@@ -52,7 +53,7 @@
     },
     "home": {
       "title": "Central Operations Platform",
-      "header": "Operational dashboard",
+      "heading": "Operational dashboard",
       "card": {
         "forms": {
           "footer": "Submit a form"
@@ -78,7 +79,7 @@
     },
     "forms": {
       "list": {
-        "caption": "Operational forms",
+        "heading": "Operational forms",
         "size": "{{count}} forms",
         "title": "Operational forms | Central Operations Platform",
         "load-more": "Load more",
@@ -107,7 +108,7 @@
       "title": "Tasks",
       "list": {
         "status": "Open",
-        "caption": "Tasks",
+        "heading": "Tasks",
         "title": "Tasks to complete",
         "size": "{{count}} tasks assigned to you"
       }
