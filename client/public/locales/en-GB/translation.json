@@ -13,7 +13,8 @@
     "401/403": "Unable to complete your request due to authorization issues.",
     "400": "Unable to complete your request due to form submission issues.",
     "50x": "Internal system error",
-    "contact-support": "Please",
+    "contact-support-prefix": "Please",
+    "contact-support-link-text": "contact support",
     "error-info": "URL {{path}} - Code: {{status}}"
   },
   "render": {

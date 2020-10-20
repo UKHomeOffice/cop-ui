@@ -55,15 +55,16 @@ const ApiErrorAlert = ({ errors }) => {
         <ul className="govuk-list govuk-error-summary__list">{errors.map(buildMessage)}</ul>
       </div>
       <p className="govuk-body">
-        {t('error.contact-support')}{' '}
+        {t('error.contact-support-prefix')}{' '}
         <a
           className="govuk-link"
           rel="noopener noreferrer"
           target="_blank"
           href={config.get('serviceDeskUrl')}
         >
-          contact support
-        </a>.
+          {t('error.contact-support-link-text')}
+        </a>
+        .
       </p>
       <details className="govuk-details">
         <summary className="govuk-details__summary">
