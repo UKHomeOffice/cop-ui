@@ -133,7 +133,7 @@ const TasksListPage = () => {
       <div className="govuk-grid-row">
         <div className="govuk-grid-column-two-thirds">
           <span className="govuk-caption-l">{t('pages.tasks.list.size', { count: data.total })}</span>
-          <h1 className="govuk-heading-l">{t('pages.tasks.list.caption')}</h1>
+          <h1 className="govuk-heading-l">{t('pages.tasks.list.heading')}</h1>
         </div>
       </div>
       <div className="govuk-grid-row">

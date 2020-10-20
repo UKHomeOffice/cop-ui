@@ -99,10 +99,8 @@ const Home = () => {
     <div className="govuk-!-margin-top-7">
       <div className="govuk-grid-row">
         <div className="govuk-grid-column-full">
-          <span className="govuk-caption-l">
-            {keycloak.tokenParsed.name}
-          </span>
-          <h1 className="govuk-heading-l">{t('pages.home.header')}</h1>
+          <span className="govuk-caption-l">{keycloak.tokenParsed.name}</span>
+          <h1 className="govuk-heading-l">{t('pages.home.heading')}</h1>
         </div>
       </div>
       <div className="govuk-grid-row">

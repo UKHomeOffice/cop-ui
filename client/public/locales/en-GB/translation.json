@@ -53,7 +53,7 @@
     },
     "home": {
       "title": "Central Operations Platform",
-      "header": "Operational dashboard",
+      "heading": "Operational dashboard",
       "card": {
         "forms": {
           "footer": "Submit a form"
@@ -108,7 +108,7 @@
       "title": "Tasks",
       "list": {
         "status": "Open",
-        "caption": "Tasks",
+        "heading": "Tasks",
         "title": "Tasks to complete",
         "size": "{{count}} tasks assigned to you"
       }
