@@ -49,10 +49,6 @@ spec:
           value: "FALSE"
         - name: NAXSI_USE_DEFAULT_RULES
           value: "FALSE"
-        - name: PORT_IN_HOST_HEADER
-          value: "FALSE"
-        - name: ERROR_REDIRECT_CODES
-          value: "599"
         - name: STATSD_METRICS
           value: "FALSE"
         ports:
