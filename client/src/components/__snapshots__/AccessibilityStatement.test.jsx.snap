@@ -27,7 +27,6 @@ exports[`Accessibility Statement page matches snapshot 1`] = `
           className="govuk-body"
         >
           This accessibility statement contains information about the Central Operations Platform, available at
-           
           <a
             href="https://www.cop.homeoffice.gov.uk"
             rel="noopener noreferrer"
@@ -76,7 +75,6 @@ exports[`Accessibility Statement page matches snapshot 1`] = `
           >
             Abilitynet (opens in new tab)
           </a>
-           
           has advice on making your device easier to use if you have a disability.
         </p>
         <h2
@@ -151,7 +149,6 @@ exports[`Accessibility Statement page matches snapshot 1`] = `
         >
           <li>
             Selecting
-             
             <a
               href="https://support.cop.homeoffice.gov.uk/servicedesk/customer/portal/3"
               rel="noopener noreferrer"
@@ -194,8 +191,12 @@ exports[`Accessibility Statement page matches snapshot 1`] = `
         <p
           className="govuk-body"
         >
+<<<<<<< HEAD
           The Equality and Human Rights Commission (EHRC) is responsible for enforcing the Public Sector Bodies (Websites and Mobile Applications) (No. 2) Accessibility Regulations 2018 (the ‘accessibility regulations’). If you’re not happy with how we respond to your complaint,
            
+=======
+          The Equality and Human Rights Commission (EHRC) is responsible for enforcing the Public Sector Bodies (Websites and Mobile Applications) (No. 2) Accessibility Regulations 2018 (the ‘accessibility regulations'). If you're not happy with how we respond to your complaint,
+>>>>>>> 757dbd9... Update jest snapshot
           <a
             href="https://www.equalityadvisoryservice.com/"
             rel="noopener noreferrer"
@@ -209,7 +210,6 @@ exports[`Accessibility Statement page matches snapshot 1`] = `
           className="govuk-body"
         >
           If you are in Northern Ireland and are not happy with how we respond to your complaint you can contact the
-           
           <a
             href="https://www.equalityni.org/home"
             rel="noopener noreferrer"
@@ -239,7 +239,6 @@ exports[`Accessibility Statement page matches snapshot 1`] = `
           className="govuk-body"
         >
           This website is not compliant with the
-           
           <a
             href="https://www.w3.org/TR/WCAG21/"
             rel="noopener noreferrer"
@@ -247,7 +246,6 @@ exports[`Accessibility Statement page matches snapshot 1`] = `
           >
             Web Content Accessibility Guidelines version 2.1 AA standard (opens in new tab)
           </a>
-           
           AA standard. The non-compliances are listed below.
         </p>
         <h2
