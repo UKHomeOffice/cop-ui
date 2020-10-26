@@ -29,9 +29,7 @@
     "ecmaVersion": 2018,
     "sourceType": "module"
   },
-  "plugins": [
-    "react"
-  ],
+  "plugins": ["react"],
   "overrides": [
     {
       "files": ["AccessibilityStatement.jsx", "PrivacyPolicy.jsx"],
@@ -43,8 +41,9 @@
   "rules": {
     "no-underscore-dangle": "off",
     "react/react-in-jsx-scope": "off",
-    "import/prefer-default-export" : "off",
-    "react/jsx-filename-extension" : [1, { "extensions": [".js", ".jsx"] }],
-    "react/jsx-props-no-spreading": ["error", {"custom": "ignore"}]
+    "import/no-extraneous-dependencies": ["error", { "devDependencies": true }],
+    "import/prefer-default-export": "off",
+    "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
+    "react/jsx-props-no-spreading": ["error", { "custom": "ignore" }]
   }
 }
