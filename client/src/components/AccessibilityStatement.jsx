@@ -320,7 +320,7 @@ const AccessibilityStatement = () => (
             <li>Text descriptions will be added to any images in the Product page.</li>
             <li>Heading consistency resolved to assist readout by screen readers.</li>
             <li>
-              (3.1.1) Every HTML document to have a lang attribute applied and that the attribute's
+              (3.1.1) Every HTML document to have a lang attribute applied and that the attribute’s
               value is valid value.
             </li>
             <li>(3.3.2) Every form element to have had a label applied.</li>
@@ -368,7 +368,7 @@ const AccessibilityStatement = () => (
             Home Office’s Quality Assurance and Testing team.
           </p>
           <p className="govuk-body">
-            We tested the service based on a user's ability to complete key journeys. All parts of
+            We tested the service based on a user’s ability to complete key journeys. All parts of
             the chosen journeys were tested.
           </p>
         </div>

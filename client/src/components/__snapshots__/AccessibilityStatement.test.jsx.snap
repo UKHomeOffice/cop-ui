@@ -402,7 +402,7 @@ exports[`Accessibility Statement page matches snapshot 1`] = `
             Heading consistency resolved to assist readout by screen readers.
           </li>
           <li>
-            (3.1.1) Every HTML document to have a lang attribute applied and that the attribute's value is valid value.
+            (3.1.1) Every HTML document to have a lang attribute applied and that the attribute’s value is valid value.
           </li>
           <li>
             (3.3.2) Every form element to have had a label applied.
@@ -480,7 +480,7 @@ exports[`Accessibility Statement page matches snapshot 1`] = `
         <p
           className="govuk-body"
         >
-          We tested the service based on a user's ability to complete key journeys. All parts of the chosen journeys were tested.
+          We tested the service based on a user’s ability to complete key journeys. All parts of the chosen journeys were tested.
         </p>
       </div>
     </div>
