@@ -58,7 +58,7 @@
   "husky": {
     "hooks": {
       "pre-commit": "lint-staged",
-      "pre-push": "CI=true react-scripts test"
+      "pre-push": "CI=true npm test"
     }
   },
   "jest": {
