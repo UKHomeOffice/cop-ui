@@ -18,7 +18,7 @@ steps:
       from_secret: DEV_DRONE_AWS_SECRET_ACCESS_KEY
     DEPLOY_ENV: dev
     DRONE_SERVER: https://drone-gh.acp.homeoffice.gov.uk
-    DRONE_VERSION: $${DRONE_SYSTEM_VERSION}
+    DRONE_VERSION: ${DRONE_SYSTEM_VERSION}
     DRONE_TOKEN:
       from_secret: DRONE_PUBLIC_TOKEN
   when:
@@ -37,7 +37,7 @@ steps:
       from_secret: PRODUCTION_DRONE_AWS_SECRET_ACCESS_KEY
     DEPLOY_ENV: production
     DRONE_SERVER: https://drone-gh.acp.homeoffice.gov.uk
-    DRONE_VERSION: $${DRONE_SYSTEM_VERSION}
+    DRONE_VERSION: ${DRONE_SYSTEM_VERSION}
     DRONE_TOKEN:
       from_secret: DRONE_PUBLIC_TOKEN
   when:
