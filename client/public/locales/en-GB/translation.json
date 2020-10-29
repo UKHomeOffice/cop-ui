@@ -57,11 +57,16 @@
       "heading": "Operational dashboard",
       "card": {
         "forms": {
+          "title": "Forms",
           "footer": "Submit a form"
+        },
+        "reports": {
+          "title": "Reports",
+          "footer": "View operational reports"
         },
         "tasks": {
           "title": "Tasks",
-          "footer": "Tasks assigned to you"
+          "footer": "Claim a task assigned to you or your groups"
         }
       }
     },
@@ -87,6 +92,16 @@
         "search": "Search for a form",
         "search-placeholder": "Search form name",
         "search-hint": "Must be greater than 3 characters"
+      }
+    },
+    "report": {
+      "title": "Report | Central Operations Platform"
+    },
+    "reports": {
+      "list": {
+        "heading": "Operational reports",
+        "size": "{{count}} reports",
+        "title": "Operational reports | Central Operations Platform"
       }
     },
     "task": {
