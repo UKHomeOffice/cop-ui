@@ -17,7 +17,7 @@ describe('Home', () => {
     shallow(<Home />);
   });
 
-  it('renders forms and tasks panels', async () => {
+  it('renders forms, tasks and reports panels', async () => {
     mockAxios.onGet('/camunda/engine-rest/process-definition/count').reply(200, {
       count: 10,
     });
@@ -34,12 +34,14 @@ describe('Home', () => {
       await wrapper.update();
     });
 
-    expect(wrapper.find(Card).length).toBe(2);
+    expect(wrapper.find(Card).length).toBe(3);
     const formsCard = wrapper.find(Card).at(0);
     const tasksCard = wrapper.find(Card).at(1);
+    const reportsCard = wrapper.find(Card).at(2);
 
-    expect(formsCard.find('span[id="count"]').text()).toBe('10');
-    expect(tasksCard.find('span[id="count"]').text()).toBe('10');
+    expect(formsCard.find('h2').text()).toBe('10 pages.home.card.forms.title');
+    expect(tasksCard.find('h2').text()).toBe('10 pages.home.card.tasks.title');
+    expect(reportsCard.find('h2').text()).toBe('pages.home.card.reports.title');
   });
 
   it('handles errors and sets it to zero', async () => {
@@ -55,15 +57,17 @@ describe('Home', () => {
       await wrapper.update();
     });
 
-    expect(wrapper.find(Card).length).toBe(2);
+    expect(wrapper.find(Card).length).toBe(3);
     const formsCard = wrapper.find(Card).at(0);
     const tasksCard = wrapper.find(Card).at(1);
+    const reportsCard = wrapper.find(Card).at(2);
 
-    expect(formsCard.find('span[id="count"]').text()).toBe('0');
-    expect(tasksCard.find('span[id="count"]').text()).toBe('0');
+    expect(formsCard.find('h2').text()).toBe('0 pages.home.card.forms.title');
+    expect(tasksCard.find('h2').text()).toBe('0 pages.home.card.tasks.title');
+    expect(reportsCard.find('h2').text()).toBe('pages.home.card.reports.title');
   });
 
-  it('can handle onlick', async () => {
+  it('can handle onClick', async () => {
     mockAxios.onGet('/camunda/engine-rest/process-definition/count').reply(200, {
       count: 10,
     });
@@ -81,11 +85,15 @@ describe('Home', () => {
 
     const formsCard = wrapper.find(Card).at(0);
     const tasksCard = wrapper.find(Card).at(1);
+    const reportsCard = wrapper.find(Card).at(2);
 
     formsCard.props().handleClick();
     expect(mockNavigate).toBeCalledWith('/forms');
 
     tasksCard.props().handleClick();
     expect(mockNavigate).toBeCalledWith('/tasks');
+
+    reportsCard.props().handleClick();
+    expect(mockNavigate).toBeCalledWith('/reports');
   });
 });

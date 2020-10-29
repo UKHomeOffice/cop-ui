@@ -106,6 +106,7 @@ const Home = () => {
       <div className="govuk-grid-row">
         <div className="govuk-grid-column-one-half">
           <Card
+            title={t('pages.home.card.forms.title')}
             href="/forms"
             isLoading={formsCount.isLoading}
             count={formsCount.count}
@@ -117,6 +118,7 @@ const Home = () => {
         </div>
         <div className="govuk-grid-column-one-half">
           <Card
+            title={t('pages.home.card.tasks.title')}
             href="/tasks"
             count={tasksCount.count}
             isLoading={tasksCount.isLoading}
@@ -124,6 +126,17 @@ const Home = () => {
               await navigation.navigate('/tasks');
             }}
             footer={t('pages.home.card.tasks.footer')}
+          />
+        </div>
+        <div className="govuk-grid-column-one-half">
+          <Card
+            title={t('pages.home.card.reports.title')}
+            href="/reports"
+            isLoading={tasksCount.isLoading}
+            handleClick={async () => {
+              await navigation.navigate('/reports');
+            }}
+            footer={t('pages.home.card.reports.footer')}
           />
         </div>
       </div>
