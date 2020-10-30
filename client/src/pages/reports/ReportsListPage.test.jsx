@@ -3,10 +3,9 @@ import { shallow, mount } from 'enzyme';
 import MockAdapter from 'axios-mock-adapter';
 import axios from 'axios';
 import { act } from '@testing-library/react';
-import _ from 'lodash';
+import config from 'react-global-configuration';
 import ReportsListPage from './ReportsListPage';
 import { mockNavigate } from '../../setupTests';
-import config from 'react-global-configuration';
 
 describe('ReportsListPage', () => {
   const mockAxios = new MockAdapter(axios);

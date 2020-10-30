@@ -21,7 +21,7 @@ const Card = ({ count, footer, handleClick, href, isLoading, title }) => {
             <span className="govuk-!-font-size-19 govuk-!-font-weight-bold">{t('loading')}</span>
           ) : (
             <h2 className="govuk-!-font-size-36 govuk-!-font-weight-bold">
-              {count === undefined ? heading : `${count} ${heading}`}
+              {count === null ? heading : `${count} ${heading}`}
             </h2>
           )}
         </a>
@@ -31,6 +31,10 @@ const Card = ({ count, footer, handleClick, href, isLoading, title }) => {
       </div>
     </div>
   );
+};
+
+Card.defaultProps = {
+  count: null,
 };
 
 Card.propTypes = {

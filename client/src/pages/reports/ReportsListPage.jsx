@@ -2,10 +2,10 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useTranslation } from 'react-i18next';
 import { useNavigation } from 'react-navi';
-import { useAxios } from '../../utils/hooks';
-import ApplicationSpinner from '../../components/ApplicationSpinner';
 import config from 'react-global-configuration';
 import _ from 'lodash';
+import { useAxios } from '../../utils/hooks';
+import ApplicationSpinner from '../../components/ApplicationSpinner';
 import './ReportsListPage.scss';
 
 const ReportsListPage = () => {
@@ -58,15 +58,14 @@ const ReportsListPage = () => {
           </span>
           <h1 className="govuk-heading-l">{t('pages.reports.list.heading')}</h1>
         </div>
-        <div className="govuk-grid-column-one-third"></div>
       </div>
       <div className="govuk-grid-row">
         <div className="govuk-grid-column-full">
-          <ul className="govuk-list">
-            {reports.data.map((report, index) => {
-              const href = `/reports/${_.kebabCase(report.name)}`;
+          <ul className="govuk-list reports">
+            {reports.data.map(({ id, name }) => {
+              const href = `/reports/${_.kebabCase(name)}`;
               return (
-                <li key={index} className="list-item">
+                <li key={id || name} className="list-item">
                   <a
                     onClick={async (e) => {
                       e.preventDefault();
@@ -75,7 +74,7 @@ const ReportsListPage = () => {
                     className="govuk-link"
                     href={href}
                   >
-                    {report.name}
+                    {name}
                   </a>
                 </li>
               );
