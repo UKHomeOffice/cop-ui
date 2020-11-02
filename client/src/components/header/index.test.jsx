@@ -8,6 +8,11 @@ describe('Header', () => {
     shallow(<Header />);
   });
 
+  it('can click my profile', () => {
+    const wrapper = mount(<Header />);
+    wrapper.find('a[id="myprofile"]').at(0).simulate('click');
+    expect(mockNavigate).toBeCalledWith('/forms/edit-your-profile');
+  });
   it('can click logout', () => {
     const wrapper = mount(<Header />);
     wrapper.find('a[id="logout"]').at(0).simulate('click');

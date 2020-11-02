@@ -31,6 +31,16 @@ const Header = () => {
             </div>
             <StyledCol>
               <NavLink
+                id="myprofile"
+                className="govuk-header__link"
+                onClick={async (e) => {
+                  e.preventDefault();
+                  await navigation.navigate('/forms/edit-your-profile');
+                }}
+              >
+                {t('header.my-profile')}
+              </NavLink>
+              <NavLink
                 id="support"
                 className="govuk-header__link"
                 href={config.get('supportUrl')}

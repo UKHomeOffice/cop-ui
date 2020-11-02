@@ -30,6 +30,7 @@
     }
   },
   "header": {
+    "my-profile": "My profile",
     "service-name": "Central Operations Platform",
     "sign-out": "Sign out",
     "support": "Support",
