@@ -26,6 +26,7 @@ const routes = mount({
     })
   ),
   '/forms': lazy(() => import('../pages/forms/routes')),
+  '/reports': lazy(() => import('../pages/reports/routes')),
   '/tasks': lazy(() => import('../pages/tasks/routes')),
   '/cases': lazy(() => import('../pages/cases/routes')),
   '/logout': map((request, context) =>

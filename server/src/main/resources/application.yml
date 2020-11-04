@@ -41,6 +41,10 @@ zuul:
       strip-prefix: false
       path: /camunda/**
       url: ${workflowService.url:http://localhost:8000}
+    report-service:
+      strip-prefix: true
+      path: /reports/**
+      url: ${reportService.url:http://report.lodev.xyz}
   sensitive-headers: Cookie,Set-Cookie
 
 management:

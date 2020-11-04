@@ -30,6 +30,10 @@
 a.card__body {
   color: #005ea5;
 
+  h2 {
+    margin: 0;
+  }
+  
   &:hover,
   &:focus {
     cursor: pointer;
