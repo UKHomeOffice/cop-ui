@@ -50,10 +50,11 @@ const Card = ({ href, handleClick, footer, count, isLoading, title }) => {
 Card.defaultProps = {
   count: null,
   title: '',
+  isLoading: false,
 };
 
 Card.propTypes = {
-  isLoading: PropTypes.bool.isRequired,
+  isLoading: PropTypes.bool,
   count: PropTypes.number,
   href: PropTypes.string.isRequired,
   handleClick: PropTypes.func.isRequired,

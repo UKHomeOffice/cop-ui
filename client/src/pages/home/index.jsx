@@ -13,11 +13,6 @@ const Home = () => {
 
   const axiosInstance = useAxios();
 
-  const [formsCount, setFormsCount] = useState({
-    isLoading: true,
-    count: 0,
-  });
-
   const [tasksCount, setTasksCount] = useState({
     isLoading: true,
     count: 0,
@@ -26,32 +21,6 @@ const Home = () => {
   useEffect(() => {
     const source = axios.CancelToken.source();
     if (axiosInstance) {
-      axiosInstance
-        .get('/camunda/engine-rest/process-definition/count', {
-          cancelToken: source.token,
-          params: {
-            startableInTasklist: true,
-            latestVersion: true,
-            active: true,
-          },
-        })
-        .then((response) => {
-          if (isMounted.current) {
-            setFormsCount({
-              isLoading: false,
-              count: response.data.count,
-            });
-          }
-        })
-        .catch(() => {
-          if (isMounted.current) {
-            setFormsCount({
-              isLoading: false,
-              count: 0,
-            });
-          }
-        });
-
       axiosInstance({
         method: 'POST',
         url: '/camunda/engine-rest/task/count',
@@ -88,7 +57,6 @@ const Home = () => {
     };
   }, [
     axiosInstance,
-    setFormsCount,
     setTasksCount,
     isMounted,
     keycloak.tokenParsed.groups,
@@ -124,7 +92,6 @@ const Home = () => {
           <li>
             <Card
               href="/forms"
-              isLoading={formsCount.isLoading}
               handleClick={async () => {
                 await navigation.navigate('/forms');
               }}
