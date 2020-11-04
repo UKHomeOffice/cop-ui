@@ -104,28 +104,35 @@ const Home = () => {
         </div>
       </div>
       <div className="govuk-grid-row">
-        <div className="govuk-grid-column-one-half">
-          <Card
-            href="/forms"
-            isLoading={formsCount.isLoading}
-            count={formsCount.count}
-            handleClick={async () => {
-              await navigation.navigate('/forms');
-            }}
-            footer={t('pages.home.card.forms.footer')}
-          />
-        </div>
-        <div className="govuk-grid-column-one-half">
-          <Card
-            href="/tasks"
-            count={tasksCount.count}
-            isLoading={tasksCount.isLoading}
-            handleClick={async () => {
-              await navigation.navigate('/tasks');
-            }}
-            footer={t('pages.home.card.tasks.footer')}
-          />
-        </div>
+        <ul className="govuk-list">
+          <li>
+            <Card
+              href="/tasks"
+              count={tasksCount.count}
+              isLoading={tasksCount.isLoading}
+              handleClick={async () => {
+                await navigation.navigate('/tasks');
+              }}
+              footer={t('pages.home.card.tasks.footer')}
+              title="tasks assigned to you"
+            />
+          </li>
+        </ul>
+      </div>
+      <div className="govuk-grid-row">
+        <ul className="govuk-list">
+          <li>
+            <Card
+              href="/forms"
+              isLoading={formsCount.isLoading}
+              handleClick={async () => {
+                await navigation.navigate('/forms');
+              }}
+              footer={t('pages.home.card.forms.footer')}
+              title="Forms"
+            />
+          </li>
+        </ul>
       </div>
     </div>
   );
