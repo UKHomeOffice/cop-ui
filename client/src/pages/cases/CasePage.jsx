@@ -1,5 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
+import CasesResultsPanel from './CasesResultsPanel';
 import './CasesPage.scss';
 
 const CasePage = () => {
@@ -13,9 +14,7 @@ const CasePage = () => {
           <h1 className="govuk-heading-l">{t('pages.cases.heading')}</h1>
           <div className="govuk-inset-text">
             <p>{t('pages.cases.heading-help')}</p>
-            <p>
-              <strong>{t('pages.cases.heading-warning')}</strong>
-            </p>
+            <p className="govuk-!-font-weight-bold">{t('pages.cases.heading-warning')}</p>
           </div>
         </div>
         <div className="govuk-grid-column-one-third">
@@ -34,6 +33,7 @@ const CasePage = () => {
           </div>
         </div>
       </div>
+      <CasesResultsPanel />
     </>
   );
 };
