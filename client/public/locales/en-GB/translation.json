@@ -138,6 +138,10 @@
       "list": {
         "title": "Cases",
         "search-placeholder": "Search using a COP prefixed number"
+      },
+      "results-panel": {
+        "title": "Search results",
+        "caption": "Number of cases found"
       }
     },
     "login": {
