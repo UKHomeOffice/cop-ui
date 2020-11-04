@@ -18,7 +18,7 @@ const Card = ({ href, handleClick, footer, count, isLoading, title }) => {
       );
     }
     return (
-      <span id="count" className="govuk-!-font-size-36 govuk-!-font-weight-bold">
+      <span id="title" className="govuk-!-font-size-36 govuk-!-font-weight-bold">
         {title}
       </span>
     );

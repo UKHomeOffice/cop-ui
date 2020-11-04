@@ -57,11 +57,16 @@
       "heading": "Operational dashboard",
       "card": {
         "forms": {
+          "title": "Forms",
           "footer": "Submit a form"
         },
         "tasks": {
-          "title": "Tasks",
+          "title": "tasks assigned to you",
           "footer": "Tasks assigned to you"
+        },
+        "cases": {
+          "title": "Cases",
+          "footer": "View active or closed cases"
         }
       }
     },

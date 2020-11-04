@@ -30,7 +30,7 @@ describe('Home', () => {
       await wrapper.update();
     });
 
-    expect(wrapper.find(Card).length).toBe(2);
+    expect(wrapper.find(Card).length).toBe(3);
     const tasksCard = wrapper.find(Card).at(0);
 
     expect(tasksCard.find('span[id="count"]').text()).toBe('10');
@@ -42,13 +42,14 @@ describe('Home', () => {
     await act(async () => {
       await Promise.resolve(wrapper);
       await new Promise((resolve) => setImmediate(resolve));
-      await wrapper.update();
+      wrapper.update();
     });
 
-    expect(wrapper.find(Card).length).toBe(2);
     const formsCard = wrapper.find(Card).at(1);
+    const casesCard = wrapper.find(Card).at(2);
 
-    expect(formsCard.find('span[id="count"]').text()).toBe('Forms');
+    expect(formsCard.find('span[id="title"]').text()).toBe('pages.home.card.forms.title');
+    expect(casesCard.find('span[id="title"]').text()).toBe('pages.home.card.cases.title');
   });
 
   it('handles errors and sets it to zero', async () => {
@@ -62,7 +63,7 @@ describe('Home', () => {
       await wrapper.update();
     });
 
-    expect(wrapper.find(Card).length).toBe(2);
+    expect(wrapper.find(Card).length).toBe(3);
     const tasksCard = wrapper.find(Card).at(0);
 
     expect(tasksCard.find('span[id="count"]').text()).toBe('0');
@@ -80,8 +81,12 @@ describe('Home', () => {
       await wrapper.update();
     });
 
+    const casesCard = wrapper.find(Card).at(2);
     const formsCard = wrapper.find(Card).at(1);
     const tasksCard = wrapper.find(Card).at(0);
+
+    casesCard.props().handleClick();
+    expect(mockNavigate).toBeCalledWith('/cases');
 
     formsCard.props().handleClick();
     expect(mockNavigate).toBeCalledWith('/forms');

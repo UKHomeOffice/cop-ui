@@ -82,7 +82,7 @@ const Home = () => {
                 await navigation.navigate('/tasks');
               }}
               footer={t('pages.home.card.tasks.footer')}
-              title="tasks assigned to you"
+              title={t('pages.home.card.tasks.title')}
             />
           </li>
         </ul>
@@ -96,7 +96,17 @@ const Home = () => {
                 await navigation.navigate('/forms');
               }}
               footer={t('pages.home.card.forms.footer')}
-              title="Forms"
+              title={t('pages.home.card.forms.title')}
+            />
+          </li>
+          <li>
+            <Card
+              href="/cases"
+              handleClick={async () => {
+                await navigation.navigate('/cases');
+              }}
+              footer={t('pages.home.card.cases.footer')}
+              title={t('pages.home.card.cases.title')}
             />
           </li>
         </ul>
