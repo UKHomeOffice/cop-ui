@@ -46,6 +46,11 @@
     "copyright": "© Crown copyright"
   },
   "pages": {
+    "cases": {
+      "list": {
+        "title": "Case view | Central Operations Platform"
+      }      
+    },
     "accessibility": {
       "title": "Accessibility Statement | Central Operations Platform"
     },
