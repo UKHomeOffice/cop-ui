@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useTranslation } from 'react-i18next';
 import { useNavigation } from 'react-navi';
-import config from 'react-global-configuration';
 import _ from 'lodash';
 import { useAxios } from '../../utils/hooks';
 import ApplicationSpinner from '../../components/ApplicationSpinner';
@@ -22,7 +21,7 @@ const ReportsListPage = () => {
     const loadReports = async () => {
       if (axiosInstance) {
         try {
-          const response = await axiosInstance.get(config.get('reportsServiceUrl'), {
+          const response = await axiosInstance.get('/reports/api/reports', {
             cancelToken: source.token,
           });
           setReports({

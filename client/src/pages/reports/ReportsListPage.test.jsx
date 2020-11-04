@@ -3,13 +3,11 @@ import { shallow, mount } from 'enzyme';
 import MockAdapter from 'axios-mock-adapter';
 import axios from 'axios';
 import { act } from '@testing-library/react';
-import config from 'react-global-configuration';
 import ReportsListPage from './ReportsListPage';
 import { mockNavigate } from '../../setupTests';
 
 describe('ReportsListPage', () => {
   const mockAxios = new MockAdapter(axios);
-  config.set({ reportsServiceUrl: 'http://example.com/reports' });
 
   beforeEach(() => {
     jest.spyOn(console, 'error').mockImplementation(() => {});
@@ -21,7 +19,7 @@ describe('ReportsListPage', () => {
   });
 
   it('can render a list of reports', async () => {
-    mockAxios.onGet('http://example.com/reports').reply(200, [
+    mockAxios.onGet('/reports/api/reports').reply(200, [
       {
         id: 'abc',
         name: 'Test Report',
@@ -52,7 +50,7 @@ describe('ReportsListPage', () => {
   });
 
   it('can handle an exception in loading', async () => {
-    mockAxios.onGet('http://example.com/reports').reply(500);
+    mockAxios.onGet('/reports/api/reports').reply(500);
 
     const wrapper = mount(<ReportsListPage />);
 

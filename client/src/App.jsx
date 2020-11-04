@@ -26,7 +26,6 @@ if (window.ENVIRONMENT_CONFIG) {
     uiVersion: process.env.REACT_APP_UI_VERSION,
     serviceDeskUrl: process.env.REACT_APP_SERVICE_DESK_URL,
     supportUrl: process.env.REACT_APP_SUPPORT_URL,
-    reportsServiceUrl: process.env.REACT_APP_REPORTS_SERVICE_URL,
   });
 }
 
