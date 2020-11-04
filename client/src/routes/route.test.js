@@ -9,6 +9,7 @@ describe('Base routes', () => {
     path                            | authenticated
     ${'/'}                          | ${true}
     ${'/tasks'}                     | ${true}
+    ${'/cases'}                     | ${true}
     ${'/forms'}                     | ${true}
     ${'/tasks/id'}                  | ${true}
     ${'/forms/id'}                  | ${true}
