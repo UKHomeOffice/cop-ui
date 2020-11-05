@@ -77,7 +77,7 @@ const Header = () => {
             {t('header.new-service-1')}{' '}
             <a
               className="govuk-link"
-              href={config.get('serviceDeskUrl')}
+              href={`${config.get('serviceDeskUrl')}/create/54`}
               target="_blank"
               rel="noopener noreferrer"
             >
