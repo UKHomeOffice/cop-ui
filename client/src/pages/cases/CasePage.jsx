@@ -20,9 +20,6 @@ const CasePage = () => {
         <div className="govuk-grid-column-one-third">
           <div className="govuk-form-group">
             <input
-              // onChange={(e) => {
-              //   search(e.target.value);
-              // }}
               spellCheck="false"
               className="govuk-input search__input"
               placeholder={t('pages.cases.list.search-placeholder')}
