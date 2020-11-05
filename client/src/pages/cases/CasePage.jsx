@@ -1,6 +1,7 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import CasesResultsPanel from './CasesResultsPanel';
+import CaseDetailsPanel from './CaseDetailsPanel';
 import './CasesPage.scss';
 
 const CasePage = () => {
@@ -30,7 +31,14 @@ const CasePage = () => {
           </div>
         </div>
       </div>
-      <CasesResultsPanel />
+      <div className="govuk-grid-row">
+        <div className="govuk-grid-column-one-quarter">
+          <CasesResultsPanel />
+        </div>
+        <div className="govuk-grid-column-three-quarters">
+          <CaseDetailsPanel />
+        </div>
+      </div>
     </>
   );
 };
