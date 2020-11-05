@@ -129,6 +129,21 @@
         "size": "{{count}} tasks assigned to you"
       }
     },
+    "cases": {
+      "title": "Cases",
+      "caption": "Case view",
+      "heading": "Cases",
+      "heading-help": "Enter a COP number in quotes to search for cases—e.g. \"COP-20200406-24\".",
+      "heading-warning": "Please note all actions are audited.",
+      "list": {
+        "title": "Cases",
+        "search-placeholder": "Search using a COP prefixed number"
+      },
+      "results-panel": {
+        "title": "Search results",
+        "caption": "Number of cases found"
+      }
+    },
     "login": {
       "title": "Login"
     }
