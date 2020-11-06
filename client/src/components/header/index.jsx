@@ -8,6 +8,7 @@ import SkipLink from '../SkipLink';
 const Header = () => {
   const { t } = useTranslation();
   const navigation = useNavigation();
+
   return (
     <>
       <header className="govuk-header" role="banner" data-module="govuk-header">
@@ -15,51 +16,51 @@ const Header = () => {
         <div className="govuk-header__container govuk-width-container">
           <div className="govuk-grid-row">
             <div className="govuk-grid-column-one-half">
-              <HeaderContent>
-                <a
-                  href="/"
-                  id="home"
+              <a
+                href="/"
+                id="home"
+                onClick={async (e) => {
+                  e.preventDefault();
+                  await navigation.navigate('/');
+                }}
+                className="govuk-header__link govuk-header__link--service-name"
+              >
+                {t('header.service-name')}
+              </a>
+            </div>
+            <div className="govuk-grid-column-one-half">
+              <StyledCol>
+                <NavLink
+                  id="myprofile"
+                  className="govuk-header__link"
                   onClick={async (e) => {
                     e.preventDefault();
-                    await navigation.navigate('/');
+                    await navigation.navigate('/forms/edit-your-profile');
                   }}
-                  className="govuk-header__link govuk-header__link--service-name"
                 >
-                  {t('header.service-name')}
-                </a>
-              </HeaderContent>
+                  {t('header.my-profile')}
+                </NavLink>
+                <NavLink
+                  id="support"
+                  className="govuk-header__link"
+                  href={config.get('supportUrl')}
+                  target="_blank"
+                >
+                  {t('header.support')}
+                </NavLink>
+                <NavLink
+                  className="govuk-header__link"
+                  href="/logout"
+                  id="logout"
+                  onClick={async (e) => {
+                    e.preventDefault();
+                    await navigation.navigate('/logout');
+                  }}
+                >
+                  {t('header.sign-out')}
+                </NavLink>
+              </StyledCol>
             </div>
-            <StyledCol>
-              <NavLink
-                id="myprofile"
-                className="govuk-header__link"
-                onClick={async (e) => {
-                  e.preventDefault();
-                  await navigation.navigate('/forms/edit-your-profile');
-                }}
-              >
-                {t('header.my-profile')}
-              </NavLink>
-              <NavLink
-                id="support"
-                className="govuk-header__link"
-                href={config.get('supportUrl')}
-                target="_blank"
-              >
-                {t('header.support')}
-              </NavLink>
-              <NavLink
-                className="govuk-header__link"
-                href="/logout"
-                id="logout"
-                onClick={async (e) => {
-                  e.preventDefault();
-                  await navigation.navigate('/logout');
-                }}
-              >
-                {t('header.sign-out')}
-              </NavLink>
-            </StyledCol>
           </div>
         </div>
       </header>
@@ -92,20 +93,12 @@ const Header = () => {
 };
 
 const StyledCol = styled.div`
-  @includes govuk-grid-column-one-half;
-  font-weight: bold;
-  padding-top: 5px;
+  margin-top: 5px;
   text-align: right;
-  padding-bottom: 10px;
+  font-weight: bold;
 `;
-
 const NavLink = styled.a`
   margin-left: 20px;
-`;
-
-const HeaderContent = styled.div`
-  @includes: govuk-header__content;
-  width: 100%;
 `;
 
 export default Header;
