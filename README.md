@@ -1,6 +1,6 @@
 # COP UI
 
-[![Build Status](https://github.com/UKHomeOffice/cop-ui/workflows/Publish%20Docker/badge.svg)
+![Build Status](https://github.com/UKHomeOffice/cop-ui/workflows/Publish%20Docker/badge.svg)
 
 Provides a UI for completing forms and actioning tasks.
 
