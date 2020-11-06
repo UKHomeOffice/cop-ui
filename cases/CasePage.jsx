@@ -23,7 +23,7 @@ const CasePage = () => {
             <input
               spellCheck="false"
               className="govuk-input search__input"
-              placeholder={t('pages.cases.list.search-placeholder')}
+              placeholder={t('pages.cases.search-placeholder')}
               id="bfNumber"
               name="search"
               type="text"
