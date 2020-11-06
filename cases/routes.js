@@ -7,7 +7,7 @@ const routes = mount({
   '/': map((request, context) =>
     withAuthentication(
       route({
-        title: context.t('pages.cases.list.title'),
+        title: context.t('pages.cases.title'),
         view: <CasePage />,
       })
     )

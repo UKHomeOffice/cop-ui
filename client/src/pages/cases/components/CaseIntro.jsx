@@ -1,10 +1,13 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 
 const CaseIntro = () => {
+  const { t } = useTranslation();
+
   return (
     <>
       <div className="govuk-grid-column-one-half">
-        <h2 className="govuk-heading-m">BusinessKeyHere</h2>
+        <h2 className="govuk-heading-m">Case</h2>
       </div>
       <div className="govuk-grid-column-one-half">
         <button
@@ -12,7 +15,7 @@ const CaseIntro = () => {
           style={{ float: 'right' }}
           className="govuk-button govuk-button--secondary"
         >
-          Copy case link
+          {t('pages.cases.details-panel.case-intro.copy-button')}
         </button>
       </div>
     </>
