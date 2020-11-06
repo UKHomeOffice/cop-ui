@@ -1,13 +1,14 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigation } from 'react-navi';
-import styled from 'styled-components';
 import config from 'react-global-configuration';
 import SkipLink from '../SkipLink';
+import './index.scss';
 
 const Header = () => {
   const { t } = useTranslation();
   const navigation = useNavigation();
+
   return (
     <>
       <header className="govuk-header" role="banner" data-module="govuk-header">
@@ -15,51 +16,71 @@ const Header = () => {
         <div className="govuk-header__container govuk-width-container">
           <div className="govuk-grid-row">
             <div className="govuk-grid-column-one-half">
-              <HeaderContent>
-                <a
-                  href="/"
-                  id="home"
-                  onClick={async (e) => {
-                    e.preventDefault();
-                    await navigation.navigate('/');
-                  }}
-                  className="govuk-header__link govuk-header__link--service-name"
-                >
-                  {t('header.service-name')}
-                </a>
-              </HeaderContent>
+              <a
+                href="/dashboard"
+                id="home"
+                onClick={async (e) => {
+                  e.preventDefault();
+                  await navigation.navigate('/dashboard');
+                }}
+                className="govuk-header__link govuk-header__link--service-name"
+              >
+                {t('header.service-name')}
+              </a>
             </div>
-            <StyledCol>
-              <NavLink
-                id="myprofile"
-                className="govuk-header__link"
-                onClick={async (e) => {
-                  e.preventDefault();
-                  await navigation.navigate('/forms/edit-your-profile');
-                }}
+            <button
+              type="button"
+              className="govuk-header__menu-button govuk-js-header-toggle"
+              aria-controls="navigation"
+              aria-label="Show or hide navigation menu"
+            >
+              Menu
+            </button>
+            <nav className="govuk-grid-column-one-half">
+              <ul
+                id="navigation"
+                className="govuk-header__navigation "
+                aria-label="Navigation menu"
               >
-                {t('header.my-profile')}
-              </NavLink>
-              <NavLink
-                id="support"
-                className="govuk-header__link"
-                href={config.get('supportUrl')}
-                target="_blank"
-              >
-                {t('header.support')}
-              </NavLink>
-              <NavLink
-                className="govuk-header__link"
-                href="/logout"
-                id="logout"
-                onClick={async (e) => {
-                  e.preventDefault();
-                  await navigation.navigate('/logout');
-                }}
-              >
-                {t('header.sign-out')}
-              </NavLink>
-            </StyledCol>
+                <li className="govuk-header__navigation-item">
+                  <a
+                    href="/forms/edit-your-profile"
+                    id="myprofile"
+                    className="govuk-header__link"
+                    onClick={async (e) => {
+                      e.preventDefault();
+                      await navigation.navigate('/forms/edit-your-profile');
+                    }}
+                  >
+                    {t('header.my-profile')}
+                  </a>
+                </li>
+                <li className="govuk-header__navigation-item">
+                  <a
+                    id="support"
+                    className="govuk-header__link"
+                    href={config.get('supportUrl')}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    {t('header.support')}
+                  </a>
+                </li>
+                <li className="govuk-header__navigation-item">
+                  <a
+                    className="govuk-header__link"
+                    href="/logout"
+                    id="logout"
+                    onClick={async (e) => {
+                      e.preventDefault();
+                      await navigation.navigate('/logout');
+                    }}
+                  >
+                    {t('header.sign-out')}
+                  </a>
+                </li>
+              </ul>
+            </nav>
           </div>
         </div>
       </header>
@@ -90,22 +111,5 @@ const Header = () => {
     </>
   );
 };
-
-const StyledCol = styled.div`
-  @includes govuk-grid-column-one-half;
-  font-weight: bold;
-  padding-top: 5px;
-  text-align: right;
-  padding-bottom: 10px;
-`;
-
-const NavLink = styled.a`
-  margin-left: 20px;
-`;
-
-const HeaderContent = styled.div`
-  @includes: govuk-header__content;
-  width: 100%;
-`;
 
 export default Header;

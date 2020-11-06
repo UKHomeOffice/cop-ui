@@ -8,6 +8,7 @@ describe('Base routes', () => {
   it.each`
     path                            | authenticated
     ${'/'}                          | ${true}
+    ${'/dashboard'}                 | ${true}
     ${'/reports'}                   | ${true}
     ${'/tasks'}                     | ${true}
     ${'/cases'}                     | ${true}
