@@ -12,6 +12,7 @@ import { augmentRequest, interpolate } from '../../utils/formioSupport';
 import Logger from '../../utils/logger';
 import ApplicationSpinner from '../ApplicationSpinner';
 import FileService from '../../utils/FileService';
+import './DisplayForm.scss';
 
 Formio.use(gds);
 
