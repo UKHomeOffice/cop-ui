@@ -9,37 +9,44 @@ import Footer from '../footer';
 import Logger from '../../utils/logger';
 import AlertBanner from '../alert/AlertBanner';
 import { AlertContextProvider } from '../../utils/AlertContext';
+import NotFound from '../NotFound';
 
-const ErrorFallback = ({ resetErrorBoundary }) => {
+const ErrorFallback = ({ resetErrorBoundary, error }) => {
   const { t } = useTranslation();
-  return (
-    <div
-      className="govuk-width-container govuk-error-summary govuk-!-margin-top-5"
-      aria-labelledby="error-summary-title"
-      role="alert"
-      tabIndex="-1"
-      data-module="govuk-error-summary"
-    >
-      <h2 className="govuk-error-summary__title" id="error-summary-title">
-        {t('render.error.title')}
-      </h2>
-      <div className="govuk-error-summary__body">
-        <button
-          type="button"
-          className="govuk-button govuk-button--warning"
-          data-module="govuk-button"
-          onClick={resetErrorBoundary}
-        >
-          {t('render.error.retry')}
-        </button>
+
+  if (error.status === 404) {
+    return <NotFound />;
+  } 
+    return (
+      <div
+        className="govuk-width-container govuk-error-summary govuk-!-margin-top-5"
+        aria-labelledby="error-summary-title"
+        role="alert"
+        tabIndex="-1"
+        data-module="govuk-error-summary"
+      >
+        <h2 className="govuk-error-summary__title" id="error-summary-title">
+          {t('render.error.title')}
+        </h2>
+        <div className="govuk-error-summary__body">
+          <button
+            type="button"
+            className="govuk-button govuk-button--warning"
+            data-module="govuk-button"
+            onClick={resetErrorBoundary}
+          >
+            {t('render.error.retry')}
+          </button>
+        </div>
       </div>
-    </div>
-  );
+    );
+  
 };
 
 ErrorFallback.propTypes = {
   error: PropTypes.shape({
     message: PropTypes.string.isRequired,
+    status: PropTypes.number.isRequired,
   }).isRequired,
   resetErrorBoundary: PropTypes.func.isRequired,
 };
@@ -55,6 +62,7 @@ const Layout = ({ children }) => {
       <div className="app-container">
         <ErrorBoundary
           FallbackComponent={ErrorFallback}
+          error
           onError={(error, componentStack) => {
             Logger.error({
               token: keycloak.token,
