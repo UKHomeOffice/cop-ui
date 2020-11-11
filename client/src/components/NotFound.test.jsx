@@ -7,4 +7,9 @@ describe('Not Found page', () => {
     const wrapper = shallow(<NotFound />);
     expect(wrapper.exists()).toBe(true);
   });
+
+  it('matches snapshot', () => {
+    const wrapper = shallow(<NotFound />);
+    expect(wrapper).toMatchSnapshot();
+  });
 });
