@@ -13,11 +13,6 @@ const Home = () => {
 
   const axiosInstance = useAxios();
 
-  const [formsCount, setFormsCount] = useState({
-    isLoading: true,
-    count: 0,
-  });
-
   const [tasksCount, setTasksCount] = useState({
     isLoading: true,
     count: 0,
@@ -26,32 +21,6 @@ const Home = () => {
   useEffect(() => {
     const source = axios.CancelToken.source();
     if (axiosInstance) {
-      axiosInstance
-        .get('/camunda/engine-rest/process-definition/count', {
-          cancelToken: source.token,
-          params: {
-            startableInTasklist: true,
-            latestVersion: true,
-            active: true,
-          },
-        })
-        .then((response) => {
-          if (isMounted.current) {
-            setFormsCount({
-              isLoading: false,
-              count: response.data.count,
-            });
-          }
-        })
-        .catch(() => {
-          if (isMounted.current) {
-            setFormsCount({
-              isLoading: false,
-              count: 0,
-            });
-          }
-        });
-
       axiosInstance({
         method: 'POST',
         url: '/camunda/engine-rest/task/count',
@@ -88,7 +57,6 @@ const Home = () => {
     };
   }, [
     axiosInstance,
-    setFormsCount,
     setTasksCount,
     isMounted,
     keycloak.tokenParsed.groups,
@@ -104,41 +72,54 @@ const Home = () => {
         </div>
       </div>
       <div className="govuk-grid-row">
-        <div className="govuk-grid-column-one-half">
-          <Card
-            title={t('pages.home.card.forms.title')}
-            href="/forms"
-            isLoading={formsCount.isLoading}
-            count={formsCount.count}
-            handleClick={async () => {
-              await navigation.navigate('/forms');
-            }}
-            footer={t('pages.home.card.forms.footer')}
-          />
-        </div>
-        <div className="govuk-grid-column-one-half">
-          <Card
-            title={t('pages.home.card.tasks.title')}
-            href="/tasks"
-            count={tasksCount.count}
-            isLoading={tasksCount.isLoading}
-            handleClick={async () => {
-              await navigation.navigate('/tasks');
-            }}
-            footer={t('pages.home.card.tasks.footer')}
-          />
-        </div>
-        <div className="govuk-grid-column-one-half">
-          <Card
-            title={t('pages.home.card.reports.title')}
-            href="/reports"
-            isLoading={tasksCount.isLoading}
-            handleClick={async () => {
-              await navigation.navigate('/reports');
-            }}
-            footer={t('pages.home.card.reports.footer')}
-          />
-        </div>
+        <ul className="govuk-list">
+          <li>
+            <Card
+              title={t('pages.home.card.tasks.title')}
+              href="/tasks"
+              count={tasksCount.count}
+              isLoading={tasksCount.isLoading}
+              handleClick={async () => {
+                await navigation.navigate('/tasks');
+              }}
+              footer={t('pages.home.card.tasks.footer')}
+            />
+          </li>
+        </ul>
+      </div>
+      <div className="govuk-grid-row">
+        <ul className="govuk-list">
+          <li>
+            <Card
+              href="/forms"
+              handleClick={async () => {
+                await navigation.navigate('/forms');
+              }}
+              footer={t('pages.home.card.forms.footer')}
+              title={t('pages.home.card.forms.title')}
+            />
+          </li>
+          <li>
+            <Card
+              title={t('pages.home.card.cases.title')}
+              href="/cases"
+              handleClick={async () => {
+                await navigation.navigate('/cases');
+              }}
+              footer={t('pages.home.card.cases.footer')}
+            />
+          </li>
+          <li>
+            <Card
+              title={t('pages.home.card.reports.title')}
+              href="/reports"
+              handleClick={async () => {
+                await navigation.navigate('/reports');
+              }}
+              footer={t('pages.home.card.reports.footer')}
+            />
+          </li>
+        </ul>
       </div>
     </div>
   );

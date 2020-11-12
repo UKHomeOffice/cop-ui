@@ -5,29 +5,41 @@ import { useTranslation } from 'react-i18next';
 
 const Card = ({ count, footer, handleClick, href, isLoading, title }) => {
   const { t } = useTranslation();
-  const heading = count === 1 ? title.slice(0, -1) : title;
+  const renderTitle = () => {
+    if (count === null) {
+      return (
+        <h2 id="title" className="govuk-!-font-size-36 govuk-!-font-weight-bold">
+          {title}
+        </h2>
+      );
+    }
+    return (
+      <>
+        <h2 id="count" className="govuk-!-font-size-48 govuk-!-font-weight-bold">
+          {count}
+        </h2>
+        <span className="govuk-!-font-size-19 govuk-!-font-weight-bold">{title}</span>
+      </>
+    );
+  };
   return (
-    <div className="govuk-grid-row">
-      <div className="govuk-grid-column-full __card">
-        <a
-          href={href}
-          onClick={(e) => {
-            e.preventDefault();
-            handleClick();
-          }}
-          className="card__body"
-        >
-          {isLoading ? (
-            <span className="govuk-!-font-size-19 govuk-!-font-weight-bold">{t('loading')}</span>
-          ) : (
-            <h2 className="govuk-!-font-size-36 govuk-!-font-weight-bold">
-              {count === null ? heading : `${count} ${heading}`}
-            </h2>
-          )}
-        </a>
-        <div className="card__footer">
-          <p className="govuk-body">{footer}</p>
-        </div>
+    <div className="__card govuk-grid-column-one-third">
+      <a
+        href={href}
+        onClick={(e) => {
+          e.preventDefault();
+          handleClick();
+        }}
+        className="card__body"
+      >
+        {isLoading ? (
+          <span className="govuk-!-font-size-19 govuk-!-font-weight-bold">{t('loading')}</span>
+        ) : (
+          renderTitle()
+        )}
+      </a>
+      <div className="card__footer">
+        <p className="govuk-!-font-size-19">{footer}</p>
       </div>
     </div>
   );
@@ -35,10 +47,11 @@ const Card = ({ count, footer, handleClick, href, isLoading, title }) => {
 
 Card.defaultProps = {
   count: null,
+  isLoading: false,
 };
 
 Card.propTypes = {
-  isLoading: PropTypes.bool.isRequired,
+  isLoading: PropTypes.bool,
   count: PropTypes.number,
   href: PropTypes.string.isRequired,
   handleClick: PropTypes.func.isRequired,

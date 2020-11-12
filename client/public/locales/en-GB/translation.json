@@ -65,8 +65,12 @@
           "footer": "View operational reports"
         },
         "tasks": {
-          "title": "Tasks",
+          "title": "Tasks assigned",
           "footer": "Claim a task assigned to you or your groups"
+        },
+        "cases": {
+          "title": "Cases",
+          "footer": "View active or closed cases"
         }
       }
     },
