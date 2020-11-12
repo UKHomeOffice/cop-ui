@@ -45,6 +45,18 @@ const DisplayForm = ({
     submitted: false,
   });
 
+  const contexts = {
+    data: {
+      environmentContext: {
+        attachmentServiceUrl: '/files',
+        privateUiUrl: window.location.origin,
+        referenceDataUrl: '/refdata',
+        workflowUrl: '/camunda',
+      },
+    },
+  };
+  const [augmentedSubmission] = useState(_.merge(existingSubmission, contexts));
+
   useEffect(() => {
     if (form && form.name && time.end) {
       Logger.info({
@@ -110,6 +122,7 @@ const DisplayForm = ({
       roles: keycloak.tokenParsed.realm_access.roles,
       groups: keycloak.tokenParsed.groups,
     },
+    ...contexts.data,
     ...interpolateContext,
   });
   return (
@@ -135,7 +148,7 @@ const DisplayForm = ({
         onPrevPage={() => {
           window.scrollTo(0, 0);
         }}
-        submission={existingSubmission}
+        submission={augmentedSubmission}
         onSubmit={() => {
           setTime({
             ...time,
