@@ -1,18 +1,19 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 
 const NotFound = () => {
+  const { t } = useTranslation();
   return (
     <div className="govuk-width-container">
       <main className="govuk-main-wrapper govuk-main-wrapper--l" id="main-content" role="main">
         <div className="govuk-grid-row">
           <div className="govuk-grid-column-two-thirds">
-            <h1 className="govuk-heading-l">Page not found</h1>
-            <p className="govuk-body">If you typed the web address, check it is correct.</p>
+            <h1 className="govuk-heading-l">{t('render.page-not-found.title')}</h1>
+            <p className="govuk-body">{t('render.page-not-found.check-address')}</p>
             <p className="govuk-body">
-              If you pasted the web address, check you copied the entire address or use the link to
-              direct you to the{' '}
+              {t('render.page-not-found.paste-address')}{' '}
               <a href="/dashboard" className="govuk-link">
-                COP dashboard
+                {t('render.page-not-found.redirect-link')}
               </a>
               .
             </p>

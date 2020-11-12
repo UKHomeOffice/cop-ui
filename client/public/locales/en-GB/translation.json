@@ -26,7 +26,8 @@
     "page-not-found": {
       "title": "The page you requested could not be found.",
       "check-address": "If you typed the web address, check it is correct.",
-      "paste-address": "If you pasted the web address, check you copied the entire address."
+      "paste-address": "If you pasted the web address, check you copied the entire address or use the link to direct you to the",
+      "redirect-link": "COP dashboard"
     }
   },
   "header": {
