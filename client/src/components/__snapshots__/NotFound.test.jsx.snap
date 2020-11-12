@@ -1,0 +1,45 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Not Found page matches snapshot 1`] = `
+<div
+  className="govuk-width-container"
+>
+  <main
+    className="govuk-main-wrapper govuk-main-wrapper--l"
+    id="main-content"
+    role="main"
+  >
+    <div
+      className="govuk-grid-row"
+    >
+      <div
+        className="govuk-grid-column-two-thirds"
+      >
+        <h1
+          className="govuk-heading-l"
+        >
+          render.page-not-found.title
+        </h1>
+        <p
+          className="govuk-body"
+        >
+          render.page-not-found.check-address
+        </p>
+        <p
+          className="govuk-body"
+        >
+          render.page-not-found.paste-address
+           
+          <a
+            className="govuk-link"
+            href="/dashboard"
+          >
+            render.page-not-found.redirect-link
+          </a>
+          .
+        </p>
+      </div>
+    </div>
+  </main>
+</div>
+`;
