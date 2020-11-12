@@ -12,7 +12,7 @@ const NotFound = () => {
             <p className="govuk-body">{t('render.page-not-found.check-address')}</p>
             <p className="govuk-body">
               {t('render.page-not-found.paste-address')}{' '}
-              <a href="/dashboard" className="govuk-link">
+              <a href="/" className="govuk-link">
                 {t('render.page-not-found.redirect-link')}
               </a>
               .

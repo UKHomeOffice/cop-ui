@@ -30,12 +30,12 @@ exports[`Not Found page matches snapshot 1`] = `
         >
           render.page-not-found.paste-address
            
-          <a
+          <Link
             className="govuk-link"
             href="/dashboard"
           >
             render.page-not-found.redirect-link
-          </a>
+          </Link>
           .
         </p>
       </div>

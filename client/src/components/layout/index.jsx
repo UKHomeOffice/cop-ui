@@ -16,31 +16,30 @@ const ErrorFallback = ({ resetErrorBoundary, error }) => {
 
   if (error.status === 404) {
     return <NotFound />;
-  } 
-    return (
-      <div
-        className="govuk-width-container govuk-error-summary govuk-!-margin-top-5"
-        aria-labelledby="error-summary-title"
-        role="alert"
-        tabIndex="-1"
-        data-module="govuk-error-summary"
-      >
-        <h2 className="govuk-error-summary__title" id="error-summary-title">
-          {t('render.error.title')}
-        </h2>
-        <div className="govuk-error-summary__body">
-          <button
-            type="button"
-            className="govuk-button govuk-button--warning"
-            data-module="govuk-button"
-            onClick={resetErrorBoundary}
-          >
-            {t('render.error.retry')}
-          </button>
-        </div>
+  }
+  return (
+    <div
+      className="govuk-width-container govuk-error-summary govuk-!-margin-top-5"
+      aria-labelledby="error-summary-title"
+      role="alert"
+      tabIndex="-1"
+      data-module="govuk-error-summary"
+    >
+      <h2 id="error-summary-title" className="govuk-error-summary__title">
+        {t('render.error.title')}
+      </h2>
+      <div className="govuk-error-summary__body">
+        <button
+          type="button"
+          className="govuk-button govuk-button--warning"
+          data-module="govuk-button"
+          onClick={resetErrorBoundary}
+        >
+          {t('render.error.retry')}
+        </button>
       </div>
-    );
-  
+    </div>
+  );
 };
 
 ErrorFallback.propTypes = {
