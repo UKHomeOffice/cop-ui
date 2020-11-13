@@ -18,6 +18,10 @@ export default () => {
             value: JSON.stringify(submission.data),
             type: 'json',
           },
+          initiatedBy: {
+            value: submission.data.form.submittedBy,
+            type: 'string',
+          },
         };
         axiosInstance
           .post(`/camunda/engine-rest/process-definition/key/${id}/submit-form`, {
