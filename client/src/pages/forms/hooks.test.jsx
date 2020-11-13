@@ -25,6 +25,9 @@ describe('hooks', () => {
         {
           data: {
             test: 'test',
+            form: {
+              submittedBy: 'test@digital.homeoffice.gov.uk',
+            },
           },
         },
         {
@@ -52,6 +55,9 @@ describe('hooks', () => {
         {
           data: {
             test: 'test',
+            form: {
+              submittedBy: 'test@digital.homeoffice.gov.uk',
+            },
           },
         },
         {
