@@ -5,8 +5,7 @@ import AccessibilityStatement from '../components/AccessibilityStatement';
 import PrivacyAndCookiePolicy from '../components/PrivacyAndCookiePolicy';
 
 const routes = mount({
-  '/': redirect('/dashboard'),
-  '/dashboard': map((request, context) =>
+  '/': map((request, context) =>
     withAuthentication(
       route({
         title: context.t('pages.home.title'),
