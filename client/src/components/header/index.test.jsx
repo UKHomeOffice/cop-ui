@@ -21,6 +21,6 @@ describe('Header', () => {
   it('can click home', () => {
     const wrapper = mount(<Header />);
     wrapper.find('a[id="home"]').at(0).simulate('click');
-    expect(mockNavigate).toBeCalledWith('/dashboard');
+    expect(mockNavigate).toBeCalledWith('/');
   });
 });

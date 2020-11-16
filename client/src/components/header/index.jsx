@@ -17,11 +17,11 @@ const Header = () => {
           <div className="govuk-grid-row">
             <div className="govuk-grid-column-one-half">
               <a
-                href="/dashboard"
+                href="/"
                 id="home"
                 onClick={async (e) => {
                   e.preventDefault();
-                  await navigation.navigate('/dashboard');
+                  await navigation.navigate('/');
                 }}
                 className="govuk-header__link govuk-header__link--service-name"
               >
