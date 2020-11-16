@@ -1,5 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
+import { Link } from 'react-navi';
 
 const NotFound = () => {
   const { t } = useTranslation();
@@ -12,9 +13,9 @@ const NotFound = () => {
             <p className="govuk-body">{t('render.page-not-found.check-address')}</p>
             <p className="govuk-body">
               {t('render.page-not-found.paste-address')}{' '}
-              <a href="/" className="govuk-link">
+              <Link href="/" className="govuk-link">
                 {t('render.page-not-found.redirect-link')}
-              </a>
+              </Link>
               .
             </p>
           </div>
