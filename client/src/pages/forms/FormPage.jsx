@@ -14,6 +14,7 @@ const FormPage = ({ formId }) => {
   const isMounted = useIsMounted();
   const navigation = useNavigation();
   const [submitting, setSubmitting] = useState(false);
+  const [pageTitle, setPageTitle] = useState();
 
   const [form, setForm] = useState({
     isLoading: true,
@@ -24,6 +25,24 @@ const FormPage = ({ formId }) => {
 
   useEffect(() => {
     const source = axios.CancelToken.source();
+
+    const formPageTitle = async () => {
+      if (axiosInstance) {
+        try {
+          const formName = await axiosInstance.get(
+            `/camunda/engine-rest/process-definition/key/${formId}`,
+            {
+              cancelToken: source.token,
+            }
+          );
+          if (formName && formName.data) {
+            setPageTitle(formName.data.name);
+          }
+        } catch (e) {
+          setPageTitle();
+        }
+      }
+    };
 
     const loadForm = async () => {
       if (axiosInstance) {
@@ -61,6 +80,7 @@ const FormPage = ({ formId }) => {
     };
 
     loadForm().then(() => {});
+    formPageTitle();
     return () => {
       source.cancel('cancelling request');
     };
@@ -76,22 +96,25 @@ const FormPage = ({ formId }) => {
   const businessKeyComponent = FormioUtils.getComponent(form.data.components, 'businessKey');
 
   return (
-    <DisplayForm
-      submitting={submitting}
-      handleOnCancel={async () => {
-        await navigation.navigate('/forms');
-      }}
-      interpolateContext={{
-        businessKey: businessKeyComponent ? businessKeyComponent.defaultValue : null,
-      }}
-      form={form.data}
-      handleOnSubmit={(data) => {
-        setSubmitting(true);
-        submitForm(data, form.data, formId, () => {
-          setSubmitting(false);
-        });
-      }}
-    />
+    <>
+      <h1 className="govuk-heading-l">{pageTitle}</h1>
+      <DisplayForm
+        submitting={submitting}
+        handleOnCancel={async () => {
+          await navigation.navigate('/forms');
+        }}
+        interpolateContext={{
+          businessKey: businessKeyComponent ? businessKeyComponent.defaultValue : null,
+        }}
+        form={form.data}
+        handleOnSubmit={(data) => {
+          setSubmitting(true);
+          submitForm(data, form.data, formId, () => {
+            setSubmitting(false);
+          });
+        }}
+      />
+    </>
   );
 };
 
