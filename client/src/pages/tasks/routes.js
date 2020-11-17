@@ -8,6 +8,14 @@ const routes = mount({
   '/': map((request, context) =>
     withAuthentication(
       route({
+        title: context.t('pages.tasks.groups.title'),
+        view: <TasksListPage />,
+      })
+    )
+  ),
+  '/yours': map((request, context) =>
+    withAuthentication(
+      route({
         title: context.t('pages.tasks.yours.title'),
         view: <TasksListPage />,
       })

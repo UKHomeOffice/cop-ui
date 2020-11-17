@@ -30,16 +30,20 @@ describe('Home', () => {
       await wrapper.update();
     });
 
-    expect(wrapper.find(Card).length).toBe(4);
+    expect(wrapper.find(Card).length).toBe(5);
     const tasksCard = wrapper.find(Card).at(0);
-    const formsCard = wrapper.find(Card).at(1);
-    const casesCard = wrapper.find(Card).at(2);
-    const reportsCard = wrapper.find(Card).at(3);
+    const groupTasksCard = wrapper.find(Card).at(1);
+    const formsCard = wrapper.find(Card).at(2);
+    const casesCard = wrapper.find(Card).at(3);
+    const reportsCard = wrapper.find(Card).at(4);
 
-    expect(formsCard.find('h2').text()).toBe('pages.home.card.forms.title');
     expect(tasksCard.find('h2').text()).toBe('10');
-    expect(reportsCard.find('h2').text()).toBe('pages.home.card.reports.title');
+    expect(tasksCard.find('span').text()).toBe('pages.home.card.tasks.title');
+    expect(groupTasksCard.find('h2').text()).toBe('10');
+    expect(groupTasksCard.find('span').text()).toBe('pages.home.card.group-tasks.title');
+    expect(formsCard.find('h2').text()).toBe('pages.home.card.forms.title');
     expect(casesCard.find('h2').text()).toBe('pages.home.card.cases.title');
+    expect(reportsCard.find('h2').text()).toBe('pages.home.card.reports.title');
   });
 
   it('handles errors and sets it to zero', async () => {
@@ -53,16 +57,18 @@ describe('Home', () => {
       await wrapper.update();
     });
 
-    expect(wrapper.find(Card).length).toBe(4);
+    expect(wrapper.find(Card).length).toBe(5);
     const tasksCard = wrapper.find(Card).at(0);
-    const formsCard = wrapper.find(Card).at(1);
-    const casesCard = wrapper.find(Card).at(2);
-    const reportsCard = wrapper.find(Card).at(3);
+    const groupTasksCard = wrapper.find(Card).at(1);
+    const formsCard = wrapper.find(Card).at(2);
+    const casesCard = wrapper.find(Card).at(3);
+    const reportsCard = wrapper.find(Card).at(4);
 
-    expect(formsCard.find('h2').text()).toBe('pages.home.card.forms.title');
     expect(tasksCard.find('h2').text()).toBe('0');
-    expect(reportsCard.find('h2').text()).toBe('pages.home.card.reports.title');
+    expect(groupTasksCard.find('h2').text()).toBe('0');
+    expect(formsCard.find('h2').text()).toBe('pages.home.card.forms.title');
     expect(casesCard.find('h2').text()).toBe('pages.home.card.cases.title');
+    expect(reportsCard.find('h2').text()).toBe('pages.home.card.reports.title');
   });
 
   it('can handle onClick', async () => {
@@ -77,22 +83,26 @@ describe('Home', () => {
       await wrapper.update();
     });
 
-    expect(wrapper.find(Card).length).toBe(4);
+    expect(wrapper.find(Card).length).toBe(5);
     const tasksCard = wrapper.find(Card).at(0);
-    const formsCard = wrapper.find(Card).at(1);
-    const casesCard = wrapper.find(Card).at(2);
-    const reportsCard = wrapper.find(Card).at(3);
+    const groupTasksCard = wrapper.find(Card).at(1);
+    const formsCard = wrapper.find(Card).at(2);
+    const casesCard = wrapper.find(Card).at(3);
+    const reportsCard = wrapper.find(Card).at(4);
+
+    tasksCard.props().handleClick();
+    expect(mockNavigate).toBeCalledWith('/tasks/yours');
+
+    groupTasksCard.props().handleClick();
+    expect(mockNavigate).toBeCalledWith('/tasks');
 
     formsCard.props().handleClick();
     expect(mockNavigate).toBeCalledWith('/forms');
 
-    tasksCard.props().handleClick();
-    expect(mockNavigate).toBeCalledWith('/tasks');
+    casesCard.props().handleClick();
+    expect(mockNavigate).toBeCalledWith('/cases');
 
     reportsCard.props().handleClick();
     expect(mockNavigate).toBeCalledWith('/reports');
-
-    casesCard.props().handleClick();
-    expect(mockNavigate).toBeCalledWith('/cases');
   });
 });
