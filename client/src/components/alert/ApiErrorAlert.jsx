@@ -16,26 +16,24 @@ const ApiErrorAlert = ({ errors }) => {
     let errorMessage;
     switch (status) {
       case 409:
-        errorMessage = t('error.409');
+        errorMessage = t('error.api.409');
         break;
       case 404:
         errorMessage = `${message}`;
         break;
       case 401:
       case 403:
-        errorMessage = t('error.401/403');
+        errorMessage = t('error.api.401/403');
         break;
       case 400:
-        errorMessage = t('error.400');
+        errorMessage = t('error.api.400');
         break;
       default:
-        errorMessage = t('error.50x');
+        errorMessage = t('error.api.50x');
     }
     return (
       <li key={uuidv4()}>
-        <p className="govuk-error-message">
-          {errorMessage}
-        </p>
+        <p className="govuk-error-message">{errorMessage}</p>
       </li>
     );
   };
@@ -49,33 +47,33 @@ const ApiErrorAlert = ({ errors }) => {
       data-module="govuk-error-summary"
     >
       <h1 className="govuk-error-summary__title" id="error-summary-title">
-        {t('error.title')}
+        {t('error.api.title')}
       </h1>
       <div className="govuk-error-summary__body">
         <ul className="govuk-list govuk-error-summary__list">{errors.map(buildMessage)}</ul>
       </div>
       <p className="govuk-body">
-        {t('error.contact-support-prefix')}{' '}
+        {t('error.api.contact-support-prefix')}{' '}
         <a
           className="govuk-link"
           rel="noopener noreferrer"
           target="_blank"
           href={config.get('serviceDeskUrl')}
         >
-          {t('error.contact-support-link-text')}
+          {t('error.api.contact-support-link-text')}
         </a>
         .
       </p>
       <details className="govuk-details">
         <summary className="govuk-details__summary">
-          <span className="govuk-details__summary-text">{t('error.details')}</span>
+          <span className="govuk-details__summary-text">{t('error.api.details')}</span>
         </summary>
         <div className="govuk-details__text">
           <div className="govuk-error-summary__body">
             <ul className="govuk-list govuk-list--bullet govuk-error-summary__list">
               {errors.map((error) => {
                 const { path, status } = error;
-                return <li key={uuidv4()}>{t('error.error-info', { path, status })}</li>;
+                return <li key={uuidv4()}>{t('error.api.error-info', { path, status })}</li>;
               })}
             </ul>
           </div>

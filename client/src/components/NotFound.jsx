@@ -9,12 +9,12 @@ const NotFound = () => {
       <main className="govuk-main-wrapper govuk-main-wrapper--l" id="main-content" role="main">
         <div className="govuk-grid-row">
           <div className="govuk-grid-column-two-thirds">
-            <h1 className="govuk-heading-l">{t('render.page-not-found.title')}</h1>
-            <p className="govuk-body">{t('render.page-not-found.check-address')}</p>
+            <h1 className="govuk-heading-l">{t('error.page-not-found.title')}</h1>
+            <p className="govuk-body">{t('error.page-not-found.check-address')}</p>
             <p className="govuk-body">
-              {t('render.page-not-found.paste-address')}{' '}
+              {t('error.page-not-found.paste-address')}{' '}
               <Link href="/" className="govuk-link">
-                {t('render.page-not-found.redirect-link')}
+                {t('error.page-not-found.redirect-link')}
               </Link>
               .
             </p>

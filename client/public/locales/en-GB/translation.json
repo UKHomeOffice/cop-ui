@@ -2,23 +2,23 @@
   "keycloak": {
     "initialising": "Initialising single sign on"
   },
-  "warning": "Warning",
   "back": "Back",
   "loading": "Loading...",
   "submitting": "Submitting your form....",
+  "warning": "Warning",
   "error": {
-    "details": "Error details",
-    "title": "We are experiencing technical problems",
-    "409": "The form has already been submitted",
-    "401/403": "Unable to complete your request due to authorization issues.",
-    "400": "Unable to complete your request due to form submission issues.",
-    "50x": "Internal system error",
-    "contact-support-prefix": "Please",
-    "contact-support-link-text": "contact support",
-    "error-info": "URL {{path}} - Code: {{status}}"
-  },
-  "render": {
-    "error": {
+    "api": {
+      "details": "Error details",
+      "title": "We are experiencing technical problems",
+      "409": "The form has already been submitted",
+      "401/403": "Unable to complete your request due to authorization issues.",
+      "400": "Unable to complete your request due to form submission issues.",
+      "50x": "Internal system error",
+      "contact-support-prefix": "Please",
+      "contact-support-link-text": "contact support",
+      "error-info": "URL {{path}} - Code: {{status}}"
+    },
+    "page": {
       "title": "An exception occurred",
       "description": "Please contact support",
       "retry": "Retry operation"
@@ -49,90 +49,6 @@
   "pages": {
     "accessibility": {
       "title": "Accessibility Statement | Central Operations Platform"
-    },
-    "privacy": {
-      "title": "Privacy and Cookie Policy | Central Operations Platform"
-    },
-    "home": {
-      "title": "Central Operations Platform",
-      "heading": "Operational dashboard",
-      "card": {
-        "forms": {
-          "title": "Forms",
-          "footer": "Submit a form"
-        },
-        "reports": {
-          "title": "Reports",
-          "footer": "View operational reports"
-        },
-        "tasks": {
-          "title": "Tasks assigned",
-          "footer": "Claim a task assigned to you or your groups"
-        },
-        "cases": {
-          "title": "Cases",
-          "footer": "View active or closed cases"
-        }
-      }
-    },
-    "form": {
-      "title": "Form | Central Operations Platform",
-      "submission": {
-        "success-message": "Your form was successfully submitted",
-        "your-reference": "Your reference is {{reference}}",
-        "close": "Close confirmation"
-      },
-      "error": {
-        "form": {
-          "title": "There is a problem with your form"
-        }
-      }
-    },
-    "forms": {
-      "list": {
-        "heading": "Operational forms",
-        "size": "{{count}} forms",
-        "title": "Operational forms | Central Operations Platform",
-        "load-more": "Load more",
-        "search": "Search for a form",
-        "search-placeholder": "Search form name",
-        "search-hint": "Must be greater than 3 characters"
-      }
-    },
-    "report": {
-      "title": "Report | Central Operations Platform"
-    },
-    "reports": {
-      "list": {
-        "heading": "Operational reports",
-        "size": "{{count}} reports",
-        "title": "Operational reports | Central Operations Platform"
-      }
-    },
-    "task": {
-      "submission": {
-        "success-message": "You have successfully completed the task"
-      },
-      "actions": {
-        "complete": "Complete"
-      },
-      "no-form": "There is no form associated with this task",
-      "title": "Task",
-      "category": "Category",
-      "due": "Due",
-      "priority": "Priority",
-      "assignee": "Assignee",
-      "current-assignee": "You are the current assignee",
-      "unassigned": "Unassigned"
-    },
-    "tasks": {
-      "title": "Tasks",
-      "list": {
-        "status": "Open",
-        "heading": "Tasks",
-        "title": "Tasks to complete",
-        "size": "{{count}} tasks assigned to you"
-      }
     },
     "cases": {
       "title": "Cases",
@@ -166,8 +82,101 @@
         }
       }
     },
+    "form": {
+      "title": "Form | Central Operations Platform",
+      "submission": {
+        "success-message": "Your form was successfully submitted",
+        "your-reference": "Your reference is {{reference}}",
+        "close": "Close confirmation"
+      },
+      "error": {
+        "form": {
+          "title": "There is a problem with your form"
+        }
+      }
+    },
+    "forms": {
+      "list": {
+        "heading": "Operational forms",
+        "size": "{{count}} forms",
+        "title": "Operational forms | Central Operations Platform",
+        "load-more": "Load more",
+        "search": "Search for a form",
+        "search-placeholder": "Search form name",
+        "search-hint": "Must be greater than 3 characters"
+      }
+    },
+    "home": {
+      "title": "Central Operations Platform",
+      "heading": "Operational dashboard",
+      "card": {
+        "cases": {
+          "title": "Cases",
+          "footer": "View active or closed cases"
+        },
+        "forms": {
+          "title": "Forms",
+          "footer": "Submit a form"
+        },
+        "group-tasks": {
+          "title": "tasks assigned to your team",
+          "footer": "Overall tasks assigned to your team"
+        },
+        "reports": {
+          "title": "Reports",
+          "footer": "View operational reports"
+        },
+        "tasks": {
+          "title": "tasks assigned to you",
+          "footer": "Tasks assigned to you"
+        }
+      }
+    },
     "login": {
       "title": "Login"
+    },
+    "privacy": {
+      "title": "Privacy and Cookie Policy | Central Operations Platform"
+    },
+    "report": {
+      "title": "Report | Central Operations Platform"
+    },
+    "reports": {
+      "list": {
+        "heading": "Operational reports",
+        "size": "{{count}} reports",
+        "title": "Operational reports | Central Operations Platform"
+      }
+    },
+    "task": {
+      "submission": {
+        "success-message": "You have successfully completed the task"
+      },
+      "actions": {
+        "complete": "Complete"
+      },
+      "no-form": "There is no form associated with this task",
+      "title": "Task",
+      "category": "Category",
+      "due": "Due",
+      "priority": "Priority",
+      "assignee": "Assignee",
+      "current-assignee": "You are the current assignee",
+      "unassigned": "Unassigned"
+    },
+    "tasks": {
+      "yours": {
+        "caption": "Your tasks",
+        "heading": "{{count}} tasks assigned to you",
+        "status": "Open",
+        "title": "Your tasks | Central Operations Platform"
+      },
+      "groups": {
+        "caption": "Your team's tasks",
+        "heading": "{{count}} tasks assigned to your team",
+        "status": "Open",
+        "title": "Your team's tasks | Central Operations Platform"
+      }
     }
   }
 }
