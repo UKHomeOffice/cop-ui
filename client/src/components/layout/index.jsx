@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { useCurrentRoute, useNavigation } from 'react-navi';
+import { NotFoundBoundary, useCurrentRoute, useNavigation } from 'react-navi';
 import { ErrorBoundary } from 'react-error-boundary';
 import { useTranslation } from 'react-i18next';
 import { useKeycloak } from '@react-keycloak/web';
@@ -11,12 +11,9 @@ import AlertBanner from '../alert/AlertBanner';
 import { AlertContextProvider } from '../../utils/AlertContext';
 import NotFound from '../NotFound';
 
-const ErrorFallback = ({ resetErrorBoundary, error }) => {
+const ErrorFallback = ({ resetErrorBoundary }) => {
   const { t } = useTranslation();
 
-  if (error.status === 404) {
-    return <NotFound />;
-  }
   return (
     <div
       className="govuk-width-container govuk-error-summary govuk-!-margin-top-5"
@@ -45,7 +42,6 @@ const ErrorFallback = ({ resetErrorBoundary, error }) => {
 ErrorFallback.propTypes = {
   error: PropTypes.shape({
     message: PropTypes.string.isRequired,
-    status: PropTypes.number.isRequired,
   }).isRequired,
   resetErrorBoundary: PropTypes.func.isRequired,
 };
@@ -55,6 +51,16 @@ const Layout = ({ children }) => {
   const route = useCurrentRoute();
   const navigation = useNavigation();
   const { t } = useTranslation();
+  const NotFoundCallBack = (error, componentStack) => {
+    Logger.error({
+      token: keycloak.token,
+      message: error.message,
+      path: route.url.pathname,
+      componentStack,
+    });
+    return <NotFound />;
+  };
+
   return (
     <>
       <Header />
@@ -71,29 +77,31 @@ const Layout = ({ children }) => {
             });
           }}
         >
-          <main
-            className="govuk-main-wrapper govuk-main-wrapper--auto-spacing govuk-!-padding-top-3"
-            role="main"
-            id="main-content"
-          >
-            <AlertContextProvider>
-              <AlertBanner />
-              {route.url.pathname !== '/' ? (
-                // eslint-disable-next-line jsx-a11y/anchor-is-valid
-                <a
-                  href="#"
-                  onClick={async (e) => {
-                    e.preventDefault();
-                    await navigation.goBack();
-                  }}
-                  className="govuk-back-link"
-                >
-                  {t('back')}
-                </a>
-              ) : null}
-              {children}
-            </AlertContextProvider>
-          </main>
+          <NotFoundBoundary render={NotFoundCallBack}>
+            <main
+              className="govuk-main-wrapper govuk-main-wrapper--auto-spacing govuk-!-padding-top-3"
+              role="main"
+              id="main-content"
+            >
+              <AlertContextProvider>
+                <AlertBanner />
+                {route.url.pathname !== '/' ? (
+                  // eslint-disable-next-line jsx-a11y/anchor-is-valid
+                  <a
+                    href="#"
+                    onClick={async (e) => {
+                      e.preventDefault();
+                      await navigation.goBack();
+                    }}
+                    className="govuk-back-link"
+                  >
+                    {t('back')}
+                  </a>
+                ) : null}
+                {children}
+              </AlertContextProvider>
+            </main>
+          </NotFoundBoundary>
         </ErrorBoundary>
       </div>
       <Footer />
