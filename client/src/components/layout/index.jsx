@@ -23,7 +23,7 @@ const ErrorFallback = ({ resetErrorBoundary }) => {
       data-module="govuk-error-summary"
     >
       <h2 id="error-summary-title" className="govuk-error-summary__title">
-        {t('render.error.title')}
+        {t('error.page.title')}
       </h2>
       <div className="govuk-error-summary__body">
         <button

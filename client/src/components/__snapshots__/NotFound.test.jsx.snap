@@ -18,23 +18,23 @@ exports[`Not Found page matches snapshot 1`] = `
         <h1
           className="govuk-heading-l"
         >
-          render.page-not-found.title
+          error.page-not-found.title
         </h1>
         <p
           className="govuk-body"
         >
-          render.page-not-found.check-address
+          error.page-not-found.check-address
         </p>
         <p
           className="govuk-body"
         >
-          render.page-not-found.paste-address
+          error.page-not-found.paste-address
            
           <Link
             className="govuk-link"
             href="/"
           >
-            render.page-not-found.redirect-link
+            error.page-not-found.redirect-link
           </Link>
           .
         </p>
