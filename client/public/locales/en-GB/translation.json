@@ -161,12 +161,11 @@
       "unassigned": "Unassigned"
     },
     "tasks": {
-      "title": "Your tasks",
-      "list": {
+      "yours": {
+        "caption": "Your tasks",
+        "heading": "{{count}} tasks assigned to you",
         "status": "Open",
-        "heading": "Your tasks",
-        "title": "Your tasks | Central Operations Platform",
-        "size": "{{count}} tasks assigned to you"
+        "title": "Your tasks | Central Operations Platform"
       }
     }
   }
