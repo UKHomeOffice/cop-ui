@@ -91,7 +91,7 @@ describe('Home', () => {
     const reportsCard = wrapper.find(Card).at(4);
 
     tasksCard.props().handleClick();
-    expect(mockNavigate).toBeCalledWith('/tasks/yours');
+    expect(mockNavigate).toBeCalledWith('/tasks/your-tasks');
 
     groupTasksCard.props().handleClick();
     expect(mockNavigate).toBeCalledWith('/tasks');

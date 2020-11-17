@@ -76,11 +76,11 @@ const Home = () => {
           <li>
             <Card
               title={t('pages.home.card.tasks.title')}
-              href="/tasks/yours"
+              href="/tasks/your-tasks"
               count={tasksCount.count}
               isLoading={tasksCount.isLoading}
               handleClick={async () => {
-                await navigation.navigate('/tasks/yours');
+                await navigation.navigate('/tasks/your-tasks');
               }}
               footer={t('pages.home.card.tasks.footer')}
             />

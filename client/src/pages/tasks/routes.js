@@ -13,7 +13,7 @@ const routes = mount({
       })
     )
   ),
-  '/yours': map((request, context) =>
+  '/your-tasks': map((request, context) =>
     withAuthentication(
       route({
         title: context.t('pages.tasks.yours.title'),
