@@ -14,14 +14,13 @@ const routes = mount({
     )
   ),
   '/:reportName': map((request, context) =>
-  withAuthentication(
-    route({
-      title: context.t('pages.report.title'),
-      view: <PowerBIReport />,
-    })
-  )
-),
-
+    withAuthentication(
+      route({
+        title: context.t('pages.report.title'),
+        view: <PowerBIReport />,
+      })
+    )
+  ),
 });
 
 export default routes;
