@@ -53,6 +53,7 @@ jest.mock('react-navi', () => ({
     goBack: mockGoBack,
   }),
   NotFoundBoundary: ({ children }) => children,
+  Link: ({ children }) => children,
   useCurrentRoute: () => ({
     url: {
       pathname: 'test',

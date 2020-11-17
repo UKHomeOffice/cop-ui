@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { useCurrentRoute, useNavigation } from 'react-navi';
+import { NotFoundBoundary, useCurrentRoute, useNavigation } from 'react-navi';
 import { ErrorBoundary } from 'react-error-boundary';
 import { useTranslation } from 'react-i18next';
 import { useKeycloak } from '@react-keycloak/web';
@@ -9,9 +9,11 @@ import Footer from '../footer';
 import Logger from '../../utils/logger';
 import AlertBanner from '../alert/AlertBanner';
 import { AlertContextProvider } from '../../utils/AlertContext';
+import NotFound from '../NotFound';
 
 const ErrorFallback = ({ resetErrorBoundary }) => {
   const { t } = useTranslation();
+
   return (
     <div
       className="govuk-width-container govuk-error-summary govuk-!-margin-top-5"
@@ -20,7 +22,7 @@ const ErrorFallback = ({ resetErrorBoundary }) => {
       tabIndex="-1"
       data-module="govuk-error-summary"
     >
-      <h2 className="govuk-error-summary__title" id="error-summary-title">
+      <h2 id="error-summary-title" className="govuk-error-summary__title">
         {t('render.error.title')}
       </h2>
       <div className="govuk-error-summary__body">
@@ -49,44 +51,49 @@ const Layout = ({ children }) => {
   const route = useCurrentRoute();
   const navigation = useNavigation();
   const { t } = useTranslation();
+  const handleLogger = (error, componentStack) => {
+    Logger.error({
+      token: keycloak.token,
+      message: error.message,
+      path: route.url.pathname,
+      componentStack,
+    });
+  };
+  const NotFoundCallBack = (error, componentStack) => {
+    handleLogger(error, componentStack);
+    return <NotFound />;
+  };
+
   return (
     <>
       <Header />
       <div className="app-container">
-        <ErrorBoundary
-          FallbackComponent={ErrorFallback}
-          onError={(error, componentStack) => {
-            Logger.error({
-              token: keycloak.token,
-              message: error.message,
-              path: route.url.pathname,
-              componentStack,
-            });
-          }}
-        >
-          <main
-            className="govuk-main-wrapper govuk-main-wrapper--auto-spacing govuk-!-padding-top-3"
-            role="main"
-            id="main-content"
-          >
-            <AlertContextProvider>
-              <AlertBanner />
-              {route.url.pathname !== '/' ? (
-                // eslint-disable-next-line jsx-a11y/anchor-is-valid
-                <a
-                  href="#"
-                  onClick={async (e) => {
-                    e.preventDefault();
-                    await navigation.goBack();
-                  }}
-                  className="govuk-back-link"
-                >
-                  {t('back')}
-                </a>
-              ) : null}
-              {children}
-            </AlertContextProvider>
-          </main>
+        <ErrorBoundary FallbackComponent={ErrorFallback} onError={handleLogger}>
+          <NotFoundBoundary render={NotFoundCallBack}>
+            <main
+              className="govuk-main-wrapper govuk-main-wrapper--auto-spacing govuk-!-padding-top-3"
+              role="main"
+              id="main-content"
+            >
+              <AlertContextProvider>
+                <AlertBanner />
+                {route.url.pathname !== '/' ? (
+                  // eslint-disable-next-line jsx-a11y/anchor-is-valid
+                  <a
+                    href="#"
+                    onClick={async (e) => {
+                      e.preventDefault();
+                      await navigation.goBack();
+                    }}
+                    className="govuk-back-link"
+                  >
+                    {t('back')}
+                  </a>
+                ) : null}
+                {children}
+              </AlertContextProvider>
+            </main>
+          </NotFoundBoundary>
         </ErrorBoundary>
       </div>
       <Footer />
