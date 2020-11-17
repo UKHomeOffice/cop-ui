@@ -32,7 +32,7 @@ const ErrorFallback = ({ resetErrorBoundary }) => {
           data-module="govuk-button"
           onClick={resetErrorBoundary}
         >
-          {t('render.error.retry')}
+          {t('error.page.retry')}
         </button>
       </div>
     </div>
