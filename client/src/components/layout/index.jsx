@@ -68,7 +68,7 @@ const Layout = ({ children }) => {
     <>
       <Header />
       <div className="app-container">
-        <ErrorBoundary FallbackComponent={ErrorFallback} error onError={handleLogger}>
+        <ErrorBoundary FallbackComponent={ErrorFallback} onError={handleLogger}>
           <NotFoundBoundary render={NotFoundCallBack}>
             <main
               className="govuk-main-wrapper govuk-main-wrapper--auto-spacing govuk-!-padding-top-3"
