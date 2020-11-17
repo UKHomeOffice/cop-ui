@@ -51,13 +51,16 @@ const Layout = ({ children }) => {
   const route = useCurrentRoute();
   const navigation = useNavigation();
   const { t } = useTranslation();
-  const NotFoundCallBack = (error, componentStack) => {
+  const handleLogger = (error, componentStack) => {
     Logger.error({
       token: keycloak.token,
       message: error.message,
       path: route.url.pathname,
       componentStack,
     });
+  };
+  const NotFoundCallBack = (error, componentStack) => {
+    handleLogger(error, componentStack);
     return <NotFound />;
   };
 
@@ -65,18 +68,7 @@ const Layout = ({ children }) => {
     <>
       <Header />
       <div className="app-container">
-        <ErrorBoundary
-          FallbackComponent={ErrorFallback}
-          error
-          onError={(error, componentStack) => {
-            Logger.error({
-              token: keycloak.token,
-              message: error.message,
-              path: route.url.pathname,
-              componentStack,
-            });
-          }}
-        >
+        <ErrorBoundary FallbackComponent={ErrorFallback} error onError={handleLogger}>
           <NotFoundBoundary render={NotFoundCallBack}>
             <main
               className="govuk-main-wrapper govuk-main-wrapper--auto-spacing govuk-!-padding-top-3"
