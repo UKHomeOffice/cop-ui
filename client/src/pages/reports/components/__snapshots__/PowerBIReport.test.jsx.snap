@@ -1,0 +1,34 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`PowerBIReport Page matches snapshot 1`] = `
+<PowerBIReport>
+  <PowerBIReport__ReportContainer
+    mobileLayout={false}
+    style={
+      Object {
+        "height": "50vw",
+        "maxHeight": "70vmin",
+      }
+    }
+  >
+    <div
+      className="PowerBIReport__ReportContainer-aqcfpq-0 blDopH"
+      style={
+        Object {
+          "height": "50vw",
+          "maxHeight": "70vmin",
+        }
+      }
+    >
+      <PowerBIReport__Report
+        id="report"
+      >
+        <div
+          className="PowerBIReport__Report-aqcfpq-1 inYsHj"
+          id="report"
+        />
+      </PowerBIReport__Report>
+    </div>
+  </PowerBIReport__ReportContainer>
+</PowerBIReport>
+`;
