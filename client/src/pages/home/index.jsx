@@ -76,13 +76,25 @@ const Home = () => {
           <li>
             <Card
               title={t('pages.home.card.tasks.title')}
+              href="/tasks/your-tasks"
+              count={tasksCount.count}
+              isLoading={tasksCount.isLoading}
+              handleClick={async () => {
+                await navigation.navigate('/tasks/your-tasks');
+              }}
+              footer={t('pages.home.card.tasks.footer')}
+            />
+          </li>
+          <li>
+            <Card
+              title={t('pages.home.card.group-tasks.title')}
               href="/tasks"
               count={tasksCount.count}
               isLoading={tasksCount.isLoading}
               handleClick={async () => {
                 await navigation.navigate('/tasks');
               }}
-              footer={t('pages.home.card.tasks.footer')}
+              footer={t('pages.home.card.group-tasks.footer')}
             />
           </li>
         </ul>
