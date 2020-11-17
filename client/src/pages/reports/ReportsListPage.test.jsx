@@ -19,16 +19,16 @@ describe('ReportsListPage', () => {
   });
 
   it('can render a list of reports', async () => {
-    mockAxios.onGet('/reports/api/reports').reply(200, [
-      {
-        id: 'abc',
-        name: 'Test Report',
-        reportType: 'PowerBIReport',
-        embedUrl: 'https://app.powerbi.com/reportEmbed?reportId=123&groupId=456',
-        accessToken: 'def',
-        accessTokenExpiry: '2050-10-27T14:42:57Z',
-      },
-    ]);
+    const mockReport = {
+      accessToken: 'def',
+      accessTokenExpiry: '2050-10-27T14:42:57Z',
+      embedUrl: 'https://app.powerbi.com/reportEmbed?reportId=123&groupId=456',
+      id: 'abc',
+      name: 'Test Report',
+      reportType: 'PowerBIReport',
+    };
+
+    mockAxios.onGet('/reports/api/reports').reply(200, [mockReport]);
 
     const wrapper = mount(<ReportsListPage />);
 
@@ -46,7 +46,10 @@ describe('ReportsListPage', () => {
         preventDefault: () => {},
       });
 
-    expect(mockNavigate).toBeCalledWith('/reports/test-report');
+    const { accessTokenExpiry, reportType, ...state } = mockReport;
+    expect(mockNavigate).toBeCalledWith('/reports/test-report', {
+      state,
+    });
   });
 
   it('can handle an exception in loading', async () => {
