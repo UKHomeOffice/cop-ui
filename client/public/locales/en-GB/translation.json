@@ -118,6 +118,10 @@
           "title": "Forms",
           "footer": "Submit a form"
         },
+        "group-tasks": {
+          "title": "tasks assigned to your team",
+          "footer": "Overall tasks assigned to your team"
+        },
         "reports": {
           "title": "Reports",
           "footer": "View operational reports"
@@ -166,6 +170,12 @@
         "heading": "{{count}} tasks assigned to you",
         "status": "Open",
         "title": "Your tasks | Central Operations Platform"
+      },
+      "groups": {
+        "caption": "Your team's tasks",
+        "heading": "{{count}} tasks assigned to your team",
+        "status": "Open",
+        "title": "Your team's tasks | Central Operations Platform"
       }
     }
   }
