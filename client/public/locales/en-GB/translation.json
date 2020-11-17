@@ -146,6 +146,12 @@
         "heading": "Operational reports",
         "size": "{{count}} reports",
         "title": "Operational reports | Central Operations Platform"
+      },
+      "logo-bar": {
+        "intro": "To refresh the report, please return to",
+        "link": "the main reports page",
+        "outro": "and reselect it.",
+        "fullscreen": "View fullscreen"
       }
     },
     "task": {

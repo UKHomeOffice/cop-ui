@@ -3,11 +3,15 @@ import { redirect } from 'navi';
 import { useNavigation } from 'react-navi';
 import { factories, models, service } from 'powerbi-client';
 import styled from 'styled-components/macro';
+import LogoBar from './LogoBar';
 
 const PowerBIReport = () => {
+  const report = useRef(null);
   const reportContainer = useRef(null);
   const mobileLayout = window.innerWidth < 640;
   const state = useNavigation().extractState();
+  const setFullscreen = () => report.current && report.current.fullscreen();
+  const logoBar = mobileLayout ? null : <LogoBar setFullscreen={setFullscreen} />;
 
   useEffect(() => {
     if (!state) return redirect('/reports/');
@@ -29,7 +33,7 @@ const PowerBIReport = () => {
       },
       tokenType: models.TokenType.Embed,
     };
-    powerbi.embed(reportContainer.current, embedConfig);
+    report.current = powerbi.embed(reportContainer.current, embedConfig);
     return undefined;
   }, [mobileLayout, state]);
 
@@ -42,6 +46,7 @@ const PowerBIReport = () => {
       }}
     >
       <Report id="report" ref={reportContainer} />
+      {logoBar}
     </ReportContainer>
   );
 };
@@ -49,6 +54,7 @@ const PowerBIReport = () => {
 const ReportContainer = styled.div`
   height: ${(props) => (props.mobileLayout ? '50vh' : '50vw')};
   maxheight: ${(props) => (props.mobileLayout ? null : '70vmin')};
+  position: relative;
 `;
 
 const Report = styled.div`
