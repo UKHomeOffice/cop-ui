@@ -1,6 +1,5 @@
 import React, { useContext, useEffect, useRef } from 'react';
 import axios from 'axios';
-import { redirect } from 'navi';
 import { useNavigation } from 'react-navi';
 import { factories, models, service } from 'powerbi-client';
 import styled from 'styled-components/macro';
@@ -14,7 +13,8 @@ const PowerBIReport = () => {
   const userBranchName = useRef(null);
   const reportContainer = useRef(null);
   const mobileLayout = window.innerWidth < 640;
-  const state = useNavigation().extractState();
+  const navigation = useNavigation();
+  const state = navigation.extractState();
   const setFullscreen = () => report.current && report.current.fullscreen();
   const logoBar = mobileLayout ? null : <LogoBar setFullscreen={setFullscreen} />;
   const isMounted = useIsMounted();
@@ -32,11 +32,10 @@ const PowerBIReport = () => {
     'South',
     'South East and Europe',
   ];
+  if (!state) navigation.navigate('/reports');
 
   useEffect(() => {
-    if (!state) return redirect('/reports/');
     const source = axios.CancelToken.source();
-
     const onPageChange = (e) => {
       let target;
       let visualNumber;

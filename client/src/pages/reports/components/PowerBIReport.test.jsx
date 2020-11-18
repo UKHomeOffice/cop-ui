@@ -1,12 +1,8 @@
 import React from 'react';
 import { mount } from 'enzyme';
-import { redirect } from 'navi';
 import { useNavigation } from 'react-navi';
 import PowerBIReport from './PowerBIReport';
-
-jest.mock('navi', () => ({
-  redirect: jest.fn(),
-}));
+import { mockNavigate } from '../../../setupTests';
 
 describe('PowerBIReport Page', () => {
   it('renders without crashing', () => {
@@ -15,9 +11,8 @@ describe('PowerBIReport Page', () => {
   });
 
   it('redirects if no state found', () => {
-    redirect.mockReset();
     mount(<PowerBIReport />);
-    expect(redirect).toHaveBeenCalled();
+    expect(mockNavigate).toHaveBeenCalled();
   });
 
   it('renders a report div', () => {
