@@ -61,29 +61,32 @@ const ReportsListPage = () => {
       <div className="govuk-grid-row">
         <div className="govuk-grid-column-full">
           <ul className="govuk-list reports">
-            {reports.data.map(({ accessToken, embedUrl, id, name }) => {
-              const href = `/reports/${_.kebabCase(name)}`;
-              const state = {
-                accessToken,
-                embedUrl,
-                id,
-                name,
-              };
-              return (
-                <li key={id || name} className="list-item">
-                  <a
-                    onClick={async (e) => {
-                      e.preventDefault();
-                      await navigation.navigate(href, { state });
-                    }}
-                    className="govuk-link"
-                    href={href}
-                  >
-                    {name}
-                  </a>
-                </li>
-              );
-            })}
+            {reports.data
+              .filter(({ reportType }) => reportType === 'PowerBIReport')
+              .filter(({ name }) => name !== 'Report Usage Metrics Report')
+              .map(({ accessToken, embedUrl, id, name }) => {
+                const href = `/reports/${_.kebabCase(name)}`;
+                const state = {
+                  accessToken,
+                  embedUrl,
+                  id,
+                  name,
+                };
+                return (
+                  <li key={id || name} className="list-item">
+                    <a
+                      onClick={async (e) => {
+                        e.preventDefault();
+                        await navigation.navigate(href, { state });
+                      }}
+                      className="govuk-link"
+                      href={href}
+                    >
+                      {name}
+                    </a>
+                  </li>
+                );
+              })}
           </ul>
         </div>
       </div>
