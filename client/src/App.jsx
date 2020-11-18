@@ -1,4 +1,4 @@
-import React, { Suspense } from 'react';
+import React, { useContext, useEffect, Suspense } from 'react';
 import './App.scss';
 import { Router, View } from 'react-navi';
 import HelmetProvider from 'react-navi-helmet';
@@ -10,6 +10,7 @@ import { initAll } from 'govuk-frontend';
 import Layout from './components/layout';
 import routes from './routes';
 import ApplicationSpinner from './components/ApplicationSpinner';
+import { TeamContext } from './utils/TeamContext';
 
 if (window.ENVIRONMENT_CONFIG) {
   // eslint-disable-next-line no-console
@@ -44,6 +45,7 @@ const RouterView = () => {
   if (!initialized) {
     return <ApplicationSpinner translationKey="keycloak.initialising" />;
   }
+  const { setTeam } = useContext(TeamContext);
   initAll();
   return (
     <Router

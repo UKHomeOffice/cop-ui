@@ -4,10 +4,13 @@ import './index.scss';
 import './i18n';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
+import { TeamContextProvider } from './utils/TeamContext';
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <TeamContextProvider>
+      <App />
+    </TeamContextProvider>
   </React.StrictMode>,
   document.getElementById('root')
 );
