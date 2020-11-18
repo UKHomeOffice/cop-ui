@@ -17,7 +17,7 @@ describe('PowerBIReport Page', () => {
   it('redirects if no state found', () => {
     redirect.mockReset();
     mount(<PowerBIReport />);
-    expect(redirect).toHaveBeenCalledTimes(1);
+    expect(redirect).toHaveBeenCalled();
   });
 
   it('renders a report div', () => {

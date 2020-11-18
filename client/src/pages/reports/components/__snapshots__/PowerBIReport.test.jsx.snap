@@ -12,7 +12,7 @@ exports[`PowerBIReport Page matches snapshot 1`] = `
     }
   >
     <div
-      className="PowerBIReport__ReportContainer-aqcfpq-0 blDopH"
+      className="PowerBIReport__ReportContainer-aqcfpq-0 feUvJv"
       style={
         Object {
           "height": "50vw",
@@ -28,6 +28,31 @@ exports[`PowerBIReport Page matches snapshot 1`] = `
           id="report"
         />
       </PowerBIReport__Report>
+      <LogoBar
+        setFullscreen={[Function]}
+      >
+        <div
+          className="logo-bar"
+        >
+          <p>
+            pages.reports.logo-bar.intro
+             
+            <Link
+              href="/reports/"
+            >
+              pages.reports.logo-bar.link
+            </Link>
+             
+            pages.reports.logo-bar.outro
+          </p>
+          <button
+            onClick={[Function]}
+            type="button"
+          >
+            pages.reports.logo-bar.fullscreen
+          </button>
+        </div>
+      </LogoBar>
     </div>
   </PowerBIReport__ReportContainer>
 </PowerBIReport>
