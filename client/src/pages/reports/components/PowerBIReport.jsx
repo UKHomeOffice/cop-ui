@@ -33,8 +33,12 @@ const PowerBIReport = () => {
       },
       tokenType: models.TokenType.Embed,
     };
-    report.current = powerbi.embed(reportContainer.current, embedConfig);
-    return undefined;
+    if (reportContainer.current) {
+      report.current = powerbi.embed(reportContainer.current, embedConfig);
+    }
+    return () => {
+      reportContainer.current = null;
+    };
   }, [mobileLayout, state]);
 
   return (
