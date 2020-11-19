@@ -22,13 +22,14 @@ if (window.ENVIRONMENT_CONFIG) {
   // eslint-disable-next-line no-console
   console.log('Using non-built version of application');
   config.set({
-    authUrl: process.env.REACT_APP_AUTH_URL,
-    authRealm: process.env.REACT_APP_AUTH_REALM,
     authClientId: process.env.REACT_APP_AUTH_CLIENT_ID,
-    uiEnvironment: process.env.REACT_APP_UI_ENVIRONMENT,
-    uiVersion: process.env.REACT_APP_UI_VERSION,
+    authRealm: process.env.REACT_APP_AUTH_REALM,
+    authUrl: process.env.REACT_APP_AUTH_URL,
+    productPageUrl: process.env.REACT_APP_PRODUCT_PAGE_URL,
     serviceDeskUrl: process.env.REACT_APP_SERVICE_DESK_URL,
     supportUrl: process.env.REACT_APP_SUPPORT_URL,
+    uiEnvironment: process.env.REACT_APP_UI_ENVIRONMENT,
+    uiVersion: process.env.REACT_APP_UI_VERSION,
   });
 }
 

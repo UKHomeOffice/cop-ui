@@ -43,6 +43,7 @@ public class UIConfig implements WebMvcConfigurer {
                         jsonObject.put("authUrl", environment.getProperty("auth.url"));
                         jsonObject.put("authRealm", environment.getProperty("auth.realm"));
                         jsonObject.put("authClientId", environment.getProperty("auth.clientId"));
+                        jsonObject.put("productPageUrl", environment.getProperty("productPage.url"));
                         jsonObject.put("serviceDeskUrl", environment.getProperty("serviceDesk.url"));
                         jsonObject.put("supportUrl", environment.getProperty("support.url"));
                         jsonObject.put("uiEnvironment", environment.getProperty("uiEnvironment"));

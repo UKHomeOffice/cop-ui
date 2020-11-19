@@ -3,6 +3,7 @@ import axios from 'axios';
 import { useTranslation } from 'react-i18next';
 import { useNavigation } from 'react-navi';
 import _ from 'lodash';
+import config from 'react-global-configuration';
 import { useAxios } from '../../utils/hooks';
 import ApplicationSpinner from '../../components/ApplicationSpinner';
 import './ReportsListPage.scss';
@@ -60,6 +61,17 @@ const ReportsListPage = () => {
       </div>
       <div className="govuk-grid-row">
         <div className="govuk-grid-column-full">
+          <p className="govuk-body govuk-!-margin-bottom-8">
+            {t('pages.reports.further-info.intro')}{' '}
+            <a
+              href={`${config.get('productPageUrl')}/help/using-cop-reports/`}
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              {t('pages.reports.further-info.link')}
+            </a>{' '}
+            {t('pages.reports.further-info.outro')}
+          </p>
           <ul className="govuk-list reports">
             {reports.data
               .filter(({ reportType }) => reportType === 'PowerBIReport')
