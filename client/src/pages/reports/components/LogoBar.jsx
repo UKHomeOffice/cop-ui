@@ -10,12 +10,12 @@ const LogoBar = ({ setFullscreen }) => {
   return (
     <div className="logo-bar">
       <p>
-        {t('pages.reports.logo-bar.intro')}{' '}
-        <Link href="/reports/">{t('pages.reports.logo-bar.link')}</Link>{' '}
-        {t('pages.reports.logo-bar.outro')}
+        {t('pages.report.logo-bar.intro')}{' '}
+        <Link href="/reports/">{t('pages.report.logo-bar.link')}</Link>{' '}
+        {t('pages.report.logo-bar.outro')}
       </p>
       <button type="button" onClick={setFullscreen}>
-        {t('pages.reports.logo-bar.fullscreen')}
+        {t('pages.report.logo-bar.fullscreen')}
       </button>
     </div>
   );
