@@ -5,15 +5,15 @@ exports[`LogoBar matches snapshot 1`] = `
   className="logo-bar"
 >
   <p>
-    pages.reports.logo-bar.intro
+    pages.report.logo-bar.intro
      
     <Link
       href="/reports/"
     >
-      pages.reports.logo-bar.link
+      pages.report.logo-bar.link
     </Link>
      
-    pages.reports.logo-bar.outro
+    pages.report.logo-bar.outro
   </p>
   <button
     onClick={
@@ -31,7 +31,7 @@ exports[`LogoBar matches snapshot 1`] = `
     }
     type="button"
   >
-    pages.reports.logo-bar.fullscreen
+    pages.report.logo-bar.fullscreen
   </button>
 </div>
 `;

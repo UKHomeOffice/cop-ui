@@ -85,7 +85,7 @@ const ReportsListPage = () => {
                   name,
                 };
                 return (
-                  <li key={id || name} className="list-item">
+                  <li key={id} className="list-item">
                     <a
                       onClick={async (e) => {
                         e.preventDefault();

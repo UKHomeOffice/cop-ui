@@ -2,10 +2,12 @@ import React, { useContext, useEffect, useRef } from 'react';
 import axios from 'axios';
 import { useNavigation } from 'react-navi';
 import { factories, models, service } from 'powerbi-client';
-import styled from 'styled-components/macro';
+import styled from 'styled-components';
 import LogoBar from './LogoBar';
 import { TeamContext } from '../../../utils/TeamContext';
 import { useAxios, useIsMounted } from '../../../utils/hooks';
+
+export const setFullscreen = (currentReport) => currentReport && currentReport.fullscreen();
 
 const PowerBIReport = () => {
   const axiosInstance = useAxios();
@@ -15,8 +17,13 @@ const PowerBIReport = () => {
   const mobileLayout = window.innerWidth < 640;
   const navigation = useNavigation();
   const state = navigation.extractState();
-  const setFullscreen = () => report.current && report.current.fullscreen();
-  const logoBar = mobileLayout ? null : <LogoBar setFullscreen={setFullscreen} />;
+  const logoBar = mobileLayout ? null : (
+    <LogoBar
+      setFullscreen={() => {
+        setFullscreen(report.current);
+      }}
+    />
+  );
   const isMounted = useIsMounted();
   const visitedPages = [];
   const {
@@ -71,6 +78,7 @@ const PowerBIReport = () => {
             ],
           })
           .catch((errors) => {
+            // eslint-disable-next-line no-console
             console.log('Errors loading visuals:', errors);
           });
       });
@@ -118,6 +126,7 @@ const PowerBIReport = () => {
             embedReport();
           }
         } catch (e) {
+          // eslint-disable-next-line no-console
           console.log('Error fetching branch name:', e);
         }
       }
@@ -149,7 +158,7 @@ const PowerBIReport = () => {
   );
 };
 
-const ReportContainer = styled.div`
+export const ReportContainer = styled.div`
   height: ${(props) => (props.mobileLayout ? '50vh' : '50vw')};
   maxheight: ${(props) => (props.mobileLayout ? null : '70vmin')};
   position: relative;

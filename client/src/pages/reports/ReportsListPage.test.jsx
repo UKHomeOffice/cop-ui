@@ -40,7 +40,7 @@ describe('ReportsListPage', () => {
     expect(wrapper.find('h1').at(0).text()).toBe('pages.reports.list.heading');
 
     wrapper
-      .find('a')
+      .find('.list-item a')
       .at(0)
       .simulate('click', {
         preventDefault: () => {},

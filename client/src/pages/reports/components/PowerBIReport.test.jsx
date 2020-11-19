@@ -1,7 +1,8 @@
 import React from 'react';
 import { mount } from 'enzyme';
+import 'jest-styled-components';
 import { useNavigation } from 'react-navi';
-import PowerBIReport from './PowerBIReport';
+import PowerBIReport, { setFullscreen, ReportContainer } from './PowerBIReport';
 import { mockNavigate } from '../../../setupTests';
 
 describe('PowerBIReport Page', () => {
@@ -15,6 +16,12 @@ describe('PowerBIReport Page', () => {
     expect(mockNavigate).toHaveBeenCalled();
   });
 
+  it('runs fullscreen if there is a report', async () => {
+    const fullScreenMock = jest.fn();
+    setFullscreen({ fullscreen: fullScreenMock });
+    expect(fullScreenMock).toHaveBeenCalledTimes(1);
+  });
+
   it('renders a report div', () => {
     useNavigation.mockImplementation(() => ({
       extractState: () => ({
@@ -26,6 +33,11 @@ describe('PowerBIReport Page', () => {
     }));
     const wrapper = mount(<PowerBIReport />);
     expect(wrapper.find('#report').exists()).toEqual(true);
+  });
+
+  it('renders styles as expected', () => {
+    const wrapper = mount(<ReportContainer mobileLayout />);
+    expect(wrapper).toHaveStyleRule('height', '50vh');
   });
 
   it('matches snapshot', () => {
