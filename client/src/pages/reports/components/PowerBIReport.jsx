@@ -6,6 +6,7 @@ import styled from 'styled-components';
 import LogoBar from './LogoBar';
 import { TeamContext } from '../../../utils/TeamContext';
 import { useAxios, useIsMounted } from '../../../utils/hooks';
+import { mobileWidth } from '../../../utils/constants';
 
 export const setFullscreen = (currentReport) => currentReport && currentReport.fullscreen();
 
@@ -14,7 +15,7 @@ const PowerBIReport = () => {
   const report = useRef(null);
   const userBranchName = useRef(null);
   const reportContainer = useRef(null);
-  const mobileLayout = window.innerWidth < 640;
+  const mobileLayout = window.innerWidth < mobileWidth;
   const navigation = useNavigation();
   const state = navigation.extractState();
   const logoBar = mobileLayout ? null : (
