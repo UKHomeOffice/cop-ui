@@ -132,9 +132,7 @@ const PowerBIReport = () => {
         }
       }
     };
-
     fetchBranchName();
-    return undefined;
   }, [
     axiosInstance,
     branchId,
