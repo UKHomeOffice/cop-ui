@@ -9,7 +9,7 @@ const routes = mount({
     withAuthentication(
       route({
         title: context.t('pages.tasks.groups.title'),
-        view: <TasksListPage />,
+        view: <TasksListPage taskType="groups" />,
       })
     )
   ),
@@ -17,7 +17,7 @@ const routes = mount({
     withAuthentication(
       route({
         title: context.t('pages.tasks.yours.title'),
-        view: <TasksListPage />,
+        view: <TasksListPage taskType="yours" />,
       })
     )
   ),
