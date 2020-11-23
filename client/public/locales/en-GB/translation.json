@@ -139,13 +139,24 @@
       "title": "Privacy and Cookie Policy | Central Operations Platform"
     },
     "report": {
-      "title": "Report | Central Operations Platform"
+      "title": "Report | Central Operations Platform",
+      "logo-bar": {
+        "intro": "To refresh the report, please return to",
+        "link": "the main reports page",
+        "outro": "and reselect it.",
+        "fullscreen": "View fullscreen"
+      }
     },
     "reports": {
       "list": {
         "heading": "Operational reports",
         "size": "{{count}} reports",
         "title": "Operational reports | Central Operations Platform"
+      },
+      "further-info": {
+        "intro": "See our",
+        "link": "reports help guide (opens in new tab)",
+        "outro": "for further information."
       }
     },
     "task": {

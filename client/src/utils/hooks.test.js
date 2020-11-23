@@ -1,8 +1,11 @@
+import React from 'react';
+import PropTypes from 'prop-types';
 import axios from 'axios';
 import MockAdapter from 'axios-mock-adapter';
 import { renderHook } from '@testing-library/react-hooks';
-import { useAxios, useIsMounted } from './hooks';
+import { useAxios, useFetchTeam, useIsMounted } from './hooks';
 import Logger from './logger';
+import { TeamContext } from './TeamContext';
 
 jest.mock('./logger', () => ({
   error: jest.fn(),
@@ -12,7 +15,7 @@ jest.mock('react', () => {
   const ActualReact = require.requireActual('react');
   return {
     ...ActualReact,
-    useContext: () => ({ setAlertContext: jest.fn() }),
+    useContext: () => ({ setAlertContext: jest.fn(), setTeam: jest.fn() }),
   };
 });
 
@@ -46,5 +49,25 @@ describe('axios hooks', () => {
     mounted.unmount();
 
     expect(mounted.result.current.current).toBe(false);
+  });
+
+  it('can fetch team', async () => {
+    mockAxios
+      .onGet('/refdata/v2/entities/team?filter=id=eq.21')
+      .reply(200, {
+        data: [
+          {
+            branchid: 23,
+          },
+        ],
+      });
+    const { Provider } = TeamContext;
+    const wrapper = ({ children }) => (
+      <Provider value={{ team: { branchid: 23 } }}>{children}</Provider>
+    );
+    wrapper.propTypes = {
+      children: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.node), PropTypes.node]).isRequired,
+    };
+    renderHook(() => useFetchTeam(), { wrapper });
   });
 });

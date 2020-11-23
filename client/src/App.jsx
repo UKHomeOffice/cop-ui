@@ -10,6 +10,7 @@ import { initAll } from 'govuk-frontend';
 import Layout from './components/layout';
 import routes from './routes';
 import ApplicationSpinner from './components/ApplicationSpinner';
+import { useFetchTeam } from './utils/hooks';
 
 if (window.ENVIRONMENT_CONFIG) {
   // eslint-disable-next-line no-console
@@ -19,13 +20,14 @@ if (window.ENVIRONMENT_CONFIG) {
   // eslint-disable-next-line no-console
   console.log('Using non-built version of application');
   config.set({
-    authUrl: process.env.REACT_APP_AUTH_URL,
-    authRealm: process.env.REACT_APP_AUTH_REALM,
     authClientId: process.env.REACT_APP_AUTH_CLIENT_ID,
-    uiEnvironment: process.env.REACT_APP_UI_ENVIRONMENT,
-    uiVersion: process.env.REACT_APP_UI_VERSION,
+    authRealm: process.env.REACT_APP_AUTH_REALM,
+    authUrl: process.env.REACT_APP_AUTH_URL,
+    productPageUrl: process.env.REACT_APP_PRODUCT_PAGE_URL,
     serviceDeskUrl: process.env.REACT_APP_SERVICE_DESK_URL,
     supportUrl: process.env.REACT_APP_SUPPORT_URL,
+    uiEnvironment: process.env.REACT_APP_UI_ENVIRONMENT,
+    uiVersion: process.env.REACT_APP_UI_VERSION,
   });
 }
 
@@ -41,11 +43,11 @@ const keycloakProviderInitConfig = {
 const RouterView = () => {
   const { t } = useTranslation();
   const [keycloak, initialized] = useKeycloak();
-  if (!initialized) {
-    return <ApplicationSpinner translationKey="keycloak.initialising" />;
-  }
+
   initAll();
-  return (
+  useFetchTeam();
+
+  return initialized ? (
     <Router
       hashScrollBehavior="smooth"
       routes={routes}
@@ -55,6 +57,8 @@ const RouterView = () => {
         <View />
       </Layout>
     </Router>
+  ) : (
+    <ApplicationSpinner translationKey="keycloak.initialising" />
   );
 };
 const App = () => (

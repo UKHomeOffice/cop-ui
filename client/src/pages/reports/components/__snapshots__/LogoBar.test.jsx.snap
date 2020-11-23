@@ -1,0 +1,37 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`LogoBar matches snapshot 1`] = `
+<div
+  className="logo-bar"
+>
+  <p>
+    pages.report.logo-bar.intro
+     
+    <Link
+      href="/reports/"
+    >
+      pages.report.logo-bar.link
+    </Link>
+     
+    pages.report.logo-bar.outro
+  </p>
+  <button
+    onClick={
+      [MockFunction] {
+        "calls": Array [
+          Array [],
+        ],
+        "results": Array [
+          Object {
+            "type": "return",
+            "value": undefined,
+          },
+        ],
+      }
+    }
+    type="button"
+  >
+    pages.report.logo-bar.fullscreen
+  </button>
+</div>
+`;

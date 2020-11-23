@@ -1,0 +1,70 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`PowerBIReport Page matches snapshot 1`] = `
+.c0 {
+  height: 50vw;
+  maxheight: 70vmin;
+  position: relative;
+}
+
+.c1 {
+  width: 100%;
+  height: 100%;
+}
+
+<PowerBIReport>
+  <styled.div
+    mobileLayout={false}
+    style={
+      Object {
+        "height": "50vw",
+        "maxHeight": "70vmin",
+      }
+    }
+  >
+    <div
+      className="c0"
+      style={
+        Object {
+          "height": "50vw",
+          "maxHeight": "70vmin",
+        }
+      }
+    >
+      <styled.div
+        id="report"
+      >
+        <div
+          className="c1"
+          id="report"
+        />
+      </styled.div>
+      <LogoBar
+        setFullscreen={[Function]}
+      >
+        <div
+          className="logo-bar"
+        >
+          <p>
+            pages.report.logo-bar.intro
+             
+            <Link
+              href="/reports/"
+            >
+              pages.report.logo-bar.link
+            </Link>
+             
+            pages.report.logo-bar.outro
+          </p>
+          <button
+            onClick={[Function]}
+            type="button"
+          >
+            pages.report.logo-bar.fullscreen
+          </button>
+        </div>
+      </LogoBar>
+    </div>
+  </styled.div>
+</PowerBIReport>
+`;

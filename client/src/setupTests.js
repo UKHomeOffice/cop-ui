@@ -13,6 +13,7 @@ export const mockNavigate = jest.fn();
 export const mockLogout = jest.fn();
 export const mockLogin = jest.fn();
 export const mockGoBack = jest.fn();
+export const mockExtractState = jest.fn();
 
 jest.mock('@react-keycloak/web', () => ({
   KeycloakProvider: ({ children }) => children,
@@ -40,6 +41,7 @@ jest.mock('@react-keycloak/web', () => ({
         realm_access: {
           roles: ['test'],
         },
+        team_id: '21',
       },
       logout: mockLogout,
     },
@@ -48,10 +50,11 @@ jest.mock('@react-keycloak/web', () => ({
 }));
 
 jest.mock('react-navi', () => ({
-  useNavigation: () => ({
+  useNavigation: jest.fn(() => ({
+    extractState: mockExtractState,
     navigate: mockNavigate,
     goBack: mockGoBack,
-  }),
+  })),
   NotFoundBoundary: ({ children }) => children,
   Link: ({ children }) => children,
   useCurrentRoute: () => ({
@@ -88,3 +91,7 @@ global.MutationObserver = class {
 };
 
 global.URL.createObjectURL = jest.fn();
+
+global.crypto = {
+  getRandomValues: jest.fn(),
+};
