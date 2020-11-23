@@ -3,24 +3,35 @@ import { useTranslation } from 'react-i18next';
 import { useKeycloak } from '@react-keycloak/web';
 import axios from 'axios';
 import _ from 'lodash';
+import PropTypes from 'prop-types';
 import ApplicationSpinner from '../../components/ApplicationSpinner';
 import { useIsMounted, useAxios } from '../../utils/hooks';
 import TaskList from './components/TaskList';
+import TaskFilters from './components/TaskFilters';
 
-const TasksListPage = () => {
+const TasksListPage = ({ taskType }) => {
   const { t } = useTranslation();
   const [keycloak] = useKeycloak();
+  const [filters, setFilters] = useState({
+    sortBy: '',
+    groupBy: '',
+    search: '',
+  });
   const [data, setData] = useState({
     isLoading: true,
     tasks: [],
-    total: 0,
     page: 0,
+    total: 0,
     maxResults: 20,
-    search: '',
   });
   const isMounted = useIsMounted();
   const axiosInstance = useAxios();
   const dataRef = useRef(data.tasks);
+
+  const handleFilters = (e) => {
+    setFilters({ ...filters, [e.target.name]: e.target.value });
+  };
+
   useEffect(() => {
     const source = axios.CancelToken.source();
     const loadTasks = async () => {
@@ -95,7 +106,6 @@ const TasksListPage = () => {
               total: taskCountResponse.data.count,
               page: data.page,
               maxResults: data.maxResults,
-              search: data.search,
             });
           }
         } catch (e) {
@@ -105,7 +115,6 @@ const TasksListPage = () => {
             total: 0,
             page: data.page,
             maxResults: data.maxResults,
-            search: '',
           });
         }
       }
@@ -122,7 +131,7 @@ const TasksListPage = () => {
     keycloak.tokenParsed.email,
     keycloak.tokenParsed.groups,
     isMounted,
-    data.search,
+    filters,
   ]);
 
   if (data.isLoading) {
@@ -132,11 +141,14 @@ const TasksListPage = () => {
     <>
       <div className="govuk-grid-row">
         <div className="govuk-grid-column-two-thirds">
-          <span className="govuk-caption-l">{t('pages.tasks.yours.caption')}</span>
+          <span className="govuk-caption-l">{t(`pages.tasks.${taskType}.caption`)}</span>
           <h1 className="govuk-heading-l">
-            {t('pages.tasks.yours.heading', { count: data.total })}
+            {t(`pages.tasks.${taskType}.heading`, { count: data.total })}
           </h1>
         </div>
+      </div>
+      <div>
+        <TaskFilters search={filters.search} handleFilters={handleFilters} />
       </div>
       <div className="govuk-grid-row">
         <div className="govuk-grid-column-full">
@@ -168,6 +180,10 @@ const TasksListPage = () => {
       </div>
     </>
   );
+};
+
+TasksListPage.propTypes = {
+  taskType: PropTypes.string.isRequired,
 };
 
 export default TasksListPage;
