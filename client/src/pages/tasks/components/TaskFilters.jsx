@@ -9,13 +9,13 @@ const TaskFilters = ({ search, handleFilters }) => {
           <label className="govuk-label" htmlFor="sort">
             Sort by:
           </label>
-          <select className="govuk-select" id="sort" name="sort" onChange={handleFilters}>
-            <option value="oldest-due-date">Oldest due date</option>
-            <option value="latest-due-date">Latest due date</option>
-            <option value="oldest-created-date">Oldest created date</option>
-            <option value="latest-created-date">Latest created date</option>
-            <option value="highest-priority">Highest priority</option>
-            <option value="lowest-priority">Lowest priority</option>
+          <select className="govuk-select" id="sort" name="sortBy" onChange={handleFilters}>
+            <option value="asc-dueDate">Oldest due date</option>
+            <option value="desc-dueDate">Latest due date</option>
+            <option value="asc-created">Oldest created date</option>
+            <option value="desc-created">Latest created date</option>
+            <option value="asc-priority">Highest priority</option>
+            <option value="desc-priority">Lowest priority</option>
           </select>
         </div>
       </div>
