@@ -13,8 +13,8 @@ const TasksListPage = ({ taskType }) => {
   const { t } = useTranslation();
   const [keycloak] = useKeycloak();
   const [filters, setFilters] = useState({
-    sortBy: '',
-    groupBy: '',
+    sortBy: 'asc-dueDate',
+    groupBy: 'category',
     search: '',
   });
   const [data, setData] = useState({
