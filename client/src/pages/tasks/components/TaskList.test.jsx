@@ -1,7 +1,7 @@
 import React from 'react';
-import { shallow } from 'enzyme';
+import { shallow, mount } from 'enzyme';
+import { Link } from 'react-navi';
 import TaskList from './TaskList';
-import { mockNavigate } from '../../../setupTests';
 
 describe('TaskList', () => {
   it('renders without crashing', () => {
@@ -9,21 +9,18 @@ describe('TaskList', () => {
   });
 
   it('can click on a task', () => {
-    const wrapper = shallow(
+    const wrapper = mount(
       <TaskList
         tasks={[
           {
-            id: 'id',
-            name: 'name',
+            id: '1',
+            name: 'test',
+            due: '19/03/2020',
           },
         ]}
       />
     );
 
-    wrapper.find('a').simulate('click', {
-      preventDefault: () => {},
-    });
-
-    expect(mockNavigate).toBeCalledWith('/tasks/id');
+    expect(wrapper.find(Link).at(0).props().href).toBe('/tasks/1');
   });
 });

@@ -1,0 +1,15 @@
+$govuk-page-width: 1400px;
+
+@import '~govuk-frontend/govuk/all';
+
+.overdue {
+  color: govuk-colour("red");
+}
+
+.not-overdue {
+  color: govuk-colour("green");
+}
+
+.claim-task {
+  text-align: right;
+}
