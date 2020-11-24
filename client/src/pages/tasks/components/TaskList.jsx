@@ -19,7 +19,7 @@ const TaskList = ({ tasks }) => {
                     borderTop: 'none',
                   }}
                 />
-                <h2 className="app-task-list__section">{key}</h2>
+                <h2 className="app-task-list__section">{`${groupedByCategory[key].length} ${key} tasks`}</h2>
                 {groupedByCategory[key].map((task) => (
                   <TaskListItem
                     key={task.id}
