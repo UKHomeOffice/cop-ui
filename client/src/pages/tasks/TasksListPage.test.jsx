@@ -21,6 +21,7 @@ describe('TasksListPage', () => {
 
   it('renders application spinner when getting data', async () => {
     const wrapper = await mount(<TasksListPage />);
+
     expect(wrapper.find(ApplicationSpinner).exists()).toBe(true);
   });
 
@@ -31,11 +32,9 @@ describe('TasksListPage', () => {
         name: 'name',
       },
     ]);
-
     mockAxios.onPost('/camunda/engine-rest/task/count').reply(200, {
       count: 1,
     });
-
     const wrapper = await mount(<TasksListPage />);
 
     await act(async () => {
@@ -49,28 +48,29 @@ describe('TasksListPage', () => {
 
   it('can click on load more', async () => {
     const mockData = [];
-    // eslint-disable-next-line no-plusplus
-    for (let i = 0; i < 10; i++) {
+    for (let i = 0; i < 10; i += 1) {
       mockData.push({
         id: `id${Math.random() + Math.random()}`,
         name: `name${i}`,
         processDefinitionId: 'processDefinitionId0',
       });
     }
-
     mockAxios.onGet('/camunda/engine-rest/process-definition').reply(200, [
       {
         category: 'test',
         id: 'processDefinitionId0',
       },
     ]);
-
     mockAxios.onPost('/camunda/engine-rest/task').reply(200, mockData);
-
     mockAxios.onPost('/camunda/engine-rest/task/count').reply(200, {
       count: 100,
     });
-
+    mockAxios.onPost('/camunda/engine-rest/process-instance').reply(200, [
+      {
+        businessKey: 'TEST-BUSINESS-KEY',
+        processInstanceId: 'processDefinitionId0',
+      },
+    ]);
     const wrapper = await mount(<TasksListPage />);
 
     await act(async () => {
@@ -92,7 +92,8 @@ describe('TasksListPage', () => {
       await wrapper.update();
     });
 
+    // Following assertions look to see how many axios calls are made in the course of the test. In this instance, 2 GET requests and 6 POST requests are expected
     expect(mockAxios.history.get.length).toBe(2);
-    expect(mockAxios.history.post.length).toBe(4);
+    expect(mockAxios.history.post.length).toBe(6);
   });
 });

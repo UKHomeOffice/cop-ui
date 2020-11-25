@@ -9,12 +9,14 @@ dayjs.extend(relativeTime);
 
 describe('TaskListItem', () => {
   it('can render without error', () => {
-    shallow(<TaskListItem id="1" due="19/03/2020" name="test" assignee="test" />);
+    shallow(
+      <TaskListItem id="1" due="19/03/2020" name="test" assignee="test" businessKey="test" />
+    );
   });
 
   it('can click on a task', () => {
     const wrapper = mount(
-      <TaskListItem id="1" due="19/03/2020" name="test" assignee="test" />
+      <TaskListItem id="1" due="19/03/2020" name="test" assignee="test" businessKey="test" />
     );
 
     expect(wrapper.find(Link).at(0).props().href).toBe('/tasks/1');
@@ -22,9 +24,8 @@ describe('TaskListItem', () => {
 
   it('can render "Overdue" if task due date is in the past', () => {
     const wrapper = mount(
-      <TaskListItem id="1" due="2020/03/19" name="test" assignee="test" />
+      <TaskListItem id="1" due="2020/03/19" name="test" assignee="test" businessKey="test" />
     );
-
     const taskDue = wrapper
       .find('div[className="govuk-grid-column-one-third govuk-!-margin-bottom-3"]')
       .at(0);
@@ -34,8 +35,9 @@ describe('TaskListItem', () => {
 
   it('can render "Due" if task due date is in the future', () => {
     const tomorrow = dayjs().add(1, 'day').format();
-    const wrapper = mount(<TaskListItem id="1" due={tomorrow} name="test" assignee="test" />);
-
+    const wrapper = mount(
+      <TaskListItem id="1" due={tomorrow} name="test" assignee="test" businessKey="test" />
+    );
     const taskDue = wrapper
       .find('div[className="govuk-grid-column-one-third govuk-!-margin-bottom-3"]')
       .at(0);

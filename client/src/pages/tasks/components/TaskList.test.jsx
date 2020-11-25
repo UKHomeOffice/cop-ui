@@ -16,6 +16,7 @@ describe('TaskList', () => {
             id: '1',
             name: 'test',
             due: '19/03/2020',
+            businessKey: 'test',
           },
         ]}
       />

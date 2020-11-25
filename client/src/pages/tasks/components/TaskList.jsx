@@ -27,6 +27,7 @@ const TaskList = ({ tasks }) => {
                     due={task.due}
                     name={task.name}
                     assignee={task.assignee}
+                    businessKey={task.businessKey}
                   />
                 ))}
               </div>
