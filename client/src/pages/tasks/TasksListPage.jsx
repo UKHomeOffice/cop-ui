@@ -13,8 +13,8 @@ const TasksListPage = ({ taskType }) => {
   const { t } = useTranslation();
   const [keycloak] = useKeycloak();
   const [filters, setFilters] = useState({
-    sortBy: '',
-    groupBy: '',
+    sortBy: 'asc-dueDate',
+    groupBy: 'category',
     search: '',
   });
   const [data, setData] = useState({
@@ -27,9 +27,12 @@ const TasksListPage = ({ taskType }) => {
   const isMounted = useIsMounted();
   const axiosInstance = useAxios();
   const dataRef = useRef(data.tasks);
-
   const handleFilters = (e) => {
     setFilters({ ...filters, [e.target.name]: e.target.value });
+  };
+  const formatSortByValue = (sortValue) => {
+    const [sortOrder, sortVariable] = sortValue.split('-');
+    return { sortOrder, sortVariable };
   };
 
   useEffect(() => {
@@ -50,7 +53,7 @@ const TasksListPage = ({ taskType }) => {
               ],
             },
           });
-
+          const { sortOrder, sortVariable } = formatSortByValue(filters.sortBy);
           const tasksResponse = await axiosInstance({
             method: 'POST',
             url: '/camunda/engine-rest/task',
@@ -60,6 +63,12 @@ const TasksListPage = ({ taskType }) => {
               firstResult: data.page,
             },
             data: {
+              sorting: [
+                {
+                  sortBy: sortVariable,
+                  sortOrder,
+                },
+              ],
               orQueries: [
                 {
                   candidateGroups: keycloak.tokenParsed.groups,
@@ -68,11 +77,9 @@ const TasksListPage = ({ taskType }) => {
               ],
             },
           });
-
           const processDefinitionIds = _.uniq(
             tasksResponse.data.map((task) => task.processDefinitionId)
           );
-
           const definitionResponse = await axiosInstance({
             method: 'GET',
             url: '/camunda/engine-rest/process-definition',
@@ -83,7 +90,7 @@ const TasksListPage = ({ taskType }) => {
 
           if (isMounted.current) {
             const merged = _.values(
-              _.merge(_.keyBy(dataRef.current, 'id'), _.keyBy(tasksResponse.data, 'id'))
+              _.merge(_.keyBy(tasksResponse.data, 'id'), _.keyBy(dataRef.current, 'id'))
             );
 
             if (definitionResponse.data && definitionResponse.data.length !== 0) {
@@ -131,12 +138,14 @@ const TasksListPage = ({ taskType }) => {
     keycloak.tokenParsed.email,
     keycloak.tokenParsed.groups,
     isMounted,
-    filters,
+    filters.sortBy,
+    filters.search,
   ]);
 
   if (data.isLoading) {
     return <ApplicationSpinner />;
   }
+
   return (
     <>
       <div className="govuk-grid-row">

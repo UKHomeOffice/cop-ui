@@ -11,7 +11,6 @@ dayjs.extend(relativeTime);
 const TaskListItem = ({ id, due, name, assignee }) => {
   const [keycloak] = useKeycloak();
   const currentUser = keycloak.tokenParsed.email;
-
   const isOverDue = () => {
     if (dayjs(due).fromNow().includes('ago')) {
       return (
@@ -22,36 +21,31 @@ const TaskListItem = ({ id, due, name, assignee }) => {
           {`Overdue ${dayjs(due).fromNow()}`}
         </span>
       );
-    } 
-      return (
-        <span
-          aria-label={`due ${dayjs(due).fromNow()}`}
-          className="govuk-!-font-size-19 govuk-!-font-weight-bold not-overdue"
-        >
-          {`Due ${dayjs(due).fromNow()}`}
-        </span>
-      );
-    
+    }
+    return (
+      <span
+        aria-label={`due ${dayjs(due).fromNow()}`}
+        className="govuk-!-font-size-19 govuk-!-font-weight-bold not-overdue"
+      >
+        {`Due ${dayjs(due).fromNow()}`}
+      </span>
+    );
   };
-
   const isAssigned = () => {
     if (!assignee) {
       return 'Unassigned';
-    } if (assignee === currentUser) {
+    }
+    if (assignee === currentUser) {
       return 'Assigned to you';
-    } 
-      return assignee;
-    
+    }
+    return assignee;
   };
-
   const handleClaim = (taskId) => {
     return taskId;
   };
-
   const handleUnclaim = (taskId) => {
     return taskId;
   };
-
   const canClaimTask = () => {
     if (assignee === null || assignee !== currentUser) {
       return (
@@ -64,18 +58,17 @@ const TaskListItem = ({ id, due, name, assignee }) => {
           Claim
         </button>
       );
-    } 
-      return (
-        <button
-          type="submit"
-          id="actionButton"
-          className="govuk-button"
-          onClick={() => handleUnclaim(id)}
-        >
-          Unclaim
-        </button>
-      );
-    
+    }
+    return (
+      <button
+        type="submit"
+        id="actionButton"
+        className="govuk-button"
+        onClick={() => handleUnclaim(id)}
+      >
+        Unclaim
+      </button>
+    );
   };
 
   return (
