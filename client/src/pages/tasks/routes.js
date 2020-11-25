@@ -24,7 +24,7 @@ const routes = mount({
   '/:taskId': map((request, context) =>
     withAuthentication(
       route({
-        title: context.t('pages.task.yours.title'),
+        title: context.t('pages.task.title'),
         view: <TaskPage taskId={request.params.taskId} />,
       })
     )

@@ -182,7 +182,7 @@ const TasksListPage = ({ taskType }) => {
       </div>
       <div className="govuk-grid-row">
         <div className="govuk-grid-column-full">
-          <TaskList tasks={data.tasks} />
+          <TaskList tasks={data.tasks} groupBy={filters.groupBy} />
           {data.total > data.maxResults && data.tasks.length < data.total ? (
             <ul className="govuk-list">
               <li>

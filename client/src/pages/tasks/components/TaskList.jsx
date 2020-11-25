@@ -3,13 +3,23 @@ import PropTypes from 'prop-types';
 import './TaskList.scss';
 import _ from 'lodash';
 import TaskListItem from './TaskListItem';
+import { formatPriority } from '../utils';
 
-const TaskList = ({ tasks }) => {
-  const groupedByCategory = _.groupBy(tasks, (x) => x.category);
+const TaskList = ({ tasks, groupBy }) => {
+  const groupedByCategory = _.groupBy(tasks, (x) => x[groupBy]);
+  const isPriority = (keyName) => {
+    if (groupBy === 'priority') {
+      // Use parseInt as formatPriority takes a number as an argument
+      return formatPriority(parseInt(keyName, 10));
+    }
+    return keyName;
+  };
+
   return (
     <div>
       <ul className="app-task-list">
         {Object.keys(groupedByCategory).map((key) => {
+          const numberOfTasks = groupedByCategory[key].length;
           return (
             <div key={key} className="govuk-grid-row">
               <div className="govuk-grid-column-full">
@@ -19,7 +29,9 @@ const TaskList = ({ tasks }) => {
                     borderTop: 'none',
                   }}
                 />
-                <h2 className="app-task-list__section">{`${groupedByCategory[key].length} ${key} tasks`}</h2>
+                <h2 className="app-task-list__section">{`${numberOfTasks} ${isPriority(key)} ${
+                  numberOfTasks < 2 ? 'task' : 'tasks'
+                }`}</h2>
                 {groupedByCategory[key].map((task) => (
                   <TaskListItem
                     key={task.id}
@@ -50,6 +62,7 @@ TaskList.propTypes = {
       name: PropTypes.string.isRequired,
     })
   ),
+  groupBy: PropTypes.string.isRequired,
 };
 
 export default TaskList;
