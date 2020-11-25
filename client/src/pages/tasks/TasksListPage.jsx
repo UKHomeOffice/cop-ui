@@ -27,11 +27,9 @@ const TasksListPage = ({ taskType }) => {
   const isMounted = useIsMounted();
   const axiosInstance = useAxios();
   const dataRef = useRef(data.tasks);
-
   const handleFilters = (e) => {
     setFilters({ ...filters, [e.target.name]: e.target.value });
   };
-
   const formatSortByValue = (sortValue) => {
     const [sortOrder, sortVariable] = sortValue.split('-');
     return { sortOrder, sortVariable };
@@ -55,9 +53,7 @@ const TasksListPage = ({ taskType }) => {
               ],
             },
           });
-
           const { sortOrder, sortVariable } = formatSortByValue(filters.sortBy);
-
           const tasksResponse = await axiosInstance({
             method: 'POST',
             url: '/camunda/engine-rest/task',
@@ -81,11 +77,9 @@ const TasksListPage = ({ taskType }) => {
               ],
             },
           });
-
           const processDefinitionIds = _.uniq(
             tasksResponse.data.map((task) => task.processDefinitionId)
           );
-
           const definitionResponse = await axiosInstance({
             method: 'GET',
             url: '/camunda/engine-rest/process-definition',
