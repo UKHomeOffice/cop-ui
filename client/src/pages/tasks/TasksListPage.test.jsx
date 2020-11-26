@@ -9,10 +9,19 @@ import TaskList from './components/TaskList';
 
 describe('TasksListPage', () => {
   const mockAxios = new MockAdapter(axios);
+  let mockData;
 
   beforeEach(() => {
     jest.spyOn(console, 'error').mockImplementation(() => {});
     mockAxios.reset();
+    mockData = [];
+    for (let i = 0; i < 10; i += 1) {
+      mockData.push({
+        id: `id${Math.random() + Math.random()}`,
+        name: `name${i}`,
+        processDefinitionId: 'processDefinitionId0',
+      });
+    }
   });
 
   it('renders without crashing', () => {
@@ -47,14 +56,7 @@ describe('TasksListPage', () => {
   });
 
   it('can click on load more', async () => {
-    const mockData = [];
-    for (let i = 0; i < 10; i += 1) {
-      mockData.push({
-        id: `id${Math.random() + Math.random()}`,
-        name: `name${i}`,
-        processDefinitionId: 'processDefinitionId0',
-      });
-    }
+    // This call is required in order to map a category to each task in mockData
     mockAxios.onGet('/camunda/engine-rest/process-definition').reply(200, [
       {
         category: 'test',
@@ -65,6 +67,7 @@ describe('TasksListPage', () => {
     mockAxios.onPost('/camunda/engine-rest/task/count').reply(200, {
       count: 100,
     });
+    // This call is required in order to map a business key to each task in mockData
     mockAxios.onPost('/camunda/engine-rest/process-instance').reply(200, [
       {
         businessKey: 'TEST-BUSINESS-KEY',
