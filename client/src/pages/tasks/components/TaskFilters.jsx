@@ -26,7 +26,7 @@ const TaskFilters = ({ search, handleFilters }) => {
           </label>
           <select className="govuk-select" id="group" name="groupBy" onChange={handleFilters}>
             <option value="category">Category</option>
-            <option value="bf-reference">BF Reference</option>
+            <option value="businessKey">BF Reference</option>
             <option value="priority">Priority</option>
             <option value="assignee">Assignee</option>
           </select>

@@ -5,7 +5,7 @@ import TaskList from './TaskList';
 
 describe('TaskList', () => {
   it('renders without crashing', () => {
-    shallow(<TaskList />);
+    shallow(<TaskList groupBy="category" />);
   });
 
   it('can click on a task', () => {
@@ -16,8 +16,10 @@ describe('TaskList', () => {
             id: '1',
             name: 'test',
             due: '19/03/2020',
+            businessKey: 'test',
           },
         ]}
+        groupBy="category"
       />
     );
 

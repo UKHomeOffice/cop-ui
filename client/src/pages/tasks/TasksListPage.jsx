@@ -77,6 +77,7 @@ const TasksListPage = ({ taskType }) => {
               ],
             },
           });
+          // This generates a unique list of process definition ids to use for a call to camunda for task categories
           const processDefinitionIds = _.uniq(
             tasksResponse.data.map((task) => task.processDefinitionId)
           );
@@ -85,6 +86,17 @@ const TasksListPage = ({ taskType }) => {
             url: '/camunda/engine-rest/process-definition',
             params: {
               processDefinitionIdIn: processDefinitionIds.toString(),
+            },
+          });
+          // This generates a unique list of process instance ids to use for a call to camunda for task business keys
+          const processInstanceIds = _.uniq(
+            tasksResponse.data.map((task) => task.processInstanceId)
+          );
+          const processInstanceResponse = await axiosInstance({
+            method: 'POST',
+            url: '/camunda/engine-rest/process-instance',
+            data: {
+              processInstanceIds,
             },
           });
 
@@ -99,9 +111,18 @@ const TasksListPage = ({ taskType }) => {
                   definitionResponse.data,
                   (definition) => definition.id === task.processDefinitionId
                 );
+                const processInstance = _.find(
+                  processInstanceResponse.data,
+                  (instance) => instance.id === task.processInstanceId
+                );
+
                 if (processDefinition) {
                   // eslint-disable-next-line no-param-reassign
                   task.category = processDefinition.category;
+                }
+                if (processInstance) {
+                  // eslint-disable-next-line no-param-reassign
+                  task.businessKey = processInstance.businessKey;
                 }
               });
             }
@@ -161,7 +182,7 @@ const TasksListPage = ({ taskType }) => {
       </div>
       <div className="govuk-grid-row">
         <div className="govuk-grid-column-full">
-          <TaskList tasks={data.tasks} />
+          <TaskList tasks={data.tasks} groupBy={filters.groupBy} />
           {data.total > data.maxResults && data.tasks.length < data.total ? (
             <ul className="govuk-list">
               <li>

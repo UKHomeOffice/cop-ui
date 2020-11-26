@@ -8,7 +8,7 @@ import { useKeycloak } from '@react-keycloak/web';
 
 dayjs.extend(relativeTime);
 
-const TaskListItem = ({ id, due, name, assignee }) => {
+const TaskListItem = ({ id, due, name, assignee, businessKey }) => {
   const [keycloak] = useKeycloak();
   const currentUser = keycloak.tokenParsed.email;
   const isOverDue = () => {
@@ -74,7 +74,7 @@ const TaskListItem = ({ id, due, name, assignee }) => {
   return (
     <div className="govuk-grid-row govuk-!-margin-bottom-3">
       <div className="govuk-grid-column-one-half govuk-!-margin-bottom-3">
-        <span className="govuk-caption-m">{id}</span>
+        <span className="govuk-caption-m">{businessKey}</span>
         <span className="govuk-!-font-size-19 govuk-!-font-weight-bold">
           <Link
             className="govuk-link govuk-!-font-size-19"
@@ -107,6 +107,7 @@ TaskListItem.propTypes = {
   due: PropTypes.string.isRequired,
   name: PropTypes.string.isRequired,
   assignee: PropTypes.string,
+  businessKey: PropTypes.string.isRequired,
 };
 
 export default TaskListItem;
