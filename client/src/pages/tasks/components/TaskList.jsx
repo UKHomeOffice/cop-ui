@@ -6,7 +6,7 @@ import TaskListItem from './TaskListItem';
 import { formatPriority } from '../utils';
 
 const TaskList = ({ tasks, groupBy }) => {
-  const groupedByCategory = _.groupBy(tasks, (x) => x[groupBy]);
+  const tasksGroupedBy = _.groupBy(tasks, (x) => x[groupBy]);
   const isPriority = (keyName) => {
     if (groupBy === 'priority') {
       // Use parseInt as formatPriority takes a number as an argument
@@ -18,8 +18,8 @@ const TaskList = ({ tasks, groupBy }) => {
   return (
     <div>
       <ul className="app-task-list">
-        {Object.keys(groupedByCategory).map((key) => {
-          const numberOfTasks = groupedByCategory[key].length;
+        {Object.keys(tasksGroupedBy).map((key) => {
+          const numberOfTasks = tasksGroupedBy[key].length;
           return (
             <div key={key} className="govuk-grid-row">
               <div className="govuk-grid-column-full">
@@ -32,7 +32,7 @@ const TaskList = ({ tasks, groupBy }) => {
                 <h2 className="app-task-list__section">{`${numberOfTasks} ${isPriority(key)} ${
                   numberOfTasks < 2 ? 'task' : 'tasks'
                 }`}</h2>
-                {groupedByCategory[key].map((task) => (
+                {tasksGroupedBy[key].map((task) => (
                   <TaskListItem
                     key={task.id}
                     id={task.id}
