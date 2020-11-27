@@ -20,10 +20,10 @@ const TasksListPage = ({ taskType }) => {
   const [data, setData] = useState({
     isLoading: true,
     tasks: [],
-    page: 0,
-    total: 0,
-    maxResults: 20,
   });
+  const [page, setPage] = useState(0);
+  const [taskCount, setTaskCount] = useState(0);
+  const maxResults = 20;
   const isMounted = useIsMounted();
   const axiosInstance = useAxios();
   const handleFilters = (e) => {
@@ -39,6 +39,17 @@ const TasksListPage = ({ taskType }) => {
     const loadTasks = async () => {
       if (axiosInstance) {
         try {
+          /* taskTypePayload uses the taskType prop to query either the user assigned tasks or 
+          their assigned and group assigned tasks */
+          const taskTypePayload =
+            taskType === 'yours'
+              ? {
+                  assignee: keycloak.tokenParsed.email,
+                }
+              : {
+                  assignee: keycloak.tokenParsed.email,
+                  candidateGroups: keycloak.tokenParsed.groups,
+                };
           const taskCountResponse = await axiosInstance({
             method: 'POST',
             url: '/camunda/engine-rest/task/count',
@@ -46,10 +57,10 @@ const TasksListPage = ({ taskType }) => {
             data: {
               orQueries: [
                 {
-                  candidateGroups: keycloak.tokenParsed.groups,
-                  assignee: keycloak.tokenParsed.email,
+                  ...taskTypePayload,
                 },
               ],
+              nameLike: `%${filters.search}%`,
             },
           });
           const { sortOrder, sortVariable } = formatSortByValue(filters.sortBy);
@@ -58,8 +69,8 @@ const TasksListPage = ({ taskType }) => {
             url: '/camunda/engine-rest/task',
             cancelToken: source.token,
             params: {
-              maxResults: data.maxResults,
-              firstResult: data.page,
+              maxResults,
+              firstResult: page,
             },
             data: {
               sorting: [
@@ -70,8 +81,7 @@ const TasksListPage = ({ taskType }) => {
               ],
               orQueries: [
                 {
-                  candidateGroups: keycloak.tokenParsed.groups,
-                  assignee: keycloak.tokenParsed.email,
+                  ...taskTypePayload,
                 },
               ],
               nameLike: `%${filters.search}%`,
@@ -85,10 +95,8 @@ const TasksListPage = ({ taskType }) => {
             setData({
               isLoading: false,
               tasks: [],
-              total: 0,
-              page: data.page,
-              maxResults: data.maxResults,
             });
+            setTaskCount(0);
           } else {
             // This generates a unique list of process definition ids to use for a call to camunda for task categories
             const processDefinitionIds = _.uniq(
@@ -139,19 +147,14 @@ const TasksListPage = ({ taskType }) => {
               setData({
                 isLoading: false,
                 tasks: tasksResponse.data,
-                total: taskCountResponse.data.count,
-                page: data.page,
-                maxResults: data.maxResults,
               });
+              setTaskCount(taskCountResponse.data.count);
             }
           }
         } catch (e) {
           setData({
             isLoading: false,
             tasks: [],
-            total: data.total,
-            page: data.page,
-            maxResults: data.maxResults,
           });
         }
       }
@@ -162,14 +165,15 @@ const TasksListPage = ({ taskType }) => {
     };
   }, [
     setData,
+    page,
+    setTaskCount,
     axiosInstance,
-    data.maxResults,
-    data.page,
     keycloak.tokenParsed.email,
     keycloak.tokenParsed.groups,
     isMounted,
     filters.sortBy,
     filters.search,
+    taskType,
   ]);
 
   if (data.isLoading) {
@@ -182,7 +186,7 @@ const TasksListPage = ({ taskType }) => {
         <div className="govuk-grid-column-two-thirds">
           <span className="govuk-caption-l">{t(`pages.tasks.${taskType}.caption`)}</span>
           <h1 className="govuk-heading-l">
-            {t(`pages.tasks.${taskType}.heading`, { count: data.total })}
+            {t(`pages.tasks.${taskType}.heading`, { count: taskCount })}
           </h1>
         </div>
       </div>
@@ -192,23 +196,17 @@ const TasksListPage = ({ taskType }) => {
       <div className="govuk-grid-row">
         <div className="govuk-grid-column-full">
           <TaskList tasks={data.tasks} groupBy={filters.groupBy} />
-          {data.total > data.maxResults && data.tasks.length < data.total ? (
+          {taskCount > maxResults && data.tasks.length < taskCount ? (
             <ul className="govuk-list">
               <li>
                 <a
                   id="loadMore"
                   onClick={async (e) => {
                     e.preventDefault();
-                    const page = data.page + data.maxResults;
-                    setData({
-                      ...data,
-                      page,
-                    });
+                    setPage(page + maxResults);
                   }}
                   className="govuk-link"
-                  href={`/tasks?firstResult=${data.page + data.maxResults}&maxResults=${
-                    data.maxResults
-                  }`}
+                  href={`/tasks?firstResult=${page + maxResults}&maxResults=${maxResults}`}
                 >
                   {t('pages.forms.list.load-more')}
                 </a>
