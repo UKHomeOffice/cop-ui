@@ -8,6 +8,7 @@ import gds from '@digitalpatterns/formio-gds-template';
 import Loader from '@highpoint/react-loader-advanced';
 import { BLACK, WHITE } from 'govuk-colours';
 import { AlertContext } from '../../utils/AlertContext';
+import { TeamContext } from '../../utils/TeamContext';
 import { augmentRequest, interpolate } from '../../utils/formioSupport';
 import Logger from '../../utils/logger';
 import ApplicationSpinner from '../ApplicationSpinner';
@@ -32,6 +33,31 @@ const DisplayForm = ({
   }`;
 
   const [keycloak] = useKeycloak();
+  const {
+    authServerUrl: url,
+    realm,
+    refreshToken,
+    subject,
+    token: accessToken,
+    tokenParsed: {
+      adelphi_number: adelphi,
+      dateofleaving,
+      delegate_email: delegateEmails,
+      email,
+      family_name: familyName,
+      given_name: givenName,
+      grade_id: gradeId,
+      groups,
+      line_manager_email: linemanagerEmail,
+      location_id: defaultlocationid,
+      name,
+      phone,
+      realm_access: { roles },
+      team_id: teamid,
+      session_state: sessionId,
+    },
+  } = keycloak;
+
   /* istanbul ignore next */
   Formio.baseUrl = host;
   Formio.projectUrl = host;
@@ -45,6 +71,8 @@ const DisplayForm = ({
     submitted: false,
   });
 
+  const { team } = useContext(TeamContext);
+
   const contexts = {
     data: {
       environmentContext: {
@@ -52,6 +80,51 @@ const DisplayForm = ({
         privateUiUrl: window.location.origin,
         referenceDataUrl: '/refdata',
         workflowUrl: '/camunda',
+      },
+      extendedStaffDetailsContext: {
+        delegateEmails,
+        email,
+        linemanagerEmail,
+        name,
+      },
+      keycloakContext: {
+        accessToken,
+        adelphi,
+        email,
+        familyName,
+        givenName,
+        gradeId,
+        locationId: defaultlocationid,
+        phone,
+        realm,
+        refreshToken,
+        roles,
+        sessionId,
+        subject,
+        url,
+      },
+      shiftDetailsDataContext: {
+        email,
+        locationid: defaultlocationid,
+        phone,
+        roles,
+        team,
+        teamid,
+      },
+      staffDetailsDataContext: {
+        adelphi,
+        dateofleaving,
+        defaultlocationid,
+        defaultteam: team,
+        defaultteamid: teamid,
+        email,
+        firstname: givenName,
+        gradeid: gradeId,
+        groups,
+        locationid: defaultlocationid,
+        phone,
+        surname: familyName,
+        teamid,
       },
     },
   };
@@ -189,6 +262,7 @@ const DisplayForm = ({
               showCancel: true,
             },
             beforeSubmit: (submission, next) => {
+              // eslint-disable-next-line no-shadow
               const { versionId, id, title, name } = form;
               // eslint-disable-next-line no-param-reassign
               submission.data.form = {
