@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useKeycloak } from '@react-keycloak/web';
 import axios from 'axios';
@@ -26,7 +26,6 @@ const TasksListPage = ({ taskType }) => {
   });
   const isMounted = useIsMounted();
   const axiosInstance = useAxios();
-  const dataRef = useRef(data.tasks);
   const handleFilters = (e) => {
     setFilters({ ...filters, [e.target.name]: e.target.value });
   };
@@ -75,72 +74,82 @@ const TasksListPage = ({ taskType }) => {
                   assignee: keycloak.tokenParsed.email,
                 },
               ],
-            },
-          });
-          // This generates a unique list of process definition ids to use for a call to camunda for task categories
-          const processDefinitionIds = _.uniq(
-            tasksResponse.data.map((task) => task.processDefinitionId)
-          );
-          const definitionResponse = await axiosInstance({
-            method: 'GET',
-            url: '/camunda/engine-rest/process-definition',
-            params: {
-              processDefinitionIdIn: processDefinitionIds.toString(),
-            },
-          });
-          // This generates a unique list of process instance ids to use for a call to camunda for task business keys
-          const processInstanceIds = _.uniq(
-            tasksResponse.data.map((task) => task.processInstanceId)
-          );
-          const processInstanceResponse = await axiosInstance({
-            method: 'POST',
-            url: '/camunda/engine-rest/process-instance',
-            data: {
-              processInstanceIds,
+              nameLike: `%${filters.search}%`,
             },
           });
 
-          if (isMounted.current) {
-            const merged = _.values(
-              _.merge(_.keyBy(tasksResponse.data, 'id'), _.keyBy(dataRef.current, 'id'))
-            );
-
-            if (definitionResponse.data && definitionResponse.data.length !== 0) {
-              merged.forEach((task) => {
-                const processDefinition = _.find(
-                  definitionResponse.data,
-                  (definition) => definition.id === task.processDefinitionId
-                );
-                const processInstance = _.find(
-                  processInstanceResponse.data,
-                  (instance) => instance.id === task.processInstanceId
-                );
-
-                if (processDefinition) {
-                  // eslint-disable-next-line no-param-reassign
-                  task.category = processDefinition.category;
-                }
-                if (processInstance) {
-                  // eslint-disable-next-line no-param-reassign
-                  task.businessKey = processInstance.businessKey;
-                }
-              });
-            }
-
-            dataRef.current = merged;
+          /* If the response from /camunda/engine-rest/task is an empty array, no need to make requests when task list is empty 
+          otherwise this will cause /process-instance call to return an error (no process instance ids in the json body). We don't 
+          want to show an alert if the search string yields no tasks - this is not an api error */
+          if (tasksResponse.data.length === 0) {
             setData({
               isLoading: false,
-              tasks: merged,
-              total: taskCountResponse.data.count,
+              tasks: [],
+              total: 0,
               page: data.page,
               maxResults: data.maxResults,
             });
+          } else {
+            // This generates a unique list of process definition ids to use for a call to camunda for task categories
+            const processDefinitionIds = _.uniq(
+              tasksResponse.data.map((task) => task.processDefinitionId)
+            );
+            const definitionResponse = await axiosInstance({
+              method: 'GET',
+              url: '/camunda/engine-rest/process-definition',
+              params: {
+                processDefinitionIdIn: processDefinitionIds.toString(),
+              },
+            });
+            // This generates a unique list of process instance ids to use for a call to camunda for task business keys
+            const processInstanceIds = _.uniq(
+              tasksResponse.data.map((task) => task.processInstanceId)
+            );
+            const processInstanceResponse = await axiosInstance({
+              method: 'POST',
+              url: '/camunda/engine-rest/process-instance',
+              data: {
+                processInstanceIds,
+              },
+            });
+
+            if (isMounted.current) {
+              if (definitionResponse.data && definitionResponse.data.length !== 0) {
+                tasksResponse.data.forEach((task) => {
+                  const processDefinition = _.find(
+                    definitionResponse.data,
+                    (definition) => definition.id === task.processDefinitionId
+                  );
+                  const processInstance = _.find(
+                    processInstanceResponse.data,
+                    (instance) => instance.id === task.processInstanceId
+                  );
+
+                  if (processDefinition) {
+                    // eslint-disable-next-line no-param-reassign
+                    task.category = processDefinition.category;
+                  }
+                  if (processInstance) {
+                    // eslint-disable-next-line no-param-reassign
+                    task.businessKey = processInstance.businessKey;
+                  }
+                });
+              }
+
+              setData({
+                isLoading: false,
+                tasks: tasksResponse.data,
+                total: taskCountResponse.data.count,
+                page: data.page,
+                maxResults: data.maxResults,
+              });
+            }
           }
         } catch (e) {
           setData({
             isLoading: false,
-            tasks: dataRef.current,
-            total: 0,
+            tasks: [],
+            total: data.total,
             page: data.page,
             maxResults: data.maxResults,
           });
