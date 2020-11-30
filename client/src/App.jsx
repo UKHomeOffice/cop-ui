@@ -10,7 +10,7 @@ import { initAll } from 'govuk-frontend';
 import Layout from './components/layout';
 import routes from './routes';
 import ApplicationSpinner from './components/ApplicationSpinner';
-import { useFetchTeam } from './utils/hooks';
+import { useFetchStaffId, useFetchTeam } from './utils/hooks';
 
 if (window.ENVIRONMENT_CONFIG) {
   // eslint-disable-next-line no-console
@@ -46,6 +46,7 @@ const RouterView = () => {
 
   initAll();
   useFetchTeam();
+  useFetchStaffId();
 
   return initialized ? (
     <Router

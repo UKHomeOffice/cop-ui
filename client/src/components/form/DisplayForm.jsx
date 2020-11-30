@@ -9,6 +9,7 @@ import Loader from '@highpoint/react-loader-advanced';
 import { BLACK, WHITE } from 'govuk-colours';
 import { AlertContext } from '../../utils/AlertContext';
 import { TeamContext } from '../../utils/TeamContext';
+import { StaffIdContext } from '../../utils/StaffIdContext';
 import { augmentRequest, interpolate } from '../../utils/formioSupport';
 import Logger from '../../utils/logger';
 import ApplicationSpinner from '../ApplicationSpinner';
@@ -72,11 +73,13 @@ const DisplayForm = ({
   });
 
   const { team } = useContext(TeamContext);
+  const { staffId: staffid } = useContext(StaffIdContext);
 
   const contexts = {
     data: {
       environmentContext: {
         attachmentServiceUrl: '/files',
+        operationalDataUrl: '/opdata',
         privateUiUrl: window.location.origin,
         referenceDataUrl: '/refdata',
         workflowUrl: '/camunda',
@@ -123,6 +126,7 @@ const DisplayForm = ({
         groups,
         locationid: defaultlocationid,
         phone,
+        staffid,
         surname: familyName,
         teamid,
       },
