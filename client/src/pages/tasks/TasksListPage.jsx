@@ -127,7 +127,7 @@ const TasksListPage = ({ taskType }) => {
                 _.merge(_.keyBy(tasksResponse.data, 'id'), _.keyBy(dataRef.current, 'id'))
               );
 
-              if (definitionResponse.data && definitionResponse.data.length !== 0) {
+              if (definitionResponse.data && definitionResponse.data.length) {
                 merged.forEach((task) => {
                   const processDefinition = _.find(
                     definitionResponse.data,
@@ -139,11 +139,9 @@ const TasksListPage = ({ taskType }) => {
                   );
 
                   if (processDefinition) {
-                    // eslint-disable-next-line no-param-reassign
                     task.category = processDefinition.category;
                   }
                   if (processInstance) {
-                    // eslint-disable-next-line no-param-reassign
                     task.businessKey = processInstance.businessKey;
                   }
                 });
