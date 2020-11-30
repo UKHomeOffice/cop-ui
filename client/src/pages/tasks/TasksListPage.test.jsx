@@ -164,8 +164,8 @@ describe('TasksListPage', () => {
 
     await waitFor(() => {
       // Check if the grouping title has the correct number of tasks associated with it for categories, the number shown is correspondant with the number of tasks pulled from the api call. Categories is the default grouping when component has mounted
-      expect(screen.getByText('10 test tasks')).toBeTruthy();
-      expect(screen.getByText('2 enhance tasks')).toBeTruthy();
+      expect(screen.getByText('test 10 tasks')).toBeTruthy();
+      expect(screen.getByText('enhance 2 tasks')).toBeTruthy();
     });
 
     // Grab groupByDropdown after initial assertions, cannot define this before the await as the component has not mounted at that point
@@ -175,23 +175,23 @@ describe('TasksListPage', () => {
 
     await waitFor(() => {
       // Same as category assertions but with priority
-      expect(screen.getByText('1 Low task')).toBeTruthy();
-      expect(screen.getByText('10 Medium tasks')).toBeTruthy();
-      expect(screen.getByText('1 High task')).toBeTruthy();
+      expect(screen.getByText('Low 1 task')).toBeTruthy();
+      expect(screen.getByText('Medium 10 tasks')).toBeTruthy();
+      expect(screen.getByText('High 1 task')).toBeTruthy();
     });
 
     fireEvent.change(groupByDropDown, { target: { value: 'assignee' } });
 
     await waitFor(() => {
       // Same as category assertions but with assignee, only one assertion here as all the tasks are assigned to john@doe.com
-      expect(screen.getByText('12 john@doe.com tasks')).toBeTruthy();
+      expect(screen.getByText('john@doe.com 12 tasks')).toBeTruthy();
     });
 
     fireEvent.change(groupByDropDown, { target: { value: 'businessKey' } });
 
     await waitFor(() => {
-      expect(screen.getByText('10 TEST-BUSINESS-KEY0 tasks')).toBeTruthy();
-      expect(screen.getByText('2 TEST-BUSINESS-KEY1 tasks')).toBeTruthy();
+      expect(screen.getByText('TEST-BUSINESS-KEY0 10 tasks')).toBeTruthy();
+      expect(screen.getByText('TEST-BUSINESS-KEY1 2 tasks')).toBeTruthy();
     });
   });
 });

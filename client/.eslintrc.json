@@ -36,6 +36,12 @@
       "rules": {
         "max-len": 0
       }
+    },
+    {
+      "files": ["TasksListPage.jsx"],
+      "rules": {
+        "no-param-reassign": "off"
+      }
     }
   ],
   "rules": {

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useKeycloak } from '@react-keycloak/web';
 import axios from 'axios';
@@ -20,13 +20,13 @@ const TasksListPage = ({ taskType }) => {
   const [data, setData] = useState({
     isLoading: true,
     tasks: [],
-    page: 0,
-    total: 0,
-    maxResults: 20,
   });
+  const [page, setPage] = useState(0);
+  const [taskCount, setTaskCount] = useState(0);
+  const maxResults = 20;
   const isMounted = useIsMounted();
   const axiosInstance = useAxios();
-  const dataRef = useRef(data.tasks);
+  const dataRef = useRef();
   const handleFilters = (e) => {
     setFilters({ ...filters, [e.target.name]: e.target.value });
   };
@@ -40,6 +40,17 @@ const TasksListPage = ({ taskType }) => {
     const loadTasks = async () => {
       if (axiosInstance) {
         try {
+          /* taskTypePayload uses the taskType prop to query either the user assigned tasks or 
+          their assigned and group assigned tasks */
+          const taskTypePayload =
+            taskType === 'yours'
+              ? {
+                  assignee: keycloak.tokenParsed.email,
+                }
+              : {
+                  assignee: keycloak.tokenParsed.email,
+                  candidateGroups: keycloak.tokenParsed.groups,
+                };
           const taskCountResponse = await axiosInstance({
             method: 'POST',
             url: '/camunda/engine-rest/task/count',
@@ -47,10 +58,10 @@ const TasksListPage = ({ taskType }) => {
             data: {
               orQueries: [
                 {
-                  candidateGroups: keycloak.tokenParsed.groups,
-                  assignee: keycloak.tokenParsed.email,
+                  ...taskTypePayload,
                 },
               ],
+              nameLike: `%${filters.search}%`,
             },
           });
           const { sortOrder, sortVariable } = formatSortByValue(filters.sortBy);
@@ -59,8 +70,8 @@ const TasksListPage = ({ taskType }) => {
             url: '/camunda/engine-rest/task',
             cancelToken: source.token,
             params: {
-              maxResults: data.maxResults,
-              firstResult: data.page,
+              maxResults,
+              firstResult: page,
             },
             data: {
               sorting: [
@@ -71,78 +82,84 @@ const TasksListPage = ({ taskType }) => {
               ],
               orQueries: [
                 {
-                  candidateGroups: keycloak.tokenParsed.groups,
-                  assignee: keycloak.tokenParsed.email,
+                  ...taskTypePayload,
                 },
               ],
-            },
-          });
-          // This generates a unique list of process definition ids to use for a call to camunda for task categories
-          const processDefinitionIds = _.uniq(
-            tasksResponse.data.map((task) => task.processDefinitionId)
-          );
-          const definitionResponse = await axiosInstance({
-            method: 'GET',
-            url: '/camunda/engine-rest/process-definition',
-            params: {
-              processDefinitionIdIn: processDefinitionIds.toString(),
-            },
-          });
-          // This generates a unique list of process instance ids to use for a call to camunda for task business keys
-          const processInstanceIds = _.uniq(
-            tasksResponse.data.map((task) => task.processInstanceId)
-          );
-          const processInstanceResponse = await axiosInstance({
-            method: 'POST',
-            url: '/camunda/engine-rest/process-instance',
-            data: {
-              processInstanceIds,
+              nameLike: `%${filters.search}%`,
             },
           });
 
-          if (isMounted.current) {
-            const merged = _.values(
-              _.merge(_.keyBy(tasksResponse.data, 'id'), _.keyBy(dataRef.current, 'id'))
-            );
-
-            if (definitionResponse.data && definitionResponse.data.length !== 0) {
-              merged.forEach((task) => {
-                const processDefinition = _.find(
-                  definitionResponse.data,
-                  (definition) => definition.id === task.processDefinitionId
-                );
-                const processInstance = _.find(
-                  processInstanceResponse.data,
-                  (instance) => instance.id === task.processInstanceId
-                );
-
-                if (processDefinition) {
-                  // eslint-disable-next-line no-param-reassign
-                  task.category = processDefinition.category;
-                }
-                if (processInstance) {
-                  // eslint-disable-next-line no-param-reassign
-                  task.businessKey = processInstance.businessKey;
-                }
-              });
-            }
-
-            dataRef.current = merged;
+          /* If the response from /camunda/engine-rest/task is an empty array, no need to make requests when task list is empty 
+          otherwise this will cause /process-instance call to return an error (no process instance ids in the json body). We don't 
+          want to show an alert if the search string yields no tasks - this is not an api error */
+          if (tasksResponse.data.length === 0) {
             setData({
               isLoading: false,
-              tasks: merged,
-              total: taskCountResponse.data.count,
-              page: data.page,
-              maxResults: data.maxResults,
+              tasks: [],
             });
+            setTaskCount(0);
+          } else {
+            // This generates a unique list of process definition ids to use for a call to camunda for task categories
+            const processDefinitionIds = _.uniq(
+              tasksResponse.data.map((task) => task.processDefinitionId)
+            );
+            const definitionResponse = await axiosInstance({
+              method: 'GET',
+              url: '/camunda/engine-rest/process-definition',
+              params: {
+                processDefinitionIdIn: processDefinitionIds.toString(),
+              },
+            });
+            // This generates a unique list of process instance ids to use for a call to camunda for task business keys
+            const processInstanceIds = _.uniq(
+              tasksResponse.data.map((task) => task.processInstanceId)
+            );
+            const processInstanceResponse = await axiosInstance({
+              method: 'POST',
+              url: '/camunda/engine-rest/process-instance',
+              data: {
+                processInstanceIds,
+              },
+            });
+
+            if (isMounted.current) {
+              const merged = _.values(
+                _.merge(_.keyBy(tasksResponse.data, 'id'), _.keyBy(dataRef.current, 'id'))
+              );
+
+              if (definitionResponse.data && definitionResponse.data.length) {
+                merged.forEach((task) => {
+                  const processDefinition = _.find(
+                    definitionResponse.data,
+                    (definition) => definition.id === task.processDefinitionId
+                  );
+                  const processInstance = _.find(
+                    processInstanceResponse.data,
+                    (instance) => instance.id === task.processInstanceId
+                  );
+
+                  if (processDefinition) {
+                    task.category = processDefinition.category;
+                  }
+                  if (processInstance) {
+                    task.businessKey = processInstance.businessKey;
+                  }
+                });
+              }
+
+              dataRef.current = merged;
+
+              setData({
+                isLoading: false,
+                tasks: merged,
+              });
+              setTaskCount(taskCountResponse.data.count);
+            }
           }
         } catch (e) {
           setData({
             isLoading: false,
-            tasks: dataRef.current,
-            total: 0,
-            page: data.page,
-            maxResults: data.maxResults,
+            tasks: [],
           });
         }
       }
@@ -153,14 +170,15 @@ const TasksListPage = ({ taskType }) => {
     };
   }, [
     setData,
+    page,
+    setTaskCount,
     axiosInstance,
-    data.maxResults,
-    data.page,
     keycloak.tokenParsed.email,
     keycloak.tokenParsed.groups,
     isMounted,
     filters.sortBy,
     filters.search,
+    taskType,
   ]);
 
   if (data.isLoading) {
@@ -173,7 +191,7 @@ const TasksListPage = ({ taskType }) => {
         <div className="govuk-grid-column-two-thirds">
           <span className="govuk-caption-l">{t(`pages.tasks.${taskType}.caption`)}</span>
           <h1 className="govuk-heading-l">
-            {t(`pages.tasks.${taskType}.heading`, { count: data.total })}
+            {t(`pages.tasks.${taskType}.heading`, { count: taskCount })}
           </h1>
         </div>
       </div>
@@ -183,23 +201,17 @@ const TasksListPage = ({ taskType }) => {
       <div className="govuk-grid-row">
         <div className="govuk-grid-column-full">
           <TaskList tasks={data.tasks} groupBy={filters.groupBy} />
-          {data.total > data.maxResults && data.tasks.length < data.total ? (
+          {taskCount > maxResults && data.tasks.length < taskCount ? (
             <ul className="govuk-list">
               <li>
                 <a
                   id="loadMore"
                   onClick={async (e) => {
                     e.preventDefault();
-                    const page = data.page + data.maxResults;
-                    setData({
-                      ...data,
-                      page,
-                    });
+                    setPage(page + maxResults);
                   }}
                   className="govuk-link"
-                  href={`/tasks?firstResult=${data.page + data.maxResults}&maxResults=${
-                    data.maxResults
-                  }`}
+                  href={`/tasks?firstResult=${page + maxResults}&maxResults=${maxResults}`}
                 >
                   {t('pages.forms.list.load-more')}
                 </a>
