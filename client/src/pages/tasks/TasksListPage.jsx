@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useKeycloak } from '@react-keycloak/web';
 import axios from 'axios';
@@ -26,6 +26,7 @@ const TasksListPage = ({ taskType }) => {
   const maxResults = 20;
   const isMounted = useIsMounted();
   const axiosInstance = useAxios();
+  const dataRef = useRef();
   const handleFilters = (e) => {
     setFilters({ ...filters, [e.target.name]: e.target.value });
   };
@@ -122,8 +123,12 @@ const TasksListPage = ({ taskType }) => {
             });
 
             if (isMounted.current) {
+              const merged = _.values(
+                _.merge(_.keyBy(tasksResponse.data, 'id'), _.keyBy(dataRef.current, 'id'))
+              );
+
               if (definitionResponse.data && definitionResponse.data.length !== 0) {
-                tasksResponse.data.forEach((task) => {
+                merged.forEach((task) => {
                   const processDefinition = _.find(
                     definitionResponse.data,
                     (definition) => definition.id === task.processDefinitionId
@@ -144,9 +149,11 @@ const TasksListPage = ({ taskType }) => {
                 });
               }
 
+              dataRef.current = merged;
+
               setData({
                 isLoading: false,
-                tasks: tasksResponse.data,
+                tasks: merged,
               });
               setTaskCount(taskCountResponse.data.count);
             }
