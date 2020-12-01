@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useKeycloak } from '@react-keycloak/web';
 import axios from 'axios';
@@ -8,6 +8,7 @@ import ApplicationSpinner from '../../components/ApplicationSpinner';
 import { useIsMounted, useAxios } from '../../utils/hooks';
 import TaskList from './components/TaskList';
 import TaskFilters from './components/TaskFilters';
+import TaskPagination from './components/TaskPagination';
 
 const TasksListPage = ({ taskType }) => {
   const { t } = useTranslation();
@@ -26,7 +27,6 @@ const TasksListPage = ({ taskType }) => {
   const maxResults = 20;
   const isMounted = useIsMounted();
   const axiosInstance = useAxios();
-  const dataRef = useRef();
   const handleFilters = (e) => {
     setFilters({ ...filters, [e.target.name]: e.target.value });
   };
@@ -123,12 +123,8 @@ const TasksListPage = ({ taskType }) => {
             });
 
             if (isMounted.current) {
-              const merged = _.values(
-                _.merge(_.keyBy(tasksResponse.data, 'id'), _.keyBy(dataRef.current, 'id'))
-              );
-
               if (definitionResponse.data && definitionResponse.data.length) {
-                merged.forEach((task) => {
+                tasksResponse.data.forEach((task) => {
                   const processDefinition = _.find(
                     definitionResponse.data,
                     (definition) => definition.id === task.processDefinitionId
@@ -147,11 +143,9 @@ const TasksListPage = ({ taskType }) => {
                 });
               }
 
-              dataRef.current = merged;
-
               setData({
                 isLoading: false,
-                tasks: merged,
+                tasks: tasksResponse.data,
               });
               setTaskCount(taskCountResponse.data.count);
             }
@@ -201,23 +195,12 @@ const TasksListPage = ({ taskType }) => {
       <div className="govuk-grid-row">
         <div className="govuk-grid-column-full">
           <TaskList tasks={data.tasks} groupBy={filters.groupBy} />
-          {taskCount > maxResults && data.tasks.length < taskCount ? (
-            <ul className="govuk-list">
-              <li>
-                <a
-                  id="loadMore"
-                  onClick={async (e) => {
-                    e.preventDefault();
-                    setPage(page + maxResults);
-                  }}
-                  className="govuk-link"
-                  href={`/tasks?firstResult=${page + maxResults}&maxResults=${maxResults}`}
-                >
-                  {t('pages.forms.list.load-more')}
-                </a>
-              </li>
-            </ul>
-          ) : null}
+          <TaskPagination
+            page={page}
+            setPage={setPage}
+            taskCount={taskCount}
+            maxResults={maxResults}
+          />
         </div>
       </div>
     </>
