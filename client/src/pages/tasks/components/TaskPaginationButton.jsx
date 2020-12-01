@@ -3,9 +3,9 @@ import PropTypes from 'prop-types';
 import { scrollToMainContent } from '../../../utils/scrollToMainContent';
 
 const TaskPaginationButton = ({ isButtonDisabled, setPage, newPageValue, text }) => {
-  const handleClick = () => {
+  const handleClick = (e) => {
     setPage(newPageValue);
-    scrollToMainContent();
+    scrollToMainContent(e);
   };
 
   return (
