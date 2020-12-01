@@ -6,6 +6,7 @@ import { useCurrentRoute } from 'react-navi';
 import Logger from './logger';
 import { AlertContext } from './AlertContext';
 import { TeamContext } from './TeamContext';
+import { StaffIdContext } from './StaffIdContext';
 
 export const useAxios = () => {
   const [keycloak, initialized] = useKeycloak();
@@ -106,6 +107,40 @@ export const useFetchTeam = () => {
       source.cancel('Cancelling request');
     };
   }, [axiosInstance, initialized, isMounted, keycloak, setTeam]);
+};
+
+export const useFetchStaffId = () => {
+  const [keycloak, initialized] = useKeycloak();
+  const axiosInstance = useAxios();
+  const isMounted = useIsMounted();
+  const { setStaffId } = useContext(StaffIdContext);
+  useEffect(() => {
+    const source = axios.CancelToken.source();
+    if (initialized) {
+      const {
+        tokenParsed: { email },
+      } = keycloak;
+      const fetchData = async () => {
+        try {
+          const response = await axiosInstance.get(`opdata/v2/staff?filter=email=eq.${email}`, {
+            cancelToken: source.token,
+          });
+          if (isMounted.current) {
+            const { staffid: staffId } = response.data[0];
+            setStaffId(staffId);
+          }
+        } catch (error) {
+          if (isMounted.current) {
+            setStaffId(null);
+          }
+        }
+      };
+      fetchData();
+    }
+    return () => {
+      source.cancel('Cancelling request');
+    };
+  }, [axiosInstance, initialized, isMounted, keycloak, setStaffId]);
 };
 
 export default useIsMounted;

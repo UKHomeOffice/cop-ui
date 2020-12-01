@@ -3,9 +3,10 @@ import PropTypes from 'prop-types';
 import axios from 'axios';
 import MockAdapter from 'axios-mock-adapter';
 import { renderHook } from '@testing-library/react-hooks';
-import { useAxios, useFetchTeam, useIsMounted } from './hooks';
+import { useAxios, useFetchTeam, useFetchStaffId, useIsMounted } from './hooks';
 import Logger from './logger';
 import { TeamContext } from './TeamContext';
+import { StaffIdContext } from './StaffIdContext';
 
 jest.mock('./logger', () => ({
   error: jest.fn(),
@@ -15,7 +16,7 @@ jest.mock('react', () => {
   const ActualReact = require.requireActual('react');
   return {
     ...ActualReact,
-    useContext: () => ({ setAlertContext: jest.fn(), setTeam: jest.fn() }),
+    useContext: () => ({ setAlertContext: jest.fn(), setTeam: jest.fn(), setStaffId: jest.fn() }),
   };
 });
 
@@ -52,15 +53,13 @@ describe('axios hooks', () => {
   });
 
   it('can fetch team', async () => {
-    mockAxios
-      .onGet('/refdata/v2/entities/team?filter=id=eq.21')
-      .reply(200, {
-        data: [
-          {
-            branchid: 23,
-          },
-        ],
-      });
+    mockAxios.onGet('/refdata/v2/entities/team?filter=id=eq.21').reply(200, {
+      data: [
+        {
+          branchid: 23,
+        },
+      ],
+    });
     const { Provider } = TeamContext;
     const wrapper = ({ children }) => (
       <Provider value={{ team: { branchid: 23 } }}>{children}</Provider>
@@ -69,5 +68,21 @@ describe('axios hooks', () => {
       children: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.node), PropTypes.node]).isRequired,
     };
     renderHook(() => useFetchTeam(), { wrapper });
+  });
+
+  it('can fetch staffid', async () => {
+    mockAxios.onGet('/opdata/v2/staff').reply(200, {
+      data: [
+        {
+          staffid: 'abc',
+        },
+      ],
+    });
+    const { Provider } = StaffIdContext;
+    const wrapper = ({ children }) => <Provider value={{ staffId: 'abc' }}>{children}</Provider>;
+    wrapper.propTypes = {
+      children: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.node), PropTypes.node]).isRequired,
+    };
+    renderHook(() => useFetchStaffId(), { wrapper });
   });
 });

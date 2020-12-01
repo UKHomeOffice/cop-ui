@@ -5,11 +5,14 @@ import './i18n';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 import { TeamContextProvider } from './utils/TeamContext';
+import { StaffIdContextProvider } from './utils/StaffIdContext';
 
 ReactDOM.render(
   <React.StrictMode>
     <TeamContextProvider>
-      <App />
+      <StaffIdContextProvider>
+        <App />
+      </StaffIdContextProvider>
     </TeamContextProvider>
   </React.StrictMode>,
   document.getElementById('root')

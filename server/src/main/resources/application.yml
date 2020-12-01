@@ -37,6 +37,10 @@ zuul:
       path: /form/**
       strip-prefix: false
       url: ${formApi.url:http://localhost:4000}
+    opdata-service:
+      path: /opdata/**
+      strip-prefix: true
+      url: ${opDataService.url:http://api-cop.lodev.xyz}
     workflow-service:
       strip-prefix: false
       path: /camunda/**
