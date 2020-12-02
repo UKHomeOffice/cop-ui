@@ -9,22 +9,17 @@ import ApplicationSpinner from '../../components/ApplicationSpinner';
 import DisplayForm from '../../components/form/DisplayForm';
 import { AlertContext } from '../../utils/AlertContext';
 import { useAxios, useIsMounted } from '../../utils/hooks';
-// import apiHooks from './hooks';
 
 const FormPage = ({ formId }) => {
-  // const { submitForm } = apiHooks();
   const source = axios.CancelToken.source();
   const axiosInstance = useAxios();
   const { setAlertContext } = useContext(AlertContext);
   const isMounted = useIsMounted();
   const navigation = useNavigation();
   const { t } = useTranslation();
-
-  const [form, setForm] = useState({ isLoading: true, data: null, });
+  const [form, setForm] = useState({ isLoading: true, data: null });
   const [pageTitle, setPageTitle] = useState();
   const [submitting, setSubmitting] = useState(false);
-
-  
 
   const getFormPageTitle = async () => {
     if (axiosInstance) {
@@ -38,24 +33,74 @@ const FormPage = ({ formId }) => {
         if (formName && formName.data) {
           setPageTitle(formName.data.name);
         }
-      } catch (e) {
+      } catch (error) {
         setPageTitle();
       }
     }
   };
 
   const loadForm = async () => {
-      if (axiosInstance) {
-        try {
-          const formKey = await axiosInstance.get(
-            `/camunda/engine-rest/process-definition/key/${formId}/startForm`,
-            {
-              cancelToken: source.token,
-            }
-          );
-          if (formKey && formKey.data) {
-            const { key } = formKey.data;
-            const formResponse = await axiosInstance.get(`/form/name/${key}`);
+    if (axiosInstance) {
+      try {
+        const formKey = await axiosInstance.get(
+          `/camunda/engine-rest/process-definition/key/${formId}/startForm`,
+          {
+            cancelToken: source.token,
+          }
+        );
+        if (formKey && formKey.data) {
+          const { key } = formKey.data;
+          const formResponse = await axiosInstance.get(`/form/name/${key}`);
+          if (isMounted.current) {
+            setForm({
+              isLoading: false,
+              data: formResponse.data,
+            });
+          }
+        } else {
+          setForm({
+            isLoading: false,
+            data: null,
+          });
+        }
+      } catch (error) {
+        if (isMounted.current) {
+          setForm({
+            isLoading: false,
+            data: null,
+          });
+        }
+      }
+    }
+  };
+
+  /* Some forms have connected forms that should be triggered immediately for the user to complete
+  This function checks for and handles those.
+ */
+  const startNextTask = async (businessKey) => {
+    if (axiosInstance) {
+      // Check for any open tasks for this processInstance (businessKey)
+      try {
+        const nextTask = await axiosInstance.get(
+          `/camunda/engine-rest/task?processInstanceBusinessKey=${businessKey}`,
+          {
+            cancelToken: source.token,
+          }
+        );
+        if (!nextTask.data) {
+          // If there are no open tasks then we can end this flow for the user
+          setAlertContext({
+            type: 'form-submission',
+            status: 'successful',
+            message: t('pages.form.submission.success-message'),
+            reference: `${businessKey}`,
+          });
+          navigation.navigate('/');
+        } else {
+          console.log(nextTask.data);
+          // If there are open tasks, we load the form for the task
+          const formResponse = await axiosInstance.get(`/form/name/peopleEaB`);
+          if (formResponse && formResponse.data) {
             if (isMounted.current) {
               setForm({
                 isLoading: false,
@@ -68,60 +113,21 @@ const FormPage = ({ formId }) => {
               data: null,
             });
           }
-        } catch (e) {
-          if (isMounted.current) {
-            setForm({
-              isLoading: false,
-              data: null,
-            });
-          }
+        }
+      } catch (error) {
+        if (isMounted.current) {
+          setForm({
+            isLoading: false,
+            data: null,
+          });
         }
       }
-    };
-
-  const handleOnFailure = () => {
-    setSubmitting(false);
+    }
   };
 
-  const handleFinalSubmit = (submission) => {
-    setAlertContext({
-      type: 'form-submission',
-      status: 'successful',
-      message: t('pages.form.submission.success-message'),
-      reference: `${submission.data.businessKey}`,
-    });
-    navigation.navigate('/');
-  };
-
-  const startNextTask = (businessKey) => {
-    console.log('starting next task', businessKey);
-    // check for open tasks for this businessKey
-    axiosInstance
-      .get(`/camunda/engine-rest/task?processInstanceBusinessKey=${businessKey}`)
-      .then((response) => { 
-        if (!response.data) {
-          handleFinalSubmit(response.data);
-        } else {
-          console.log(response.data[0].formKey) // response.data is an array, there should not be multiple instances as there are/will be other controls to prevent multiples
-          axiosInstance
-            .get(`/form/name/peopleEaB`)
-            .then((formResponse) => {
-              if (isMounted.current) {
-                setForm({
-                  isLoading: false,
-                  data: formResponse.data,
-                });
-              }
-            })
-            .catch((error) => console.log(error));
-        }
-      })
-      .catch((error) => { 
-        console.log(error) 
-        handleOnFailure();
-      })
-  };
-
+  /* The submitForm was using a different syntax for the api calls
+  It seems to be due to the 'useCallback' feature, as you cannot use 'async/await' with that
+  */
   const submitForm = useCallback((submission, formInfo, id) => {
     const variables = {
       [formInfo.name]: {
@@ -131,7 +137,7 @@ const FormPage = ({ formId }) => {
       initiatedBy: {
         value: submission.data.form.submittedBy,
         type: 'string',
-      }
+      },
     };
     axiosInstance
       .post(`/camunda/engine-rest/process-definition/key/${id}/submit-form`, {
@@ -141,20 +147,15 @@ const FormPage = ({ formId }) => {
       .then(async (results) => {
         startNextTask(results.data.businessKey);
       })
-      .catch((error) => {
-        console.log('error', error)
+      .catch(() => {
+        setSubmitting(false);
       });
   });
 
-    
-
   useEffect(() => {
-    loadForm();
     getFormPageTitle();
-    // return () => {
-    //   source.cancel('cancelling request');
-    // };
-  }, [axiosInstance, formId, setForm, isMounted, setSubmitting]);
+    loadForm();
+  }, [axiosInstance, formId, setForm, isMounted]);
 
   if (form.isLoading) {
     return <ApplicationSpinner />;
