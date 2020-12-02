@@ -199,12 +199,14 @@ const TasksListPage = ({ taskType }) => {
       <div className="govuk-grid-row">
         <div className="govuk-grid-column-full">
           <TaskList tasks={data.tasks} groupBy={filters.groupBy} />
-          <TaskPagination
-            page={page}
-            setPage={setPage}
-            taskCount={taskCount}
-            maxResults={maxResults}
-          />
+          {data.tasks.length ? (
+            <TaskPagination
+              page={page}
+              setPage={setPage}
+              taskCount={taskCount}
+              maxResults={maxResults}
+            />
+          ) : null}
         </div>
       </div>
     </>
