@@ -38,7 +38,6 @@ describe('ReportsListPage', () => {
       await wrapper.update();
     });
     expect(wrapper.find('h1').at(0).text()).toBe('pages.reports.list.heading');
-
     wrapper
       .find('.list-item a')
       .at(0)

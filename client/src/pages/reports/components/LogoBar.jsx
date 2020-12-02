@@ -1,20 +1,33 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Link } from 'react-navi';
 import { useTranslation } from 'react-i18next';
 import './LogoBar.scss';
 
-const LogoBar = ({ setFullscreen }) => {
-  const { t } = useTranslation();
+export const fullscreen = (report) => report.fullscreen();
+export const reload = (report) => report.reload();
 
+const LogoBar = ({ report, visitedPages }) => {
+  const { t } = useTranslation();
   return (
     <div className="logo-bar">
-      <p>
-        {t('pages.report.logo-bar.intro')}{' '}
-        <Link href="/reports/">{t('pages.report.logo-bar.link')}</Link>{' '}
-        {t('pages.report.logo-bar.outro')}
-      </p>
-      <button type="button" onClick={setFullscreen}>
+      <button
+        id="reload"
+        type="button"
+        onClick={() => {
+          // eslint-disable-next-line no-param-reassign
+          visitedPages.current = [];
+          reload(report);
+        }}
+      >
+        {t('pages.report.logo-bar.reload')}
+      </button>
+      <button
+        id="fullscreen"
+        type="button"
+        onClick={() => {
+          fullscreen(report);
+        }}
+      >
         {t('pages.report.logo-bar.fullscreen')}
       </button>
     </div>
@@ -22,7 +35,12 @@ const LogoBar = ({ setFullscreen }) => {
 };
 
 LogoBar.propTypes = {
-  setFullscreen: PropTypes.func.isRequired,
+  report: PropTypes.shape({
+    fullscreen: PropTypes.func.isRequired,
+  }).isRequired,
+  visitedPages: PropTypes.shape({
+    current: PropTypes.arrayOf(PropTypes.string).isRequired,
+  }).isRequired,
 };
 
 export default LogoBar;

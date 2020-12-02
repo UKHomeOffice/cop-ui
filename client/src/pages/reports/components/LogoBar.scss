@@ -2,13 +2,13 @@
 
 .logo-bar {
   align-items: center;
-  bottom: -35px;
+  bottom: 0px;
   display: flex;
   font-family: $govuk-font-family-nta;
   font-size: 12px;
   height: 35px;
   position: absolute;
-  right: 0;
+  right: 10px;
 
   button {
     border: none;
@@ -17,27 +17,26 @@
     cursor: pointer;
     font-size: smaller;
     font-weight: $govuk-font-weight-bold;
-    padding: 6px;
+    padding: 8px;
     text-transform: uppercase;
     &:focus {
       outline: none;
     }
   }
 
-  p {
-    color: govuk-colour('dark-grey');
-    margin: 0;
-
-    @media only screen and (max-width: 960px) {
-      display: none;
+  button {
+    &:not(:last-child) {
+      padding-right: 0px;
+      &:after {
+        content: '|';
+        margin-left: 8px;
+      }
     }
   }
+}
 
-  button,
-  p {
-    &:not(:last-child):after {
-      content: '|';
-      margin-left: 6px;
-    }
+@media only screen and (max-width: 960px) {
+  .logo-bar {
+    display: none;
   }
 }

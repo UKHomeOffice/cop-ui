@@ -4,7 +4,13 @@ import LogoBar from './LogoBar';
 
 describe('LogoBar', () => {
   const props = {
-    setFullscreen: jest.fn(),
+    report: {
+      fullscreen: jest.fn(),
+      reload: jest.fn(),
+    },
+    visitedPages: {
+      current: [],
+    },
   };
 
   it('renders without crashing', () => {
@@ -12,10 +18,22 @@ describe('LogoBar', () => {
     expect(wrapper.exists()).toBe(true);
   });
 
-  it('fires setFullscreen on button click', () => {
+  it('fires reload as expected', () => {
     const wrapper = shallow(<LogoBar {...props} />);
-    wrapper.find('button').simulate('click');
-    expect(props.setFullscreen).toHaveBeenCalledTimes(1);
+    wrapper.find('#reload').simulate('click');
+    expect(props.report.reload).toHaveBeenCalledTimes(1);
+  });
+
+  it('resets visitedPages as expected', () => {
+    const wrapper = shallow(<LogoBar {...props} />);
+    wrapper.find('#reload').simulate('click');
+    expect(props.visitedPages.current).toEqual([]);
+  });
+
+  it('fires fullscreen as expected', () => {
+    const wrapper = shallow(<LogoBar {...props} />);
+    wrapper.find('#fullscreen').simulate('click');
+    expect(props.report.fullscreen).toHaveBeenCalledTimes(1);
   });
 
   it('matches snapshot', () => {
