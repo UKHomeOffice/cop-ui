@@ -1,11 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { scrollToMainContent } from '../../../utils/scrollToMainContent';
 
 const TaskPaginationButton = ({ isButtonDisabled, setPage, newPageValue, text }) => {
-  const handleClick = (e) => {
+  const handleClick = () => {
     setPage(newPageValue);
-    scrollToMainContent(e);
+    window.scrollTo(0, 0);
   };
 
   return (

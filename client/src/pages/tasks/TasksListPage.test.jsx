@@ -66,7 +66,10 @@ describe('TasksListPage', () => {
   });
 
   it('can group tasks correctly', async () => {
-    // Add more objects with different processDefinitionIds to map different categories to them. Also added differing priorities to test priority grouping
+    /*
+     * Add more objects with different processDefinitionIds to map different categories to them.
+     * Also added differing priorities to test priority grouping
+     */
     mockData = mockData.concat([
       {
         id: 'enhance-category',
@@ -118,7 +121,11 @@ describe('TasksListPage', () => {
     const { container } = render(<TasksListPage />);
 
     await waitFor(() => {
-      // Check if the grouping title has the correct number of tasks associated with it for categories, the number shown is correspondant with the number of tasks pulled from the api call. Categories is the default grouping when component has mounted
+      /*
+       * Check if the grouping title has the correct number of tasks associated with it for categories,
+       * the number shown is correspondant with the number of tasks pulled from the api call.
+       * Categories is the default grouping when component has mounted
+       */
       expect(screen.getByText('test 10 tasks')).toBeTruthy();
       expect(screen.getByText('enhance 2 tasks')).toBeTruthy();
     });

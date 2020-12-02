@@ -40,8 +40,10 @@ const TasksListPage = ({ taskType }) => {
     const loadTasks = async () => {
       if (axiosInstance) {
         try {
-          /* taskTypePayload uses the taskType prop to query either the user assigned tasks or 
-          their assigned and group assigned tasks */
+          /*
+           * taskTypePayload uses the taskType prop to query either the user assigned tasks or
+           * their assigned and group assigned tasks
+           */
           const taskTypePayload =
             taskType === 'yours'
               ? {
@@ -89,9 +91,11 @@ const TasksListPage = ({ taskType }) => {
             },
           });
 
-          /* If the response from /camunda/engine-rest/task is an empty array, no need to make requests when task list is empty 
-          otherwise this will cause /process-instance call to return an error (no process instance ids in the json body). We don't 
-          want to show an alert if the search string yields no tasks - this is not an api error */
+          /*
+           * If the response from /camunda/engine-rest/task is an empty array, no need to make requests when task list is empty
+           * otherwise this will cause /process-instance call to return an error (no process instance ids in the json body). We don't
+           * want to show an alert if the search string yields no tasks - this is not an api error
+           */
           if (tasksResponse.data.length === 0) {
             setData({
               isLoading: false,
