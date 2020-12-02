@@ -28,14 +28,37 @@ export default () => {
             variables,
             businessKey: submission.data.businessKey,
           })
-          .then(async () => {
-            setAlertContext({
-              type: 'form-submission',
-              status: 'successful',
-              message: t('pages.form.submission.success-message'),
-              reference: `${submission.data.businessKey}`,
-            });
-            await navigation.navigate('/');
+          .then(async (results) => {
+              // retrieve result data
+              console.log('r', results);
+              console.log('k', submission.data.businessKey)
+              // get the businessKey DP-20201201-10 results.data.businessKey : is this the same as submission.data.businessKey above?
+              // check for tasks
+              axiosInstance
+                .get(`/camunda/engine-rest/task?processInstanceBusinessKey=DP-20201201-10`, {
+                  variables,
+                  businessKey: 'DP-20201201-10',
+                })
+                .then(async (results) => {
+                  console.log('secondres', results)
+                })
+              // if YES
+
+                // load form for task
+              // ELSE if NO
+                // setAlertContext
+
+
+
+
+            
+            // setAlertContext({
+            //   type: 'form-submission',
+            //   status: 'successful',
+            //   message: t('pages.form.submission.success-message'),
+            //   reference: `${submission.data.businessKey}`,
+            // });
+            // await navigation.navigate('/');
           })
           .catch(() => {
             handleOnFailure();
