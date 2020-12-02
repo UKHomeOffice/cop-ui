@@ -2,7 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 const TaskPaginationButton = ({ isButtonDisabled, setPage, newPageValue, text }) => {
-  const handleClick = () => {
+  const handleClick = (e) => {
+    e.target.blur();
     setPage(newPageValue);
     window.scrollTo(0, 0);
   };
