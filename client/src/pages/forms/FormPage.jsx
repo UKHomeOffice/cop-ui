@@ -1,21 +1,21 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import axios from 'axios';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import FormioUtils from 'formiojs/utils';
 import PropTypes from 'prop-types';
-// import { useTranslation } from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 import { useNavigation } from 'react-navi';
 import ApplicationSpinner from '../../components/ApplicationSpinner';
 import DisplayForm from '../../components/form/DisplayForm';
-// import { AlertContext } from '../../utils/AlertContext';
+import { AlertContext } from '../../utils/AlertContext';
 import { useAxios, useIsMounted } from '../../utils/hooks';
 
 const FormPage = ({ formId }) => {
   const axiosInstance = useAxios();
-  // const { setAlertContext } = useContext(AlertContext);
+  const { setAlertContext } = useContext(AlertContext);
   const isMounted = useIsMounted();
   const navigation = useNavigation();
-  // const { t } = useTranslation();
+  const { t } = useTranslation();
   const [form, setForm] = useState({ isLoading: true, data: null });
   const [pageTitle, setPageTitle] = useState();
   const [submitting, setSubmitting] = useState(false);
@@ -24,53 +24,46 @@ const FormPage = ({ formId }) => {
   This function checks for and handles those.
  */
   const startNextTask = async (businessKey) => {
-    console.log('starting next task, isloading and data states', form.isLoading, form.data);
-    // Clear form states
-    setForm({
-      isLoading: false,
-      data: null,
-    });
-    console.log('check axios instance', axiosInstance);
     if (axiosInstance) {
       // Check for any open tasks for this processInstance (businessKey)
       try {
         const nextTask = await axiosInstance.get(
           `/camunda/engine-rest/task?processInstanceBusinessKey=${businessKey}`
         );
-        // if (!nextTask.data) {
-        //   // If there are no open tasks then we can end this flow for the user
-        //   setAlertContext({
-        //     type: 'form-submission',
-        //     status: 'successful',
-        //     message: t('pages.form.submission.success-message'),
-        //     reference: `${businessKey}`,
-        //   });
-        //   navigation.navigate('/');
-        // } else {
-        console.log('get next task data', nextTask.data);
-        // If there are open tasks, we load the form for the task
-        const formResponse = await axiosInstance.get(`/form/name/peopleEaB`);
-        console.log('check form response', formResponse, formResponse.data);
-        if (formResponse && formResponse.data) {
-          console.log('setForm happening');
-          setForm({
-            isLoading: false,
-            data: formResponse.data,
+        if (!nextTask.data) {
+          // If there are no open tasks then we can end this flow for the user
+          setAlertContext({
+            type: 'form-submission',
+            status: 'successful',
+            message: t('pages.form.submission.success-message'),
+            reference: `${businessKey}`,
           });
+          navigation.navigate('/');
         } else {
-          console.log('else statement for setForm happening');
+          console.log(nextTask.data);
+          // If there are open tasks, we load the form for the task
+          const formResponse = await axiosInstance.get(`/form/name/peopleEaB`);
+          if (formResponse && formResponse.data) {
+            if (isMounted.current) {
+              setForm({
+                isLoading: false,
+                data: formResponse.data,
+              });
+            }
+          } else {
+            setForm({
+              isLoading: false,
+              data: null,
+            });
+          }
+        }
+      } catch (error) {
+        if (isMounted.current) {
           setForm({
             isLoading: false,
             data: null,
           });
         }
-        // }
-      } catch (error) {
-        console.log('trycatch error happening');
-        setForm({
-          isLoading: false,
-          data: null,
-        });
       }
     }
   };
