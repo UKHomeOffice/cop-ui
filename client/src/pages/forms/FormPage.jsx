@@ -11,7 +11,6 @@ import { AlertContext } from '../../utils/AlertContext';
 import { useAxios, useIsMounted } from '../../utils/hooks';
 
 const FormPage = ({ formId }) => {
-  const source = axios.CancelToken.source();
   const axiosInstance = useAxios();
   const { setAlertContext } = useContext(AlertContext);
   const isMounted = useIsMounted();
@@ -29,10 +28,7 @@ const FormPage = ({ formId }) => {
       // Check for any open tasks for this processInstance (businessKey)
       try {
         const nextTask = await axiosInstance.get(
-          `/camunda/engine-rest/task?processInstanceBusinessKey=${businessKey}`,
-          {
-            cancelToken: source.token,
-          }
+          `/camunda/engine-rest/task?processInstanceBusinessKey=${businessKey}`
         );
         if (!nextTask.data) {
           // If there are no open tasks then we can end this flow for the user
@@ -100,7 +96,9 @@ const FormPage = ({ formId }) => {
   };
 
   useEffect(() => {
-    const getFormPageTitle = async () => {
+    const source = axios.CancelToken.source();
+
+    const formPageTitle = async () => {
       if (axiosInstance) {
         try {
           const formName = await axiosInstance.get(
@@ -112,7 +110,7 @@ const FormPage = ({ formId }) => {
           if (formName && formName.data) {
             setPageTitle(formName.data.name);
           }
-        } catch (error) {
+        } catch (e) {
           setPageTitle();
         }
       }
@@ -142,7 +140,7 @@ const FormPage = ({ formId }) => {
               data: null,
             });
           }
-        } catch (error) {
+        } catch (e) {
           if (isMounted.current) {
             setForm({
               isLoading: false,
@@ -153,12 +151,12 @@ const FormPage = ({ formId }) => {
       }
     };
 
-    getFormPageTitle().then(() => {});
     loadForm().then(() => {});
+    formPageTitle();
     return () => {
-      source.cancel('Cancelling request');
+      source.cancel('cancelling request');
     };
-  }, [axiosInstance, formId, setForm, isMounted, source]);
+  }, [axiosInstance, formId, setForm, isMounted, setSubmitting]);
 
   if (form.isLoading) {
     return <ApplicationSpinner />;
