@@ -13,7 +13,11 @@ const Home = () => {
 
   const axiosInstance = useAxios();
 
-  const [tasksCount, setTasksCount] = useState({
+  const [groupTasksCount, setGroupTasksCount] = useState({
+    isLoading: true,
+    count: 0,
+  });
+  const [yourTasksCount, setYourTasksCount] = useState({
     isLoading: true,
     count: 0,
   });
@@ -36,7 +40,7 @@ const Home = () => {
       })
         .then((response) => {
           if (isMounted.current) {
-            setTasksCount({
+            setGroupTasksCount({
               isLoading: false,
               count: response.data.count,
             });
@@ -44,7 +48,35 @@ const Home = () => {
         })
         .catch(() => {
           if (isMounted.current) {
-            setTasksCount({
+            setGroupTasksCount({
+              isLoading: false,
+              count: 0,
+            });
+          }
+        });
+      axiosInstance({
+        method: 'POST',
+        url: '/camunda/engine-rest/task/count',
+        cancelToken: source.token,
+        data: {
+          orQueries: [
+            {
+              assignee: keycloak.tokenParsed.email,
+            },
+          ],
+        },
+      })
+        .then((response) => {
+          if (isMounted.current) {
+            setYourTasksCount({
+              isLoading: false,
+              count: response.data.count,
+            });
+          }
+        })
+        .catch(() => {
+          if (isMounted.current) {
+            setYourTasksCount({
               isLoading: false,
               count: 0,
             });
@@ -57,7 +89,8 @@ const Home = () => {
     };
   }, [
     axiosInstance,
-    setTasksCount,
+    setGroupTasksCount,
+    setYourTasksCount,
     isMounted,
     keycloak.tokenParsed.groups,
     keycloak.tokenParsed.email,
@@ -77,8 +110,8 @@ const Home = () => {
             <Card
               title={t('pages.home.card.tasks.title')}
               href="/tasks/your-tasks"
-              count={tasksCount.count}
-              isLoading={tasksCount.isLoading}
+              count={yourTasksCount.count}
+              isLoading={yourTasksCount.isLoading}
               handleClick={async () => {
                 await navigation.navigate('/tasks/your-tasks');
               }}
@@ -89,8 +122,8 @@ const Home = () => {
             <Card
               title={t('pages.home.card.group-tasks.title')}
               href="/tasks"
-              count={tasksCount.count}
-              isLoading={tasksCount.isLoading}
+              count={groupTasksCount.count}
+              isLoading={groupTasksCount.isLoading}
               handleClick={async () => {
                 await navigation.navigate('/tasks');
               }}
