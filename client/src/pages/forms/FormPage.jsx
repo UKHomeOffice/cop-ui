@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from 'react';
+import React, { useEffect, useState, useContext, useCallback } from 'react';
 import axios from 'axios';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import FormioUtils from 'formiojs/utils';
@@ -11,6 +11,7 @@ import { AlertContext } from '../../utils/AlertContext';
 import { useAxios, useIsMounted } from '../../utils/hooks';
 
 const FormPage = ({ formId }) => {
+  const source = axios.CancelToken.source();
   const axiosInstance = useAxios();
   const { setAlertContext } = useContext(AlertContext);
   const isMounted = useIsMounted();
@@ -20,6 +21,59 @@ const FormPage = ({ formId }) => {
   const [pageTitle, setPageTitle] = useState();
   const [submitting, setSubmitting] = useState(false);
 
+  const getFormPageTitle = async () => {
+    if (axiosInstance) {
+      try {
+        const formName = await axiosInstance.get(
+          `/camunda/engine-rest/process-definition/key/${formId}`,
+          {
+            cancelToken: source.token,
+          }
+        );
+        if (formName && formName.data) {
+          setPageTitle(formName.data.name);
+        }
+      } catch (error) {
+        setPageTitle();
+      }
+    }
+  };
+
+  const loadForm = async () => {
+    if (axiosInstance) {
+      try {
+        const formKey = await axiosInstance.get(
+          `/camunda/engine-rest/process-definition/key/${formId}/startForm`,
+          {
+            cancelToken: source.token,
+          }
+        );
+        if (formKey && formKey.data) {
+          const { key } = formKey.data;
+          const formResponse = await axiosInstance.get(`/form/name/${key}`);
+          if (isMounted.current) {
+            setForm({
+              isLoading: false,
+              data: formResponse.data,
+            });
+          }
+        } else {
+          setForm({
+            isLoading: false,
+            data: null,
+          });
+        }
+      } catch (error) {
+        if (isMounted.current) {
+          setForm({
+            isLoading: false,
+            data: null,
+          });
+        }
+      }
+    }
+  };
+
   /* Some forms have connected forms that should be triggered immediately for the user to complete
   This function checks for and handles those.
  */
@@ -28,7 +82,10 @@ const FormPage = ({ formId }) => {
       // Check for any open tasks for this processInstance (businessKey)
       try {
         const nextTask = await axiosInstance.get(
-          `/camunda/engine-rest/task?processInstanceBusinessKey=${businessKey}`
+          `/camunda/engine-rest/task?processInstanceBusinessKey=${businessKey}`,
+          {
+            cancelToken: source.token,
+          }
         );
         if (!nextTask.data) {
           // If there are no open tasks then we can end this flow for the user
@@ -71,7 +128,7 @@ const FormPage = ({ formId }) => {
   /* The submitForm was using a different syntax for the api calls
   It seems to be due to the 'useCallback' feature, as you cannot use 'async/await' with that
   */
-  const submitForm = (submission, formInfo, id) => {
+  const submitForm = useCallback((submission, formInfo, id) => {
     const variables = {
       [formInfo.name]: {
         value: JSON.stringify(submission.data),
@@ -93,70 +150,12 @@ const FormPage = ({ formId }) => {
       .catch(() => {
         setSubmitting(false);
       });
-  };
+  });
 
   useEffect(() => {
-    const source = axios.CancelToken.source();
-
-    const formPageTitle = async () => {
-      if (axiosInstance) {
-        try {
-          const formName = await axiosInstance.get(
-            `/camunda/engine-rest/process-definition/key/${formId}`,
-            {
-              cancelToken: source.token,
-            }
-          );
-          if (formName && formName.data) {
-            setPageTitle(formName.data.name);
-          }
-        } catch (e) {
-          setPageTitle();
-        }
-      }
-    };
-
-    const loadForm = async () => {
-      if (axiosInstance) {
-        try {
-          const formKey = await axiosInstance.get(
-            `/camunda/engine-rest/process-definition/key/${formId}/startForm`,
-            {
-              cancelToken: source.token,
-            }
-          );
-          if (formKey && formKey.data) {
-            const { key } = formKey.data;
-            const formResponse = await axiosInstance.get(`/form/name/${key}`);
-            if (isMounted.current) {
-              setForm({
-                isLoading: false,
-                data: formResponse.data,
-              });
-            }
-          } else {
-            setForm({
-              isLoading: false,
-              data: null,
-            });
-          }
-        } catch (e) {
-          if (isMounted.current) {
-            setForm({
-              isLoading: false,
-              data: null,
-            });
-          }
-        }
-      }
-    };
-
-    loadForm().then(() => {});
-    formPageTitle();
-    return () => {
-      source.cancel('cancelling request');
-    };
-  }, [axiosInstance, formId, setForm, isMounted, setSubmitting]);
+    getFormPageTitle();
+    loadForm();
+  }, [axiosInstance, formId, setForm, isMounted]);
 
   if (form.isLoading) {
     return <ApplicationSpinner />;
