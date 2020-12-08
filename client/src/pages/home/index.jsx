@@ -33,7 +33,7 @@ const Home = () => {
           orQueries: [
             {
               candidateGroups: keycloak.tokenParsed.groups,
-              assignee: keycloak.tokenParsed.email,
+              includeAssignedTasks: true,
             },
           ],
         },

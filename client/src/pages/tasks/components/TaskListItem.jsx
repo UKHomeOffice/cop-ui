@@ -50,7 +50,7 @@ const TaskListItem = ({ id, due, name, assignee, businessKey }) => {
     const source = axios.CancelToken.source();
     await axiosInstance({
       method: 'POST',
-      url: `/camunda/engine-rest/task/${id}/claim`,
+      url: `/camunda/engine-rest/task/${id}/assignee`,
       cancelToken: source.token,
       data: {
         userId: currentUser,
