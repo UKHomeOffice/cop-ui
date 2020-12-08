@@ -1,16 +1,22 @@
-import React from 'react';
-import { Link } from 'react-navi';
+import React, { useState } from 'react';
+import { Link, useNavigation } from 'react-navi';
 import PropTypes from 'prop-types';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
-import './TaskListItem.scss';
+import axios from 'axios';
 import { useKeycloak } from '@react-keycloak/web';
+import { useAxios } from '../../../utils/hooks';
+import './TaskListItem.scss';
 
 dayjs.extend(relativeTime);
 
 const TaskListItem = ({ id, due, name, assignee, businessKey }) => {
+  const axiosInstance = useAxios();
   const [keycloak] = useKeycloak();
+  const navigation = useNavigation();
   const currentUser = keycloak.tokenParsed.email;
+  const [unclaimActionMade, setUnclaimActionMade] = useState(false);
+
   const isOverDue = () => {
     if (dayjs(due).fromNow().includes('ago')) {
       return (
@@ -32,7 +38,7 @@ const TaskListItem = ({ id, due, name, assignee, businessKey }) => {
     );
   };
   const isAssigned = () => {
-    if (!assignee) {
+    if (!assignee || unclaimActionMade) {
       return 'Unassigned';
     }
     if (assignee === currentUser) {
@@ -40,32 +46,39 @@ const TaskListItem = ({ id, due, name, assignee, businessKey }) => {
     }
     return assignee;
   };
-  const handleClaim = (taskId) => {
-    return taskId;
+  const handleClaim = async () => {
+    const source = axios.CancelToken.source();
+    await axiosInstance({
+      method: 'POST',
+      url: `/camunda/engine-rest/task/${id}/claim`,
+      cancelToken: source.token,
+      data: {
+        userId: currentUser,
+      },
+    }).then(() => navigation.navigate(`/tasks/${id}`));
   };
-  const handleUnclaim = (taskId) => {
-    return taskId;
+  const handleUnclaim = async (e) => {
+    const source = axios.CancelToken.source();
+    e.persist();
+    await axiosInstance({
+      method: 'POST',
+      url: `/camunda/engine-rest/task/${id}/unclaim`,
+      cancelToken: source.token,
+    }).then(() => {
+      setUnclaimActionMade(true);
+      e.target.blur();
+    });
   };
   const canClaimTask = () => {
-    if (assignee === null || assignee !== currentUser) {
+    if (assignee === null || assignee !== currentUser || unclaimActionMade) {
       return (
-        <button
-          type="submit"
-          id="actionButton"
-          className="govuk-button"
-          onClick={() => handleClaim(id)}
-        >
+        <button type="submit" id="actionButton" className="govuk-button" onClick={handleClaim}>
           Claim
         </button>
       );
     }
     return (
-      <button
-        type="submit"
-        id="actionButton"
-        className="govuk-button"
-        onClick={() => handleUnclaim(id)}
-      >
+      <button type="submit" id="actionButton" className="govuk-button" onClick={handleUnclaim}>
         Unclaim
       </button>
     );
