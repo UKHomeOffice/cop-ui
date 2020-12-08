@@ -52,7 +52,7 @@ describe('TaskListItem', () => {
   });
 
   it('can claim a task not assigned to the current user', async () => {
-    mockAxios.onPost('/camunda/engine-rest/task/1/claim').reply(200, {
+    mockAxios.onPost('/camunda/engine-rest/task/1/assignee').reply(200, {
       count: 1,
     });
     // In the setupTests mocks, the default current user is "test"

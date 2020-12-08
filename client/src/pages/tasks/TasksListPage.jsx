@@ -50,19 +50,15 @@ const TasksListPage = ({ taskType }) => {
                   assignee: keycloak.tokenParsed.email,
                 }
               : {
-                  assignee: keycloak.tokenParsed.email,
                   candidateGroups: keycloak.tokenParsed.groups,
+                  includeAssignedTasks: true,
                 };
           const taskCountResponse = await axiosInstance({
             method: 'POST',
             url: '/camunda/engine-rest/task/count',
             cancelToken: source.token,
             data: {
-              orQueries: [
-                {
-                  ...taskTypePayload,
-                },
-              ],
+              ...taskTypePayload,
               nameLike: `%${filters.search}%`,
             },
           });
@@ -82,11 +78,7 @@ const TasksListPage = ({ taskType }) => {
                   sortOrder,
                 },
               ],
-              orQueries: [
-                {
-                  ...taskTypePayload,
-                },
-              ],
+              ...taskTypePayload,
               nameLike: `%${filters.search}%`,
             },
           });
