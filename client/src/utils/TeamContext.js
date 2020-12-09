@@ -7,7 +7,7 @@ export const TeamContext = createContext({
 });
 
 export const TeamContextProvider = ({ children }) => {
-  const [team, setTeam] = useState(null);
+  const [team, setTeam] = useState({});
 
   return <TeamContext.Provider value={{ team, setTeam }}>{children}</TeamContext.Provider>;
 };

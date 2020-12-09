@@ -4,31 +4,16 @@ exports[`LogoBar matches snapshot 1`] = `
 <div
   className="logo-bar"
 >
-  <p>
-    pages.report.logo-bar.intro
-     
-    <Link
-      href="/reports/"
-    >
-      pages.report.logo-bar.link
-    </Link>
-     
-    pages.report.logo-bar.outro
-  </p>
   <button
-    onClick={
-      [MockFunction] {
-        "calls": Array [
-          Array [],
-        ],
-        "results": Array [
-          Object {
-            "type": "return",
-            "value": undefined,
-          },
-        ],
-      }
-    }
+    id="reload"
+    onClick={[Function]}
+    type="button"
+  >
+    pages.report.logo-bar.reload
+  </button>
+  <button
+    id="fullscreen"
+    onClick={[Function]}
     type="button"
   >
     pages.report.logo-bar.fullscreen

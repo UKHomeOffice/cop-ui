@@ -14,7 +14,7 @@ exports[`PowerBIReport Page matches snapshot 1`] = `
 
 <PowerBIReport>
   <styled.div
-    mobileLayout={false}
+    mobileLayout={null}
     style={
       Object {
         "height": "50vw",
@@ -39,31 +39,6 @@ exports[`PowerBIReport Page matches snapshot 1`] = `
           id="report"
         />
       </styled.div>
-      <LogoBar
-        setFullscreen={[Function]}
-      >
-        <div
-          className="logo-bar"
-        >
-          <p>
-            pages.report.logo-bar.intro
-             
-            <Link
-              href="/reports/"
-            >
-              pages.report.logo-bar.link
-            </Link>
-             
-            pages.report.logo-bar.outro
-          </p>
-          <button
-            onClick={[Function]}
-            type="button"
-          >
-            pages.report.logo-bar.fullscreen
-          </button>
-        </div>
-      </LogoBar>
     </div>
   </styled.div>
 </PowerBIReport>
