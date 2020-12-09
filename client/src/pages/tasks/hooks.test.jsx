@@ -1,77 +1,187 @@
-import axios from 'axios';
-import { renderHook, act } from '@testing-library/react-hooks';
-import MockAdapter from 'axios-mock-adapter';
 import React from 'react';
+import { renderHook, act } from '@testing-library/react-hooks';
+import axios from 'axios';
+import MockAdapter from 'axios-mock-adapter';
+import { waitFor } from '@testing-library/react';
+import { AlertContextProvider } from '../../utils/AlertContext';
 import apiHooks from './hooks';
 import { mockNavigate } from '../../setupTests';
-import { AlertContextProvider } from '../../utils/AlertContext';
 
 jest.mock('../../utils/logger', () => ({
   error: jest.fn(),
 }));
 
+jest.mock('react', () => {
+  const ActualReact = require.requireActual('react');
+  return {
+    ...ActualReact,
+    useContext: () => ({ setAlertContext: jest.fn(), setTeam: jest.fn(), setStaffId: jest.fn() }),
+  };
+});
+
 describe('hooks', () => {
   const mockAxios = new MockAdapter(axios);
-
-  it('can handle submit', async () => {
-    mockAxios.onPost('/camunda/engine-rest/task/taskId/submit-form').reply(200, {});
-    // eslint-disable-next-line react/prop-types
-    const wrapper = ({ children }) => <AlertContextProvider>{children}</AlertContextProvider>;
-    const { result } = renderHook(() => apiHooks(), { wrapper });
-
-    const submission = {
-      data: {
-        textField: 'test',
-      },
-    };
-
-    const form = { name: 'formName', id: 'formId' };
-
-    const taskId = 'taskId';
-
-    const businessKey = 'businesskey';
-
-    await act(async () => {
-      result.current.submitForm({
-        submission,
-        form,
-        taskId,
-        businessKey,
-        handleOnFailure: () => {},
-      });
-    });
-    expect(mockNavigate).toBeCalled();
+  beforeEach(() => {
+    mockAxios.reset();
+    mockNavigate.mockReset();
   });
 
-  it('can handle failure', async () => {
+  it('can handle a failure to submit a form', async () => {
     mockAxios.onPost('/camunda/engine-rest/task/taskId/submit-form').reply(500, {});
+    const handleOnFailure = jest.fn();
     // eslint-disable-next-line react/prop-types
     const wrapper = ({ children }) => <AlertContextProvider>{children}</AlertContextProvider>;
     const { result } = renderHook(() => apiHooks(), { wrapper });
 
-    const submission = {
-      data: {
-        textField: 'test',
-      },
-    };
-
-    const form = { name: 'formName', id: 'formId' };
-
-    const taskId = 'taskId';
-
-    const businessKey = 'businesskey';
-    const handleOnFailure = jest.fn();
-
     await act(async () => {
-      result.current.submitForm({
-        submission,
-        form,
-        taskId,
-        businessKey,
-        handleOnFailure,
-      });
+      result.current.submitForm(
+        // submission
+        {
+          data: {
+            textField: 'test',
+          },
+        },
+        // form
+        { name: 'formName', id: 'formId' },
+        // taskId
+        'taskId',
+        // businessKey
+        'businesskey',
+        // handleOnFailure
+        handleOnFailure
+      );
     });
 
     expect(handleOnFailure).toBeCalled();
+  });
+
+  it('can handle successful submit, but failed get tasks', async () => {
+    // eslint-disable-next-line react/prop-types
+    const wrapper = ({ children }) => <AlertContextProvider>{children}</AlertContextProvider>;
+    const { result } = renderHook(() => apiHooks(), { wrapper });
+    const handleOnFailure = jest.fn();
+
+    mockAxios.onPost('/camunda/engine-rest/task/taskId/submit-form').reply(200, {});
+    mockAxios
+      .onGet('/camunda/engine-rest/task?processInstanceBusinessKey=businesskey')
+      .reply(500, {});
+
+    // Successful submit
+    await act(async () => {
+      result.current.submitForm(
+        // submission
+        {
+          data: {
+            textField: 'test',
+          },
+        },
+        // form
+        { name: 'formName', id: 'formId' },
+        // taskId
+        'taskId',
+        // businessKey
+        'businesskey',
+        // handleOnFailure
+        handleOnFailure
+      );
+    });
+    // This will be the handleOnFailure for the onGet call
+    expect(handleOnFailure).toBeCalled();
+  });
+
+  it('can handle successful submit, and go to the task if task exists for this user', async () => {
+    const { result } = renderHook(() => apiHooks());
+
+    mockAxios.onPost('/camunda/engine-rest/task/taskId/submit-form').reply(200, {});
+    mockAxios.onGet('/camunda/engine-rest/task?processInstanceBusinessKey=businesskey').reply(200, [
+      {
+        id: 'testId',
+        assignee: 'test', // this is declared in setupTests.js
+      },
+    ]);
+
+    result.current.submitForm(
+      // submission
+      {
+        data: {
+          textField: 'test',
+        },
+      },
+      // form
+      { name: 'formName', id: 'formId' },
+      // taskId
+      'taskId',
+      // businessKey
+      'businesskey',
+      // handleOnFailure
+      () => {}
+    );
+
+    await waitFor(() => {
+      expect(mockNavigate).toHaveBeenCalledWith('/tasks/testId');
+    });
+  });
+
+  it('can handle successful submit, and go to dashboard with confirmation if no further task exists for this businessKey', async () => {
+    const { result } = renderHook(() => apiHooks());
+
+    mockAxios.onPost('/camunda/engine-rest/task/taskId/submit-form').reply(200, {});
+    mockAxios
+      .onGet('/camunda/engine-rest/task?processInstanceBusinessKey=businesskey')
+      .reply(200, []);
+
+    result.current.submitForm(
+      // submission
+      {
+        data: {
+          textField: 'test',
+        },
+      },
+      // form
+      { name: 'formName', id: 'formId' },
+      // taskId
+      'taskId',
+      // businessKey
+      'businesskey',
+      // handleOnFailure
+      () => {}
+    );
+
+    await waitFor(() => {
+      expect(mockNavigate).toHaveBeenCalledWith('/');
+    });
+  });
+
+  it('can handle successful submit, and go to dashboard with confirmation if a task exists, but not for this user', async () => {
+    const { result } = renderHook(() => apiHooks());
+
+    mockAxios.onPost('/camunda/engine-rest/task/taskId/submit-form').reply(200, {});
+    mockAxios.onGet('/camunda/engine-rest/task?processInstanceBusinessKey=businesskey').reply(200, [
+      {
+        id: 'testId',
+        assignee: 'notThisUser',
+      },
+    ]);
+
+    result.current.submitForm(
+      // submission
+      {
+        data: {
+          textField: 'test',
+        },
+      },
+      // form
+      { name: 'formName', id: 'formId' },
+      // taskId
+      'taskId',
+      // businessKey
+      'businesskey',
+      // handleOnFailure
+      () => {}
+    );
+
+    await waitFor(() => {
+      expect(mockNavigate).toHaveBeenCalledWith('/');
+    });
   });
 });
