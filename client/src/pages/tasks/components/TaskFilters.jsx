@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-const TaskFilters = ({ search, handleFilters }) => {
+const TaskFilters = ({ search, sortBy, groupBy, handleFilters }) => {
   return (
     <div className="govuk-grid-row">
       <div className="govuk-grid-column-one-third">
@@ -9,13 +9,19 @@ const TaskFilters = ({ search, handleFilters }) => {
           <label className="govuk-label" htmlFor="sort">
             Sort by:
           </label>
-          <select className="govuk-select" id="sort" name="sortBy" onChange={handleFilters}>
+          <select
+            className="govuk-select"
+            id="sort"
+            name="sortBy"
+            onChange={handleFilters}
+            value={sortBy}
+          >
             <option value="asc-dueDate">Oldest due date</option>
             <option value="desc-dueDate">Latest due date</option>
             <option value="asc-created">Oldest created date</option>
             <option value="desc-created">Latest created date</option>
-            <option value="asc-priority">Highest priority</option>
-            <option value="desc-priority">Lowest priority</option>
+            <option value="desc-priority">Highest priority</option>
+            <option value="asc-priority">Lowest priority</option>
           </select>
         </div>
       </div>
@@ -24,7 +30,13 @@ const TaskFilters = ({ search, handleFilters }) => {
           <label className="govuk-label" htmlFor="group">
             Group by:
           </label>
-          <select className="govuk-select" id="group" name="groupBy" onChange={handleFilters}>
+          <select
+            className="govuk-select"
+            id="group"
+            name="groupBy"
+            onChange={handleFilters}
+            value={groupBy}
+          >
             <option value="category">Category</option>
             <option value="businessKey">BF Reference</option>
             <option value="priority">Priority</option>
@@ -58,6 +70,8 @@ TaskFilters.defaultProps = {
 TaskFilters.propTypes = {
   handleFilters: PropTypes.func.isRequired,
   search: PropTypes.string,
+  sortBy: PropTypes.string.isRequired,
+  groupBy: PropTypes.string.isRequired,
 };
 
 export default TaskFilters;
