@@ -1,4 +1,5 @@
 import { useCallback, useContext } from 'react';
+import { useKeycloak } from '@react-keycloak/web';
 import { useTranslation } from 'react-i18next';
 import { useNavigation } from 'react-navi';
 import { useAxios } from '../../utils/hooks';
@@ -9,6 +10,8 @@ export default () => {
   const { t } = useTranslation();
   const { setAlertContext } = useContext(AlertContext);
   const navigation = useNavigation();
+  const [keycloak] = useKeycloak();
+  const currentUser = keycloak.tokenParsed.email;
 
   const submitForm = useCallback(
     ({ submission, form, taskId, businessKey, handleOnFailure }) => {
@@ -25,13 +28,26 @@ export default () => {
             businessKey,
           })
           .then(async () => {
-            setAlertContext({
-              type: 'form-submission',
-              status: 'successful',
-              message: t('pages.task.submission.success-message'),
-              reference: `${businessKey}`,
-            });
-            await navigation.navigate('/');
+            axiosInstance
+              .get(`/camunda/engine-rest/task?processInstanceBusinessKey=${businessKey}`)
+              .then((response) => {
+                // This will automatically open the next form available (if one exists for this user)
+                // We can only ever open one task in this manner and so always take the first available
+                if (response.data.length > 0 && response.data[0].assignee === currentUser) {
+                  navigation.navigate(`/tasks/${response.data[0].id}`);
+                } else {
+                  setAlertContext({
+                    type: 'form-submission',
+                    status: 'successful',
+                    message: t('pages.task.submission.success-message'),
+                    reference: `${businessKey}`,
+                  });
+                  navigation.navigate('/');
+                }
+              })
+              .catch(() => {
+                handleOnFailure();
+              });
           })
           .catch(() => {
             handleOnFailure();
