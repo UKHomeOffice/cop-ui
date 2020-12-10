@@ -187,7 +187,6 @@ describe('TaskPage', () => {
     expect(wrapper.find(ApplicationSpinner).exists()).toBe(false);
 
     const displayForm = wrapper.find(DisplayForm).at(0);
-
     expect(displayForm.exists()).toBe(true);
 
     await act(async () => {
@@ -198,15 +197,14 @@ describe('TaskPage', () => {
       });
       await wrapper.update();
     });
-
-    expect(mockNavigate).toBeCalledWith('/');
+    expect(wrapper.find(ApplicationSpinner).exists()).toBe(true);
 
     await act(async () => {
       await displayForm.props().handleOnCancel();
       await wrapper.update();
     });
 
-    expect(mockNavigate).toBeCalledWith('/');
+    expect(mockNavigate).toBeCalledWith('/tasks');
   });
 
   it('adds complete button if form is not present', async () => {
@@ -257,12 +255,5 @@ describe('TaskPage', () => {
     const completeButton = wrapper.find('button').at(0);
 
     expect(completeButton.exists()).toBe(true);
-
-    await act(async () => {
-      await completeButton.simulate('click');
-      await wrapper.update();
-    });
-
-    expect(mockNavigate).toBeCalledWith('/');
   });
 });
