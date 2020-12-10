@@ -32,10 +32,6 @@ const TaskPage = ({ taskId }) => {
     const source = axios.CancelToken.source();
     setTask({ isLoading: true, data: null });
     setSubmitting(false);
-    setTask({
-      isLoading: true,
-      data: null,
-    });
 
     // Get task data
     const loadTask = async () => {
