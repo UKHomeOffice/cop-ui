@@ -232,27 +232,6 @@ const TaskPage = ({ taskId }) => {
               </div>
             </div>
           </div>
-          <div className="govuk-grid-row">
-            <div className="govuk-grid-column-full">
-              <button
-                className="govuk-button"
-                type="button"
-                onClick={() => {
-                  submitForm({
-                    submission: {},
-                    form: {
-                      name: 'no-form',
-                    },
-                    taskId,
-                    businessKey: processInstance.businessKey,
-                    handleOnFailure,
-                  });
-                }}
-              >
-                {t('pages.task.actions.complete')}
-              </button>
-            </div>
-          </div>
         </>
       )}
     </>
