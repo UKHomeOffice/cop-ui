@@ -27,9 +27,14 @@ const TaskPage = ({ taskId }) => {
   });
 
   useEffect(() => {
-    // Reset state
+    // Reset state so that when task page is reloaded with 'next task' it starts fresh
     const source = axios.CancelToken.source();
     setTask({ isLoading: true, data: null });
+    setSubmitting(false);
+    setTask({
+      isLoading: true,
+      data: null,
+    });
 
     // Get task data
     const loadTask = async () => {
