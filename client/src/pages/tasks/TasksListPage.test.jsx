@@ -2,12 +2,11 @@ import React from 'react';
 import { shallow, mount } from 'enzyme';
 import MockAdapter from 'axios-mock-adapter';
 import axios from 'axios';
-import { act, render, screen, waitFor, fireEvent, queryByAttribute } from '@testing-library/react';
+import { render, screen, waitFor, fireEvent, queryByAttribute } from '@testing-library/react';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import TasksListPage from './TasksListPage';
 import ApplicationSpinner from '../../components/ApplicationSpinner';
-import TaskList from './components/TaskList';
 
 dayjs.extend(relativeTime);
 
@@ -44,25 +43,40 @@ describe('TasksListPage', () => {
     expect(wrapper.find(ApplicationSpinner).exists()).toBe(true);
   });
 
-  it('renders a list of tasks', async () => {
-    mockAxios.onGet('/camunda/engine-rest/task').reply(200, [
+  it('can render a list of tasks', async () => {
+    mockAxios.onPost('/camunda/engine-rest/task').reply(200, [
       {
-        id: 'id',
-        name: 'name',
+        id: 1,
+        name: 'test-task',
+        processDefinitionId: 'processDefinitionId0',
+        processInstanceId: 'processInstanceId0',
+        due: dayjs().add(2, 'day').format(),
+        created: dayjs().subtract(1, 'day').format(),
+        assignee: 'john@doe.com',
+        priority: 100,
       },
     ]);
     mockAxios.onPost('/camunda/engine-rest/task/count').reply(200, {
       count: 1,
     });
-    const wrapper = await mount(<TasksListPage />);
+    mockAxios.onGet('/camunda/engine-rest/process-definition').reply(200, [
+      {
+        category: 'test',
+        id: 'processDefinitionId0',
+      },
+    ]);
+    mockAxios.onPost('/camunda/engine-rest/process-instance').reply(200, [
+      {
+        businessKey: 'TEST-BUSINESS-KEY0',
+        id: 'processInstanceId0',
+      },
+    ]);
 
-    await act(async () => {
-      await Promise.resolve(wrapper);
-      await new Promise((resolve) => setImmediate(resolve));
-      await wrapper.update();
+    render(<TasksListPage />);
+
+    await waitFor(() => {
+      expect(screen.getByText('test-task')).toBeTruthy();
     });
-
-    expect(wrapper.find(TaskList).exists()).toBe(true);
   });
 
   it('can group tasks correctly', async () => {

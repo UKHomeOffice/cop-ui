@@ -10,11 +10,15 @@ describe('TaskFilters', () => {
   });
 
   it('renders without crashing', () => {
-    shallow(<TaskFilters search="" handleFilters={mockHandleFilter} />);
+    shallow(
+      <TaskFilters search="" sortBy="test" groupBy="test" handleFilters={mockHandleFilter} />
+    );
   });
 
   it('calls handleFilter when sortBy option has been chosen', () => {
-    const wrapper = shallow(<TaskFilters search="" handleFilters={mockHandleFilter} />);
+    const wrapper = shallow(
+      <TaskFilters search="" sortBy="test" groupBy="test" handleFilters={mockHandleFilter} />
+    );
     const sortBy = wrapper.find('select[id="sort"]').at(0);
 
     sortBy.simulate('change', { event: { target: { value: 'desc-dueDate' } } });
@@ -23,7 +27,9 @@ describe('TaskFilters', () => {
   });
 
   it('calls handleFilter when groupBy option has been chosen', () => {
-    const wrapper = shallow(<TaskFilters search="" handleFilters={mockHandleFilter} />);
+    const wrapper = shallow(
+      <TaskFilters search="" sortBy="test" groupBy="test" handleFilters={mockHandleFilter} />
+    );
     const groupBy = wrapper.find('select[id="group"]').at(0);
 
     groupBy.simulate('change', { event: { target: { value: 'priority' } } });
@@ -32,7 +38,9 @@ describe('TaskFilters', () => {
   });
 
   it('calls handleFilter when search bar has input', () => {
-    const wrapper = shallow(<TaskFilters search="" handleFilters={mockHandleFilter} />);
+    const wrapper = shallow(
+      <TaskFilters search="" sortBy="test" groupBy="test" handleFilters={mockHandleFilter} />
+    );
     const searchBar = wrapper.find('input[id="filterTaskName"]').at(0);
 
     searchBar.simulate('change', { event: { target: { value: 'Border' } } });

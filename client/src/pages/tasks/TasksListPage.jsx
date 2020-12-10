@@ -9,13 +9,14 @@ import { useIsMounted, useAxios } from '../../utils/hooks';
 import TaskList from './components/TaskList';
 import TaskFilters from './components/TaskFilters';
 import TaskPagination from './components/TaskPagination';
+import secureLocalStorage from '../../utils/SecureLocalStorage';
 
 const TasksListPage = ({ taskType }) => {
   const { t } = useTranslation();
   const [keycloak] = useKeycloak();
   const [filters, setFilters] = useState({
-    sortBy: 'asc-dueDate',
-    groupBy: 'category',
+    sortBy: secureLocalStorage.setInitialValue(`${taskType}-tasksSortBy`, 'asc-dueDate'),
+    groupBy: secureLocalStorage.setInitialValue(`${taskType}-tasksGroupBy`, 'category'),
     search: '',
   });
   const [data, setData] = useState({
@@ -28,7 +29,12 @@ const TasksListPage = ({ taskType }) => {
   const isMounted = useIsMounted();
   const axiosInstance = useAxios();
   const handleFilters = (e) => {
-    setFilters({ ...filters, [e.target.name]: e.target.value });
+    const newFilterValues = { ...filters, [e.target.name]: e.target.value };
+    setFilters(newFilterValues);
+    if (e.target.name !== 'search') {
+      secureLocalStorage.updateStoredValue(`${taskType}-tasksSortBy`, newFilterValues.sortBy);
+      secureLocalStorage.updateStoredValue(`${taskType}-tasksGroupBy`, newFilterValues.groupBy);
+    }
   };
   const formatSortByValue = (sortValue) => {
     const [sortOrder, sortVariable] = sortValue.split('-');
@@ -186,7 +192,12 @@ const TasksListPage = ({ taskType }) => {
         </div>
       </div>
       <div>
-        <TaskFilters search={filters.search} handleFilters={handleFilters} />
+        <TaskFilters
+          search={filters.search}
+          sortBy={filters.sortBy}
+          groupBy={filters.groupBy}
+          handleFilters={handleFilters}
+        />
       </div>
       <div className="govuk-grid-row">
         <div className="govuk-grid-column-full">
