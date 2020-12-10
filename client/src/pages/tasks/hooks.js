@@ -14,7 +14,7 @@ export default () => {
   const currentUser = keycloak.tokenParsed.email;
 
   const submitForm = useCallback(
-    (submission, form, taskId, businessKey, handleOnFailure) => {
+    ({ submission, form, taskId, businessKey, handleOnFailure }) => {
       if (form) {
         const variables = {
           [form.name]: {
