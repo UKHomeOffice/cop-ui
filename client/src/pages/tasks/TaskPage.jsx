@@ -19,8 +19,9 @@ const TaskPage = ({ taskId }) => {
   const navigation = useNavigation();
   const [keycloak] = useKeycloak();
   const currentUser = keycloak.tokenParsed.email;
-  const [submitting, setSubmitting] = useState(false);
   const { submitForm } = apiHooks();
+  const [submitting, setSubmitting] = useState(false);
+  const [assigneeText, setAssigneeText] = useState();
   const [task, setTask] = useState({
     isLoading: true,
     data: null,
@@ -96,6 +97,7 @@ const TaskPage = ({ taskId }) => {
                 task: taskInfo,
               },
             });
+            setAssigneeText(t('pages.task.current-assignee'));
           } else {
             setTask({
               isLoading: false,
@@ -108,6 +110,11 @@ const TaskPage = ({ taskId }) => {
                 task: taskInfo,
               },
             });
+            if (!taskData.data.task.assignee) {
+              setAssigneeText(t('pages.task.unassigned'));
+            } else {
+              setAssigneeText(taskData.data.task.assignee);
+            }
           }
         } catch (e) {
           setTask({ isLoading: true, data: null });
@@ -126,16 +133,6 @@ const TaskPage = ({ taskId }) => {
 
   if (!task.data) {
     return null;
-  }
-  const { tokenParsed } = keycloak;
-
-  let assignee = t('pages.task.current-assignee');
-  const taskAssignee = task.data.task.assignee;
-
-  if (!taskAssignee) {
-    assignee = t('pages.task.unassigned');
-  } else if (taskAssignee && taskAssignee !== tokenParsed.email) {
-    assignee = tokenParsed.email;
   }
 
   const {
@@ -178,7 +175,7 @@ const TaskPage = ({ taskId }) => {
         </div>
         <div className="govuk-grid-column-one-quarter" id="taskAssignee">
           <span className="govuk-caption-m govuk-!-font-size-19">{t('pages.task.assignee')}</span>
-          <h4 className="govuk-heading-m govuk-!-font-size-19">{assignee}</h4>
+          <h4 className="govuk-heading-m govuk-!-font-size-19">{assigneeText}</h4>
         </div>
       </div>
       <div className="govuk-grid-row">
