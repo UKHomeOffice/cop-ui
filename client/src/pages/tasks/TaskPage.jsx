@@ -19,13 +19,20 @@ const TaskPage = ({ taskId }) => {
   const navigation = useNavigation();
   const [keycloak] = useKeycloak();
   const [submitting, setSubmitting] = useState(false);
-
   const { submitForm } = apiHooks();
   const [task, setTask] = useState({
     isLoading: true,
     data: null,
   });
+
   useEffect(() => {
+    // Clear values so that when task page is reloaded with 'next task' it starts fresh
+    setSubmitting(false);
+    setTask({
+      isLoading: true,
+      data: null,
+    });
+
     const source = axios.CancelToken.source();
     const loadTask = async () => {
       if (axiosInstance) {
