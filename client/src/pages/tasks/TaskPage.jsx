@@ -18,6 +18,7 @@ const TaskPage = ({ taskId }) => {
   const axiosInstance = useAxios();
   const navigation = useNavigation();
   const [keycloak] = useKeycloak();
+  const currentUser = keycloak.tokenParsed.email;
   const [submitting, setSubmitting] = useState(false);
   const { submitForm } = apiHooks();
   const [task, setTask] = useState({
@@ -26,61 +27,59 @@ const TaskPage = ({ taskId }) => {
   });
 
   useEffect(() => {
-    // Clear values so that when task page is reloaded with 'next task' it starts fresh
-    setSubmitting(false);
-    setTask({
-      isLoading: true,
-      data: null,
-    });
-
+    // Reset state
     const source = axios.CancelToken.source();
+    setTask({ isLoading: true, data: null });
+
+    // Get task data
     const loadTask = async () => {
       if (axiosInstance) {
         try {
-          const taskDataResponse = await axiosInstance({
-            method: 'GET',
-            url: `/ui/tasks/${taskId}`,
+          const taskData = await axiosInstance.get(`/ui/tasks/${taskId}`, {
             cancelToken: source.token,
           });
-          if (isMounted.current) {
-            const {
-              variables,
-              form,
-              processInstance,
-              processDefinition,
-              task: taskInfo,
-            } = taskDataResponse.data;
-            let formSubmission = {};
-            const formVariableSubmissionName = form ? `${form.name}::submissionData` : null;
+          // Spread the taskData into seperate variables
+          const {
+            variables,
+            form,
+            processInstance,
+            processDefinition,
+            task: taskInfo,
+          } = taskData.data;
+          let formSubmission = {};
+          const formVariableSubmissionName = form ? `${form.name}::submissionData` : null;
 
-            if (taskInfo.variables) {
-              Object.keys(taskInfo.variables).forEach((key) => {
-                if (taskInfo.variables[key].type === 'Json') {
-                  taskInfo.variables[key] = JSON.parse(taskInfo.variables[key].value);
-                } else {
-                  taskInfo.variables[key] = taskInfo.variables[key].value;
-                }
-              });
-            }
+          if (taskInfo.variables) {
+            Object.keys(taskInfo.variables).forEach((key) => {
+              if (taskInfo.variables[key].type === 'Json') {
+                taskInfo.variables[key] = JSON.parse(taskInfo.variables[key].value);
+              } else {
+                taskInfo.variables[key] = taskInfo.variables[key].value;
+              }
+            });
+          }
 
-            if (variables) {
-              Object.keys(variables).forEach((key) => {
-                if (variables[key].type === 'Json') {
-                  variables[key] = JSON.parse(variables[key].value);
-                } else {
-                  variables[key] = variables[key].value;
-                }
-              });
+          if (variables) {
+            Object.keys(variables).forEach((key) => {
+              if (variables[key].type === 'Json') {
+                variables[key] = JSON.parse(variables[key].value);
+              } else {
+                variables[key] = variables[key].value;
+              }
+            });
 
-              formSubmission = variables[formVariableSubmissionName]
-                ? variables[formVariableSubmissionName]
-                : variables.submissionData;
-            }
+            formSubmission = variables[formVariableSubmissionName]
+              ? variables[formVariableSubmissionName]
+              : variables.submissionData;
+          }
 
-            const updatedVariables = _.omit(variables || {}, [
-              'submissionData',
-              formVariableSubmissionName,
-            ]);
+          const updatedVariables = _.omit(variables || {}, [
+            'submissionData',
+            formVariableSubmissionName,
+          ]);
+
+          // If user allowed to view this task, set the task details include the form
+          if (taskData.data.task.assignee === currentUser) {
             setTask({
               isLoading: false,
               data: {
@@ -92,14 +91,21 @@ const TaskPage = ({ taskId }) => {
                 task: taskInfo,
               },
             });
-          }
-        } catch (e) {
-          if (isMounted.current) {
+          } else {
             setTask({
               isLoading: false,
-              data: null,
+              data: {
+                variables: updatedVariables,
+                form: '', // force form to null as user should not be able to access it
+                formSubmission,
+                processInstance,
+                processDefinition,
+                task: taskInfo,
+              },
             });
           }
+        } catch (e) {
+          setTask({ isLoading: true, data: null });
         }
       }
     };
