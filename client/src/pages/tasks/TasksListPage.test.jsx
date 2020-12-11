@@ -17,6 +17,7 @@ describe('TasksListPage', () => {
 
   beforeEach(() => {
     jest.spyOn(console, 'error').mockImplementation(() => {});
+    jest.useFakeTimers();
     mockAxios.reset();
     mockData = [];
     for (let i = 0; i < 10; i += 1) {
@@ -33,13 +34,17 @@ describe('TasksListPage', () => {
     }
   });
 
+  afterEach(() => {
+    jest.runOnlyPendingTimers();
+    jest.useRealTimers();
+  });
+
   it('renders without crashing', () => {
     shallow(<TasksListPage />);
   });
 
   it('renders application spinner when getting data', async () => {
     const wrapper = await mount(<TasksListPage />);
-
     expect(wrapper.find(ApplicationSpinner).exists()).toBe(true);
   });
 
@@ -168,6 +173,51 @@ describe('TasksListPage', () => {
     await waitFor(() => {
       expect(screen.getByText('TEST-BUSINESS-KEY0 10 tasks')).toBeTruthy();
       expect(screen.getByText('TEST-BUSINESS-KEY1 2 tasks')).toBeTruthy();
+    });
+  });
+
+  it('refreshes the task list every 5 seconds', async () => {
+    mockAxios.onPost('/camunda/engine-rest/task').reply(200, [
+      {
+        id: 1,
+        name: 'test-task',
+        processDefinitionId: 'processDefinitionId0',
+        processInstanceId: 'processInstanceId0',
+        due: dayjs().add(2, 'day').format(),
+        created: dayjs().subtract(1, 'day').format(),
+        assignee: 'john@doe.com',
+        priority: 100,
+      },
+    ]);
+    mockAxios.onPost('/camunda/engine-rest/task/count').reply(200, {
+      count: 1,
+    });
+    mockAxios.onGet('/camunda/engine-rest/process-definition').reply(200, [
+      {
+        category: 'test',
+        id: 'processDefinitionId0',
+      },
+    ]);
+    mockAxios.onPost('/camunda/engine-rest/process-instance').reply(200, [
+      {
+        businessKey: 'TEST-BUSINESS-KEY0',
+        id: 'processInstanceId0',
+      },
+    ]);
+
+    render(<TasksListPage />);
+
+    // Exclude any setTimeouts that are being triggered by the test render
+    const countSetTimeoutCalls = () => {
+      return setTimeout.mock.calls.filter(
+        ([fn, t]) => t !== 0 || !String(fn).includes('_flushCallback')
+      );
+    };
+
+    await waitFor(() => {
+      expect(screen.getByText('test-task')).toBeTruthy();
+      expect(countSetTimeoutCalls()).toHaveLength(1);
+      expect(setTimeout).toHaveBeenLastCalledWith(expect.any(Function), 300000); // Checks the timeout is set to 5min
     });
   });
 });

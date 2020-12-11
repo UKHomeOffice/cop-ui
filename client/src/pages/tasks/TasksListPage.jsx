@@ -144,12 +144,12 @@ const TasksListPage = ({ taskType }) => {
                   }
                 });
               }
-
               setData({
                 isLoading: false,
                 tasks: tasksResponse.data,
               });
               setTaskCount(taskCountResponse.data.count);
+              setTimeout(loadTasks, 300000);
             }
           }
         } catch (e) {
@@ -163,6 +163,7 @@ const TasksListPage = ({ taskType }) => {
     loadTasks().then(() => {});
     return () => {
       source.cancel('Cancelling request');
+      clearTimeout(loadTasks);
     };
   }, [
     setData,
@@ -189,6 +190,9 @@ const TasksListPage = ({ taskType }) => {
           <h1 className="govuk-heading-l">
             {t(`pages.tasks.${taskType}.heading`, { count: taskCount })}
           </h1>
+          <div className="govuk-inset-text">
+            <strong>{t('pages.tasks.refresh')}</strong>
+          </div>
         </div>
       </div>
       <div>
