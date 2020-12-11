@@ -4,7 +4,7 @@ import axios from 'axios';
 import { useTranslation } from 'react-i18next';
 import moment from 'moment';
 import { useKeycloak } from '@react-keycloak/web';
-import { useNavigation } from 'react-navi';
+import { useNavigation, Link } from 'react-navi';
 import _ from 'lodash';
 import { useIsMounted, useAxios } from '../../utils/hooks';
 import ApplicationSpinner from '../../components/ApplicationSpinner';
@@ -148,7 +148,16 @@ const TaskPage = ({ taskId }) => {
     <>
       <div className="govuk-grid-row">
         <div className="govuk-grid-column-full" id="taskName">
-          <span className="govuk-caption-l">{processInstance.businessKey}</span>
+          <span className="govuk-caption-l">
+            <Link
+              className="govuk-link"
+              target="_blank"
+              rel="noopener noreferrer"
+              href={`/cases/${processInstance.businessKey}`}
+            >
+              {processInstance.businessKey}
+            </Link>
+          </span>
           <h2 className="govuk-heading-l">{taskInfo.name}</h2>
         </div>
       </div>
