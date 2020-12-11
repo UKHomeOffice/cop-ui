@@ -93,7 +93,7 @@ const TaskPage = ({ taskId }) => {
                 task: taskInfo,
               },
             });
-            setAssigneeText(t('pages.task.current-assignee'));
+            setAssigneeText(currentUser);
           } else {
             setTask({
               isLoading: false,
@@ -107,7 +107,7 @@ const TaskPage = ({ taskId }) => {
               },
             });
             if (!taskData.data.task.assignee) {
-              setAssigneeText(t('pages.task.unassigned'));
+              setAssigneeText('Unassigned');
             } else {
               setAssigneeText(taskData.data.task.assignee);
             }
@@ -121,7 +121,7 @@ const TaskPage = ({ taskId }) => {
     return () => {
       source.cancel('Cancelling request');
     };
-  }, [axiosInstance, setTask, isMounted, taskId]);
+  }, [axiosInstance, setTask, isMounted, taskId, currentUser]);
 
   if (task.isLoading) {
     return <ApplicationSpinner />;
@@ -149,7 +149,12 @@ const TaskPage = ({ taskId }) => {
       <div className="govuk-grid-row">
         <div className="govuk-grid-column-full" id="taskName">
           <span className="govuk-caption-l">
-            <Link className="govuk-link" target="_blank" rel="noopener noreferrer" href={`/cases/${processInstance.businessKey}`}>
+            <Link
+              className="govuk-link"
+              target="_blank"
+              rel="noopener noreferrer"
+              href={`/cases/${processInstance.businessKey}`}
+            >
               {processInstance.businessKey}
             </Link>
           </span>
