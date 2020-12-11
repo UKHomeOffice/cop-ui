@@ -30,7 +30,7 @@ const TaskList = ({ tasks, groupBy }) => {
                   }}
                 />
                 <h2 className="app-task-list__section">{`${isPriority(key)} ${numberOfTasks} ${
-                  numberOfTasks < 2 ? 'task' : 'tasks'
+                  numberOfTasks === 1 ? 'task' : 'tasks'
                 }`}</h2>
                 {tasksGroupedBy[key].map((task) => (
                   <TaskListItem

@@ -137,7 +137,69 @@ describe('TaskPage', () => {
     expect(taskDue.find('h4').at(0).text()).not.toBe('');
   });
 
-  it('can submit task', async () => {
+  it('displays the form when task assignee is equal to current user', async () => {
+    mockAxios.onGet('/ui/tasks/taskId').reply(200, {
+      form: {
+        name: 'testForm',
+        display: 'form',
+        components: [],
+      },
+      task: {
+        id: 'taskId',
+        assignee: 'test', // this is declared in setupTests.js
+        name: 'task name',
+        due: moment(),
+        priority: '1000',
+        variables: {
+          taskVariableA: {
+            type: 'Json',
+            value: JSON.stringify({ data: { text: 'test' } }),
+          },
+          testEmail: {
+            value: 'test',
+            type: 'string',
+          },
+        },
+      },
+      variables: {
+        email: {
+          value: 'test',
+          type: 'string',
+        },
+        test: {
+          type: 'Json',
+          value: JSON.stringify({ data: { text: 'test' } }),
+        },
+        'testForm::submissionData': {
+          type: 'Json',
+          value: JSON.stringify({ data: { text: 'test' } }),
+        },
+      },
+      processDefinition: {
+        category: 'test',
+      },
+      processInstance: {
+        businessKey: 'BUSINESS KEY',
+      },
+    });
+
+    const wrapper = await mount(
+      <AlertContextProvider>
+        <TaskPage taskId="taskId" />
+      </AlertContextProvider>
+    );
+
+    await act(async () => {
+      await Promise.resolve(wrapper);
+      await new Promise((resolve) => setImmediate(resolve));
+      await wrapper.update();
+    });
+
+    expect(wrapper.find(ApplicationSpinner).exists()).toBe(false);
+    expect(wrapper.find(DisplayForm).exists()).toBe(true);
+  });
+
+  it('does not display the form when task assignee is not equal to current user', async () => {
     mockAxios.onGet('/ui/tasks/taskId').reply(200, {
       form: {
         name: 'testForm',
@@ -149,7 +211,68 @@ describe('TaskPage', () => {
         name: 'task name',
         due: moment(),
         priority: '1000',
-        assignee: 'apples',
+        assignee: 'not-test',
+        variables: {
+          taskVariableA: {
+            type: 'Json',
+            value: JSON.stringify({ data: { text: 'test' } }),
+          },
+          testEmail: {
+            value: 'test',
+            type: 'string',
+          },
+        },
+      },
+      variables: {
+        email: {
+          value: 'test',
+          type: 'string',
+        },
+        test: {
+          type: 'Json',
+          value: JSON.stringify({ data: { text: 'test' } }),
+        },
+        'testForm::submissionData': {
+          type: 'Json',
+          value: JSON.stringify({ data: { text: 'test' } }),
+        },
+      },
+      processDefinition: {
+        category: 'test',
+      },
+      processInstance: {
+        businessKey: 'BUSINESS KEY',
+      },
+    });
+    const wrapper = await mount(
+      <AlertContextProvider>
+        <TaskPage taskId="taskId" />
+      </AlertContextProvider>
+    );
+
+    await act(async () => {
+      await Promise.resolve(wrapper);
+      await new Promise((resolve) => setImmediate(resolve));
+      await wrapper.update();
+    });
+
+    expect(wrapper.find(ApplicationSpinner).exists()).toBe(false);
+    expect(wrapper.find(DisplayForm).exists()).toBe(false);
+  });
+
+  it('can submit task', async () => {
+    mockAxios.onGet('/ui/tasks/taskId').reply(200, {
+      form: {
+        name: 'testForm',
+        display: 'form',
+        components: [],
+      },
+      task: {
+        id: 'taskId',
+        assignee: 'test',
+        name: 'task name',
+        due: moment(),
+        priority: '1000',
       },
       variables: {
         email: 'test',
@@ -205,55 +328,5 @@ describe('TaskPage', () => {
     });
 
     expect(mockNavigate).toBeCalledWith('/tasks');
-  });
-
-  it('adds complete button if form is not present', async () => {
-    mockAxios.onGet('/ui/tasks/taskId').reply(200, {
-      form: null,
-      task: {
-        id: 'taskId',
-        name: 'task name',
-        due: moment(),
-        priority: '1000',
-        assignee: 'apples',
-      },
-      variables: {
-        email: 'test',
-        test: {
-          type: 'Json',
-          value: JSON.stringify({ data: { text: 'test' } }),
-        },
-        submissionData: {
-          type: 'Json',
-          value: JSON.stringify({ data: { text: 'test' } }),
-        },
-      },
-      processDefinition: {
-        category: 'test',
-      },
-      processInstance: {
-        businessKey: 'BUSINESS KEY',
-      },
-    });
-
-    mockAxios.onPost('/camunda/engine-rest/task/taskId/submit-form').reply(200, {});
-
-    const wrapper = await mount(
-      <AlertContextProvider>
-        <TaskPage taskId="taskId" />
-      </AlertContextProvider>
-    );
-
-    await act(async () => {
-      await Promise.resolve(wrapper);
-      await new Promise((resolve) => setImmediate(resolve));
-      await wrapper.update();
-    });
-
-    expect(wrapper.find(ApplicationSpinner).exists()).toBe(false);
-
-    const completeButton = wrapper.find('button').at(0);
-
-    expect(completeButton.exists()).toBe(true);
   });
 });
