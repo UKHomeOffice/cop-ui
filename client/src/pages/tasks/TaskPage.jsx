@@ -93,7 +93,7 @@ const TaskPage = ({ taskId }) => {
                 task: taskInfo,
               },
             });
-            setAssigneeText(t('pages.task.current-assignee'));
+            setAssigneeText(currentUser);
           } else {
             setTask({
               isLoading: false,
@@ -107,7 +107,7 @@ const TaskPage = ({ taskId }) => {
               },
             });
             if (!taskData.data.task.assignee) {
-              setAssigneeText(t('pages.task.unassigned'));
+              setAssigneeText('Unassigned');
             } else {
               setAssigneeText(taskData.data.task.assignee);
             }
@@ -121,7 +121,7 @@ const TaskPage = ({ taskId }) => {
     return () => {
       source.cancel('Cancelling request');
     };
-  }, [axiosInstance, setTask, isMounted, taskId, currentUser, t]);
+  }, [axiosInstance, setTask, isMounted, taskId, currentUser]);
 
   if (task.isLoading) {
     return <ApplicationSpinner />;
