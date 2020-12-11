@@ -121,7 +121,7 @@ const TaskPage = ({ taskId }) => {
     return () => {
       source.cancel('Cancelling request');
     };
-  }, [axiosInstance, setTask, isMounted, taskId]);
+  }, [axiosInstance, setTask, isMounted, taskId, currentUser, t]);
 
   if (task.isLoading) {
     return <ApplicationSpinner />;
@@ -149,7 +149,12 @@ const TaskPage = ({ taskId }) => {
       <div className="govuk-grid-row">
         <div className="govuk-grid-column-full" id="taskName">
           <span className="govuk-caption-l">
-            <Link className="govuk-link" target="_blank" rel="noopener noreferrer" href={`/cases/${processInstance.businessKey}`}>
+            <Link
+              className="govuk-link"
+              target="_blank"
+              rel="noopener noreferrer"
+              href={`/cases/${processInstance.businessKey}`}
+            >
               {processInstance.businessKey}
             </Link>
           </span>
