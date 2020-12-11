@@ -149,12 +149,7 @@ const TaskPage = ({ taskId }) => {
       <div className="govuk-grid-row">
         <div className="govuk-grid-column-full" id="taskName">
           <span className="govuk-caption-l">
-            <Link
-              className="govuk-link"
-              target="_blank"
-              rel="noopener noreferrer"
-              href={`/cases/${processInstance.businessKey}`}
-            >
+            <Link className="govuk-link" target="_blank" rel="noopener noreferrer" href={`/cases/${processInstance.businessKey}`}>
               {processInstance.businessKey}
             </Link>
           </span>
