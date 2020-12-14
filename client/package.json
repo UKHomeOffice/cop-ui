@@ -87,6 +87,7 @@
         "statements": 90
       }
     },
+    "resetMocks": false,
     "snapshotSerializers": [
       "enzyme-to-json/serializer"
     ]
