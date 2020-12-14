@@ -66,6 +66,7 @@ const Header = () => {
                     className="govuk-header__link"
                     onClick={async (e) => {
                       e.preventDefault();
+                      toggleMenu(e);
                       await navigation.navigate('/forms/edit-your-profile');
                     }}
                   >
