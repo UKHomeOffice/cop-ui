@@ -102,6 +102,30 @@ const Header = () => {
           </div>
         </div>
       </header>
+      <div className="govuk-phase-banner govuk-width-container">
+        <p className="govuk-phase-banner__content">
+          <strong className="govuk-tag govuk-phase-banner__content__tag ">
+            {config.get('uiVersion')}
+          </strong>
+          <span>
+            <strong className="govuk-tag govuk-phase-banner__content__tag ">
+              {config.get('uiEnvironment')}
+            </strong>
+          </span>
+          <span className="govuk-phase-banner__text">
+            {t('header.new-service-1')}{' '}
+            <a
+              className="govuk-link"
+              href={`${config.get('serviceDeskUrl')}/create/54`}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {t('header.new-service-2')}
+            </a>{' '}
+            {t('header.new-service-3')}
+          </span>
+        </p>
+      </div>
     </>
   );
 };
