@@ -302,8 +302,8 @@ DisplayForm.propTypes = {
   }).isRequired,
   handleOnCancel: PropTypes.func.isRequired,
   handleOnSubmit: PropTypes.func.isRequired,
-  existingSubmission: PropTypes.shape({ root: PropTypes.object }),
-  interpolateContext: PropTypes.shape({ root: PropTypes.object }),
+  existingSubmission: PropTypes.shape({ root: PropTypes.shape() }),
+  interpolateContext: PropTypes.shape({ root: PropTypes.shape() }),
   submitting: PropTypes.bool,
 };
 

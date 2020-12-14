@@ -73,7 +73,7 @@ ApplicationSpinner.defaultProps = {
 };
 ApplicationSpinner.propTypes = {
   translationKey: PropTypes.string,
-  args: PropTypes.shape({ root: PropTypes.object }),
+  args: PropTypes.shape({ root: PropTypes.shape() }),
   colour: PropTypes.string,
 };
 

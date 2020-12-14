@@ -12,7 +12,7 @@ jest.mock('../../utils/logger', () => ({
 }));
 
 jest.mock('react', () => {
-  const ActualReact = require.requireActual('react');
+  const ActualReact = jest.requireActual('react');
   return {
     ...ActualReact,
     useContext: () => ({ setAlertContext: jest.fn(), setTeam: jest.fn(), setStaffId: jest.fn() }),

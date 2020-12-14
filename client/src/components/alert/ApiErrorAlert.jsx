@@ -88,7 +88,7 @@ ApiErrorAlert.propTypes = {
     PropType.shape({
       message: PropType.string.isRequired,
       path: PropType.string.isRequired,
-      exception: PropType.object,
+      exception: PropType.shape(),
       status: PropType.number.isRequired,
     })
   ).isRequired,

@@ -8,7 +8,7 @@ import FormsListPage from './FormsListPage';
 import { mockNavigate } from '../../setupTests';
 
 jest.mock('lodash', () => ({
-  ...require.requireActual('lodash'),
+  ...jest.requireActual('lodash'),
   debounce: (fn) => {
     // eslint-disable-next-line no-param-reassign
     fn.cancel = jest.fn();

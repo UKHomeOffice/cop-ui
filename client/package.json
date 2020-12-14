@@ -28,12 +28,12 @@
     "react-dom": "^16.13.1",
     "react-error-boundary": "^2.2.1",
     "react-formio": "^4.3.0",
-    "react-global-configuration": "^1.4.0",
+    "react-global-configuration": "^1.4.1",
     "react-i18next": "^11.4.0",
     "react-iframe": "^1.8.0",
     "react-navi": "^0.14.3",
     "react-navi-helmet": "^0.14.3",
-    "react-scripts": "3.4.1",
+    "react-scripts": "^4.0.1",
     "secure-ls": "^1.2.6",
     "styled-components": "^5.1.0",
     "uuid": "^8.1.0"
@@ -48,12 +48,12 @@
     "enzyme": "^3.11.0",
     "enzyme-adapter-react-16": "^1.15.2",
     "enzyme-to-json": "^3.6.1",
-    "eslint": "^6.8.0",
+    "eslint": "^7.5.0",
     "eslint-config-airbnb": "^18.1.0",
     "eslint-config-prettier": "^6.11.0",
     "eslint-plugin-import": "^2.20.2",
-    "eslint-plugin-jsx-a11y": "^6.2.3",
-    "eslint-plugin-react": "^7.19.0",
+    "eslint-plugin-jsx-a11y": "^6.3.0",
+    "eslint-plugin-react": "^7.20.0",
     "eslint-plugin-react-hooks": "^4.0.0",
     "husky": "^4.3.0",
     "jest-styled-components": "^7.0.3",
@@ -86,6 +86,7 @@
         "statements": 90
       }
     },
+    "resetMocks": false,
     "snapshotSerializers": [
       "enzyme-to-json/serializer"
     ]

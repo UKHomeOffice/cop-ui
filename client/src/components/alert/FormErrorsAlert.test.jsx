@@ -41,7 +41,8 @@ describe('FormErrorsAlert', () => {
             },
           ],
         }}
-      />
+      />,
+      { attachTo: document.body }
     );
 
     await act(async () => {
