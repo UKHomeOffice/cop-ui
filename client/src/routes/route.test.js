@@ -12,6 +12,7 @@ describe('Base routes', () => {
     ${'/tasks'}                     | ${true}
     ${'/cases'}                     | ${true}
     ${'/forms'}                     | ${true}
+    ${'/submit-a-form'}             | ${true}
     ${'/tasks/id'}                  | ${true}
     ${'/forms/id'}                  | ${true}
     ${'/login'}                     | ${true}
