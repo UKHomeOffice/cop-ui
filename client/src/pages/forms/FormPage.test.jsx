@@ -7,7 +7,6 @@ import { Form } from 'react-formio';
 import FormPage from './FormPage';
 import ApplicationSpinner from '../../components/ApplicationSpinner';
 import { mockNavigate } from '../../setupTests';
-import Logger from '../../utils/logger';
 import AlertBanner from '../../components/alert/AlertBanner';
 import { AlertContextProvider } from '../../utils/AlertContext';
 import FormErrorsAlert from '../../components/alert/FormErrorsAlert';
@@ -150,87 +149,9 @@ describe('FormPage', () => {
     expect(wrapper.find(ApplicationSpinner).exists()).toBe(false);
 
     const form = wrapper.find(Form).at(0);
-    const next = jest.fn();
-    const submission = {
-      data: {},
-    };
-    form.props().options.hooks.beforeSubmit(submission, next);
-    expect(submission.data.form.formVersionId).toBe('version');
 
     form.props().options.hooks.beforeCancel();
     expect(mockNavigate).toBeCalledWith('/forms');
-  });
-
-  it('expect form time to be logged', async () => {
-    mockAxios.onGet('/camunda/engine-rest/process-definition/key/id/startForm').reply(200, {
-      key: 'formKey',
-    });
-
-    mockAxios.onGet('/form/name/formKey').reply(200, {
-      name: 'test',
-      display: 'form',
-      versionId: 'version',
-      title: 'title',
-      components: [
-        {
-          id: 'eoduazt',
-          key: 'textField1',
-          case: '',
-          mask: false,
-          tags: '',
-          type: 'textfield',
-          input: true,
-          label: 'Text Field',
-          logic: [],
-          hidden: false,
-          prefix: '',
-          suffix: '',
-          unique: false,
-          widget: {
-            type: 'input',
-          },
-        },
-        {
-          id: 'e23op57',
-          key: 'submit',
-          size: 'md',
-          type: 'button',
-          block: false,
-          input: true,
-          label: 'Submit',
-          theme: 'primary',
-          action: 'submit',
-          hidden: false,
-          prefix: '',
-          suffix: '',
-          unique: false,
-          widget: {
-            type: 'input',
-          },
-        },
-      ],
-    });
-
-    const wrapper = await mount(
-      <AlertContextProvider>
-        <AlertBanner />
-        <FormPage formId="id" />
-      </AlertContextProvider>
-    );
-
-    await act(async () => {
-      await Promise.resolve(wrapper);
-      await new Promise((resolve) => setImmediate(resolve));
-      await wrapper.update();
-    });
-
-    expect(wrapper.find(ApplicationSpinner).exists()).toBe(false);
-    const form = wrapper.find(Form).at(0);
-    const formProps = form.props();
-    formProps.onSubmit();
-
-    expect(Logger.info).toBeCalled();
-    expect(mockSubmitForm).toBeCalled();
   });
 
   it('renders error on form', async () => {

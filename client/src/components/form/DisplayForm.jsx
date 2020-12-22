@@ -232,6 +232,17 @@ const DisplayForm = ({
             end: new Date(),
             submitted: true,
           });
+          // eslint-disable-next-line no-shadow
+          const { versionId, id, title, name } = form;
+          // eslint-disable-next-line no-param-reassign
+          submissionData.data.form = {
+            formVersionId: versionId,
+            formId: id,
+            title,
+            name,
+            submissionDate: new Date(),
+            submittedBy: keycloak.tokenParsed.email,
+          };
           handleOnSubmit(submissionData);
         }}
         onChange={(data) => {
@@ -264,20 +275,6 @@ const DisplayForm = ({
             },
             buttonSettings: {
               showCancel: true,
-            },
-            beforeSubmit: (submission, next) => {
-              // eslint-disable-next-line no-shadow
-              const { versionId, id, title, name } = form;
-              // eslint-disable-next-line no-param-reassign
-              submission.data.form = {
-                formVersionId: versionId,
-                formId: id,
-                title,
-                name,
-                submissionDate: new Date(),
-                submittedBy: keycloak.tokenParsed.email,
-              };
-              next();
             },
           },
         }}

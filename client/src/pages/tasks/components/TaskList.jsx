@@ -3,14 +3,14 @@ import PropTypes from 'prop-types';
 import './TaskList.scss';
 import _ from 'lodash';
 import TaskListItem from './TaskListItem';
-import { formatPriority } from '../utils';
+import determinePriority from '../../../utils/priority';
 
 const TaskList = ({ tasks, groupBy }) => {
   const tasksGroupedBy = _.groupBy(tasks, (x) => x[groupBy]);
   const isPriority = (keyName) => {
     if (groupBy === 'priority') {
-      // Use parseInt as formatPriority takes a number as an argument
-      return formatPriority(parseInt(keyName, 10));
+      // Use parseInt as determinePriority takes a number as an argument
+      return determinePriority(parseInt(keyName, 10));
     }
     return keyName;
   };
