@@ -331,8 +331,8 @@ const AccessibilityStatement = () => (
 
           <h3 className="govuk-heading-s">Plan to cover</h3>
           <p className="govuk-body">
-            Two new services have joined COP since our last audit. We plan to cover both new forms -
-            The EU Transition and PCP Desk Ergonomic Assessment by the end of January 2021.
+            Two new services have joined COP since our last audit. We plan to cover both new
+            forms—Record Trade Checks and PCP Desk Ergonomic Assessment—by the end of January 2021.
           </p>
 
           <h3 className="govuk-heading-s">Disproportionate burden</h3>
