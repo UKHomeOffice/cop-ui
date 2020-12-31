@@ -130,6 +130,7 @@ const DisplayForm = ({
         surname: familyName,
         teamid,
       },
+      ...interpolateContext,
     },
   };
   const [augmentedSubmission] = useState(_.merge(existingSubmission, contexts));
@@ -200,8 +201,8 @@ const DisplayForm = ({
       groups: keycloak.tokenParsed.groups,
     },
     ...contexts.data,
-    ...interpolateContext,
   });
+
   return (
     <Loader
       show={submitting}
