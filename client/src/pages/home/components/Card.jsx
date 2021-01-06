@@ -7,17 +7,11 @@ const Card = ({ count, footer, handleClick, href, isLoading, title }) => {
   const { t } = useTranslation();
   const renderTitle = () => {
     if (count === null) {
-      return (
-        <h2 id="title" className="govuk-!-font-size-36 govuk-!-font-weight-bold">
-          {title}
-        </h2>
-      );
+      return <h2 className="govuk-!-font-size-36 govuk-!-font-weight-bold">{title}</h2>;
     }
     return (
       <>
-        <h2 id="count" className="govuk-!-font-size-48 govuk-!-font-weight-bold">
-          {count}
-        </h2>
+        <h2 className="govuk-!-font-size-48 govuk-!-font-weight-bold">{count}</h2>
         <span className="govuk-!-font-size-19 govuk-!-font-weight-bold">{title}</span>
       </>
     );
