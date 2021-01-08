@@ -10,7 +10,7 @@ import { useIsMounted, useAxios } from '../../utils/hooks';
 import ApplicationSpinner from '../../components/ApplicationSpinner';
 import determinePriority from '../../utils/priority';
 import DisplayForm from '../../components/form/DisplayForm';
-import apiHooks from './hooks';
+import apiHooks from '../../components/form/hooks';
 
 const TaskPage = ({ taskId }) => {
   const isMounted = useIsMounted();
@@ -211,11 +211,12 @@ const TaskPage = ({ taskId }) => {
                 submitForm({
                   submission,
                   form,
-                  taskId,
+                  id: taskId,
                   businessKey: processInstance.businessKey,
                   handleOnFailure,
+                  submitPath: 'task'
                 });
-              }}
+              }}       
             />
           </div>
         </div>

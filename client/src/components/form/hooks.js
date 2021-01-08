@@ -14,16 +14,21 @@ export default () => {
   const currentUser = keycloak.tokenParsed.email;
 
   const submitForm = useCallback(
-    ({ submission, form, taskId, businessKey, handleOnFailure }) => {
+    ({ submission, form, id, businessKey, handleOnFailure, submitPath }) => {
       if (form) {
         const variables = {
           [form.name]: {
             value: JSON.stringify(submission.data),
             type: 'json',
           },
+          initiatedBy: {
+            value: submission.data.form.submittedBy,
+            type: 'string',
+          },
         };
+
         axiosInstance
-          .post(`/camunda/engine-rest/task/${taskId}/submit-form`, {
+          .post(`/camunda/engine-rest/${submitPath}/${id}/submit-form`, {
             variables,
             businessKey,
           })
