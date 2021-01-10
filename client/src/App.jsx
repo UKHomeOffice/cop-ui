@@ -7,6 +7,7 @@ import config from 'react-global-configuration';
 import Keycloak from 'keycloak-js';
 import { KeycloakProvider, useKeycloak } from '@react-keycloak/web';
 import { initAll } from 'govuk-frontend';
+import { MatomoProvider, createInstance } from '@datapunt/matomo-tracker-react';
 import Layout from './components/layout';
 import routes from './routes';
 import ApplicationSpinner from './components/ApplicationSpinner';
@@ -25,9 +26,11 @@ if (window.ENVIRONMENT_CONFIG) {
     authUrl: process.env.REACT_APP_AUTH_URL,
     productPageUrl: process.env.REACT_APP_PRODUCT_PAGE_URL,
     serviceDeskUrl: process.env.REACT_APP_SERVICE_DESK_URL,
+    analyticsSiteId: process.env.REACT_APP_ANALYTICS_SITE_ID,
     supportUrl: process.env.REACT_APP_SUPPORT_URL,
     uiEnvironment: process.env.REACT_APP_UI_ENVIRONMENT,
     uiVersion: process.env.REACT_APP_UI_VERSION,
+    analyticsUrlBase: process.env.REACT_APP_ANALYTICS_URL_BASE,
   });
 }
 
@@ -48,16 +51,23 @@ const RouterView = () => {
   useFetchTeam();
   useFetchStaffId();
 
+  const tracker = createInstance({
+    urlBase: config.get('analyticsUrlBase'),
+    siteId: config.get('analyticsSiteId'),
+  });
+
   return initialized ? (
-    <Router
-      hashScrollBehavior="smooth"
-      routes={routes}
-      context={{ t, isAuthenticated: keycloak.authenticated }}
-    >
-      <Layout>
-        <View />
-      </Layout>
-    </Router>
+    <MatomoProvider value={tracker}>
+      <Router
+        hashScrollBehavior="smooth"
+        routes={routes}
+        context={{ t, isAuthenticated: keycloak.authenticated }}
+      >
+        <Layout>
+          <View />
+        </Layout>
+      </Router>
+    </MatomoProvider>
   ) : (
     <ApplicationSpinner translationKey="keycloak.initialising" />
   );
