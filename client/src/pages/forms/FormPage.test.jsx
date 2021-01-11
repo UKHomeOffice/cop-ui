@@ -17,7 +17,7 @@ jest.mock('../../utils/logger', () => ({
 
 const mockSubmitForm = jest.fn();
 
-jest.mock('./hooks', () => () => ({
+jest.mock('../../components/form/hooks', () => () => ({
   submitForm: mockSubmitForm,
 }));
 
