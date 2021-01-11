@@ -102,7 +102,15 @@ describe('TaskPage', () => {
         },
         'testForm::submissionData': {
           type: 'Json',
-          value: JSON.stringify({ data: { text: 'test' } }),
+          value: JSON.stringify({
+            data: {
+              textField: 'submissionText',
+              businessKey: 'businessKey',
+              form: {
+                submittedBy: 'test@digital.homeoffice.gov.uk',
+              },
+            },
+          }),
         },
       },
       processDefinition: {
@@ -172,7 +180,15 @@ describe('TaskPage', () => {
         },
         'testForm::submissionData': {
           type: 'Json',
-          value: JSON.stringify({ data: { text: 'test' } }),
+          value: JSON.stringify({
+            data: {
+              textField: 'submissionText',
+              businessKey: 'businessKey',
+              form: {
+                submittedBy: 'test@digital.homeoffice.gov.uk',
+              },
+            },
+          }),
         },
       },
       processDefinition: {
@@ -234,7 +250,15 @@ describe('TaskPage', () => {
         },
         'testForm::submissionData': {
           type: 'Json',
-          value: JSON.stringify({ data: { text: 'test' } }),
+          value: JSON.stringify({
+            data: {
+              textField: 'submissionText',
+              businessKey: 'businessKey',
+              form: {
+                submittedBy: 'test@digital.homeoffice.gov.uk',
+              },
+            },
+          }),
         },
       },
       processDefinition: {
@@ -282,7 +306,15 @@ describe('TaskPage', () => {
         },
         submissionData: {
           type: 'Json',
-          value: JSON.stringify({ data: { text: 'test' } }),
+          value: JSON.stringify({
+            data: {
+              textField: 'submissionText',
+              businessKey: 'businessKey',
+              form: {
+                submittedBy: 'test@digital.homeoffice.gov.uk',
+              },
+            },
+          }),
         },
       },
       processDefinition: {
@@ -316,6 +348,10 @@ describe('TaskPage', () => {
       await displayForm.props().handleOnSubmit({
         data: {
           textField: 'test',
+          businessKey: 'businessKey',
+          form: {
+            submittedBy: 'test@digital.homeoffice.gov.uk',
+          },
         },
       });
       await wrapper.update();
