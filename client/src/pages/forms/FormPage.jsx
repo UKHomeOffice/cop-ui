@@ -6,7 +6,7 @@ import { useNavigation } from 'react-navi';
 import FormioUtils from 'formiojs/utils';
 import { useAxios, useIsMounted } from '../../utils/hooks';
 import ApplicationSpinner from '../../components/ApplicationSpinner';
-import apiHooks from './hooks';
+import apiHooks from '../../components/form/hooks';
 import DisplayForm from '../../components/form/DisplayForm';
 
 const FormPage = ({ formId }) => {
@@ -94,24 +94,32 @@ const FormPage = ({ formId }) => {
     return null;
   }
   const businessKeyComponent = FormioUtils.getComponent(form.data.components, 'businessKey');
+  const handleOnFailure = () => {
+    setSubmitting(false);
+  };
 
   return (
     <>
       <h1 className="govuk-heading-l">{pageTitle}</h1>
       <DisplayForm
         submitting={submitting}
+        form={form.data}
         handleOnCancel={async () => {
           await navigation.navigate('/forms');
         }}
         interpolateContext={{
           businessKey: businessKeyComponent ? businessKeyComponent.defaultValue : null,
         }}
-        form={form.data}
         handleOnSubmit={(data) => {
           setSubmitting(true);
-          submitForm(data, form.data, formId, () => {
-            setSubmitting(false);
-          });
+          submitForm({
+            submission: data,
+            form: form.data,
+            id: formId,
+            businessKey: businessKeyComponent ? businessKeyComponent.defaultValue : null,
+            handleOnFailure,
+            submitPath: 'process-definition/key'
+          })
         }}
       />
     </>
