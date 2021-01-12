@@ -2,7 +2,6 @@ import React from 'react';
 import { renderHook, act } from '@testing-library/react-hooks';
 import axios from 'axios';
 import MockAdapter from 'axios-mock-adapter';
-// import { waitFor } from '@testing-library/react';
 import { AlertContextProvider } from '../../utils/AlertContext';
 import apiHooks from './hooks';
 import { mockNavigate } from '../../setupTests';
