@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import { useNavigation } from 'react-navi';
 import styled from 'styled-components';
+import { useMatomo } from '@datapunt/matomo-tracker-react';
 import LogoBar from './LogoBar';
 import { TeamContext } from '../../../utils/TeamContext';
 import { mobileWidth } from '../../../utils/constants';
@@ -19,6 +20,11 @@ const PowerBIReport = () => {
     team: { branchid: branchId },
   } = useContext(TeamContext);
   const visitedPages = useRef([]);
+  const { trackPageView } = useMatomo();
+
+  useEffect(() => {
+    trackPageView();
+  }, []);
 
   useEffect(() => {
     if (!state) {

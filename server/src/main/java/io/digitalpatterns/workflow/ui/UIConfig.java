@@ -40,6 +40,8 @@ public class UIConfig implements WebMvcConfigurer {
                     String html = IOUtils.toString(resource.getInputStream(), UTF_8);
                     if (html.contains("__ENVIRONMENT_CONFIG__")) {
                         final JSONObject jsonObject = new JSONObject();
+                        jsonObject.put("analyticsUrlBase", environment.getProperty("analytics.urlBase"));
+                        jsonObject.put("analyticsSiteId", environment.getProperty("analytics.siteId"));
                         jsonObject.put("authUrl", environment.getProperty("auth.url"));
                         jsonObject.put("authRealm", environment.getProperty("auth.realm"));
                         jsonObject.put("authClientId", environment.getProperty("auth.clientId"));

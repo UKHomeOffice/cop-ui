@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { useNavigation } from 'react-navi';
 import _ from 'lodash';
 import config from 'react-global-configuration';
+import { useMatomo } from '@datapunt/matomo-tracker-react';
 import { useAxios } from '../../utils/hooks';
 import ApplicationSpinner from '../../components/ApplicationSpinner';
 import './ReportsListPage.scss';
@@ -16,6 +17,11 @@ const ReportsListPage = () => {
     isLoading: true,
     data: [],
   });
+  const { trackPageView } = useMatomo();
+
+  useEffect(() => {
+    trackPageView();
+  }, []);
 
   useEffect(() => {
     const source = axios.CancelToken.source();
