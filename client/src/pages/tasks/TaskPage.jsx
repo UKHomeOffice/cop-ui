@@ -4,7 +4,7 @@ import axios from 'axios';
 import { useTranslation } from 'react-i18next';
 import moment from 'moment';
 import { useKeycloak } from '@react-keycloak/web';
-import { useNavigation, Link } from 'react-navi';
+import { useNavigation } from 'react-navi';
 import _ from 'lodash';
 import { useMatomo } from '@datapunt/matomo-tracker-react';
 import { useIsMounted, useAxios } from '../../utils/hooks';
@@ -12,6 +12,7 @@ import ApplicationSpinner from '../../components/ApplicationSpinner';
 import determinePriority from '../../utils/priority';
 import DisplayForm from '../../components/form/DisplayForm';
 import apiHooks from '../../components/form/hooks';
+import TaskPageMetadata from './components/TaskPageMetadata';
 
 const TaskPage = ({ taskId }) => {
   const isMounted = useIsMounted();
@@ -119,7 +120,7 @@ const TaskPage = ({ taskId }) => {
             }
           }
         } catch (e) {
-          setTask({ isLoading: true, data: null });
+          setTask({ isLoading: false, data: null });
         }
       }
     };
@@ -152,48 +153,15 @@ const TaskPage = ({ taskId }) => {
 
   return (
     <>
-      <div className="govuk-grid-row">
-        <div className="govuk-grid-column-full" id="taskName">
-          <span className="govuk-caption-l">
-            <Link
-              className="govuk-link"
-              target="_blank"
-              rel="noopener noreferrer"
-              href={`/cases/${processInstance.businessKey}`}
-            >
-              {processInstance.businessKey}
-            </Link>
-          </span>
-          <h2 className="govuk-heading-l">{taskInfo.name}</h2>
-        </div>
-      </div>
-      <div className="govuk-grid-row">
-        <div className="govuk-grid-column-one-quarter" id="category">
-          <span className="govuk-caption-m govuk-!-font-size-19">{t('pages.task.category')}</span>
-          <h4 className="govuk-heading-m govuk-!-font-size-19">{processDefinition.category}</h4>
-        </div>
-        <div className="govuk-grid-column-one-quarter" id="taskDueDate">
-          <span className="govuk-caption-m govuk-!-font-size-19">{t('pages.task.due')}</span>
-          <h4 className="govuk-heading-m govuk-!-font-size-19">
-            {moment().to(moment(taskInfo.due))}
-          </h4>
-        </div>
-        <div className="govuk-grid-column-one-quarter" id="taskPriority">
-          <span className="govuk-caption-m govuk-!-font-size-19">{t('pages.task.priority')}</span>
-          <h4 className="govuk-heading-m govuk-!-font-size-19">
-            {determinePriority(taskInfo.priority)}
-          </h4>
-        </div>
-        <div className="govuk-grid-column-one-quarter" id="taskAssignee">
-          <span className="govuk-caption-m govuk-!-font-size-19">{t('pages.task.assignee')}</span>
-          <h4 className="govuk-heading-m govuk-!-font-size-19">{assigneeText}</h4>
-        </div>
-      </div>
-      <div className="govuk-grid-row">
-        <div className="govuk-grid-column-full" id="description">
-          <p className="govuk-body">{taskInfo.description}</p>
-        </div>
-      </div>
+      <TaskPageMetadata
+        businessKey={processInstance.businessKey}
+        name={taskInfo.name}
+        category={processDefinition.category}
+        dueDate={moment().to(moment(taskInfo.due))}
+        priority={determinePriority(taskInfo.priority)}
+        assignee={assigneeText}
+        description={taskInfo.description}
+      />
       {form ? (
         <div className="govuk-grid-row">
           <div className="govuk-grid-column-full" id="form">
@@ -220,9 +188,9 @@ const TaskPage = ({ taskId }) => {
                   id: taskId,
                   businessKey: processInstance.businessKey,
                   handleOnFailure,
-                  submitPath: 'task'
+                  submitPath: 'task',
                 });
-              }}       
+              }}
             />
           </div>
         </div>
