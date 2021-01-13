@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { useNavigation } from 'react-navi';
 import { useKeycloak } from '@react-keycloak/web';
 import axios from 'axios';
+import { useMatomo } from '@datapunt/matomo-tracker-react';
 import Card from './components/Card';
 import { useIsMounted, useAxios } from '../../utils/hooks';
 
@@ -22,6 +23,12 @@ const Home = () => {
     count: 0,
   });
   const isMounted = useIsMounted();
+  const { trackPageView } = useMatomo();
+
+  useEffect(() => {
+    trackPageView();
+  }, []);
+
   useEffect(() => {
     const source = axios.CancelToken.source();
     if (axiosInstance) {

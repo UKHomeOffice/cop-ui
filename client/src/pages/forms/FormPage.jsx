@@ -4,6 +4,7 @@ import axios from 'axios';
 import { useNavigation } from 'react-navi';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import FormioUtils from 'formiojs/utils';
+import { useMatomo } from '@datapunt/matomo-tracker-react';
 import { useAxios, useIsMounted } from '../../utils/hooks';
 import ApplicationSpinner from '../../components/ApplicationSpinner';
 import apiHooks from '../../components/form/hooks';
@@ -22,6 +23,11 @@ const FormPage = ({ formId }) => {
   });
 
   const axiosInstance = useAxios();
+  const { trackPageView } = useMatomo();
+
+  useEffect(() => {
+    trackPageView();
+  }, []);
 
   useEffect(() => {
     const source = axios.CancelToken.source();
