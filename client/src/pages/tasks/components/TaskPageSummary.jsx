@@ -51,14 +51,15 @@ const TaskPageSummary = ({
           <span className="govuk-caption-m govuk-!-font-size-19">
             {t(`pages.task.priority`)}
             &nbsp; (
-            <span
+            <a
               className="govuk-link"
+              href="#"
               aria-hidden="true"
               onClick={handlePriorityEdit}
               onKeyDown={handlePriorityEdit}
             >
               {isEditingPriority ? 'cancel' : 'change'}
-            </span>
+            </a>
             )
             <ChangePriority
               isEditingPriority={isEditingPriority}
