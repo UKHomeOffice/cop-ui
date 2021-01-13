@@ -3,7 +3,7 @@ import { shallow, mount } from 'enzyme';
 import MockAdapter from 'axios-mock-adapter';
 import axios from 'axios';
 import moment from 'moment';
-import { act } from '@testing-library/react';
+import { act, screen, render, waitFor, fireEvent } from '@testing-library/react';
 import TaskPage from './TaskPage';
 import ApplicationSpinner from '../../components/ApplicationSpinner';
 import { AlertContextProvider } from '../../utils/AlertContext';
@@ -364,5 +364,46 @@ describe('TaskPage', () => {
     });
 
     expect(mockNavigate).toBeCalledWith('/tasks');
+  });
+
+  it('can update task priority', async () => {
+    mockAxios.onGet('/ui/tasks/taskId').reply(200, {
+      task: {
+        id: 'taskId',
+        name: 'Cheese',
+        due: moment(),
+        priority: '100',
+        assignee: null,
+      },
+      processDefinition: {
+        category: 'test',
+      },
+      processInstance: {
+        businessKey: 'BUSINESS KEY',
+      },
+    });
+    mockAxios.onPut('/camunda/engine-rest/task/taskId').reply(204);
+
+    await waitFor(() => {
+      render(
+        <AlertContextProvider>
+          <TaskPage taskId="taskId" />
+        </AlertContextProvider>
+      );
+    });
+    fireEvent.click(screen.getByText('change'));
+
+    expect(screen.queryByText('cancel')).toBeInTheDocument();
+    expect(screen.queryByText('Change priority')).toBeInTheDocument();
+    expect(screen.queryByText('change')).not.toBeInTheDocument();
+
+    fireEvent.click(screen.getByText('High'));
+    await waitFor(() => fireEvent.click(screen.getByText('Change priority')));
+
+    expect(mockAxios.history.get.length).toBe(2);
+    expect(mockAxios.history.put.length).toBe(1);
+    expect(screen.queryByText('Change priority')).not.toBeInTheDocument();
+    expect(screen.queryByText('cancel')).not.toBeInTheDocument();
+    expect(screen.queryByText('Cheese')).toBeInTheDocument();
   });
 });
