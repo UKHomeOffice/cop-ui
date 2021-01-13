@@ -2,17 +2,15 @@ import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import axios from 'axios';
 import { useTranslation } from 'react-i18next';
-import moment from 'moment';
 import { useKeycloak } from '@react-keycloak/web';
 import { useNavigation } from 'react-navi';
 import _ from 'lodash';
 import { useMatomo } from '@datapunt/matomo-tracker-react';
 import { useIsMounted, useAxios } from '../../utils/hooks';
 import ApplicationSpinner from '../../components/ApplicationSpinner';
-import determinePriority from '../../utils/priority';
 import DisplayForm from '../../components/form/DisplayForm';
 import apiHooks from '../../components/form/hooks';
-import TaskPageMetadata from './components/TaskPageMetadata';
+import TaskPageSummary from './components/TaskPageSummary';
 
 const TaskPage = ({ taskId }) => {
   const isMounted = useIsMounted();
@@ -28,6 +26,7 @@ const TaskPage = ({ taskId }) => {
     isLoading: true,
     data: null,
   });
+  const [taskUpdateSubmitted, setTaskUpdateSubmitted] = useState(false);
   const { trackPageView } = useMatomo();
 
   useEffect(() => {
@@ -128,7 +127,7 @@ const TaskPage = ({ taskId }) => {
     return () => {
       source.cancel('Cancelling request');
     };
-  }, [axiosInstance, setTask, isMounted, taskId, currentUser]);
+  }, [axiosInstance, setTask, isMounted, taskId, currentUser, taskUpdateSubmitted]);
 
   if (task.isLoading) {
     return <ApplicationSpinner />;
@@ -153,14 +152,13 @@ const TaskPage = ({ taskId }) => {
 
   return (
     <>
-      <TaskPageMetadata
+      <TaskPageSummary
         businessKey={processInstance.businessKey}
-        name={taskInfo.name}
         category={processDefinition.category}
-        dueDate={moment().to(moment(taskInfo.due))}
-        priority={determinePriority(taskInfo.priority)}
         assignee={assigneeText}
-        description={taskInfo.description}
+        taskInfo={taskInfo}
+        taskUpdateSubmitted={taskUpdateSubmitted}
+        setTaskUpdateSubmitted={setTaskUpdateSubmitted}
       />
       {form ? (
         <div className="govuk-grid-row">
