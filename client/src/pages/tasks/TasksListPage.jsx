@@ -4,6 +4,7 @@ import { useKeycloak } from '@react-keycloak/web';
 import axios from 'axios';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
+import { useMatomo } from '@datapunt/matomo-tracker-react';
 import ApplicationSpinner from '../../components/ApplicationSpinner';
 import { useIsMounted, useAxios } from '../../utils/hooks';
 import TaskList from './components/TaskList';
@@ -40,6 +41,11 @@ const TasksListPage = ({ taskType }) => {
     const [sortOrder, sortVariable] = sortValue.split('-');
     return { sortOrder, sortVariable };
   };
+  const { trackPageView } = useMatomo();
+
+  useEffect(() => {
+    trackPageView();
+  }, []);
 
   useEffect(() => {
     const source = axios.CancelToken.source();

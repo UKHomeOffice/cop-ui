@@ -3,6 +3,7 @@ import axios from 'axios';
 import { useTranslation } from 'react-i18next';
 import { useNavigation } from 'react-navi';
 import _, { debounce } from 'lodash';
+import { useMatomo } from '@datapunt/matomo-tracker-react';
 import { useAxios, useIsMounted } from '../../utils/hooks';
 import ApplicationSpinner from '../../components/ApplicationSpinner';
 
@@ -21,6 +22,12 @@ const FormsListPage = () => {
   });
 
   const dataRef = useRef(forms.data);
+  const { trackPageView } = useMatomo();
+
+  useEffect(() => {
+    trackPageView();
+  }, []);
+
   useEffect(() => {
     const source = axios.CancelToken.source();
     const loadForms = async () => {

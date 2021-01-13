@@ -6,6 +6,7 @@ import moment from 'moment';
 import { useKeycloak } from '@react-keycloak/web';
 import { useNavigation, Link } from 'react-navi';
 import _ from 'lodash';
+import { useMatomo } from '@datapunt/matomo-tracker-react';
 import { useIsMounted, useAxios } from '../../utils/hooks';
 import ApplicationSpinner from '../../components/ApplicationSpinner';
 import determinePriority from '../../utils/priority';
@@ -26,6 +27,11 @@ const TaskPage = ({ taskId }) => {
     isLoading: true,
     data: null,
   });
+  const { trackPageView } = useMatomo();
+
+  useEffect(() => {
+    trackPageView();
+  }, []);
 
   useEffect(() => {
     // Reset state so that when task page is reloaded with 'next task' it starts fresh

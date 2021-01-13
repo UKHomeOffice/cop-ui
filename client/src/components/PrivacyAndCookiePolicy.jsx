@@ -1,6 +1,13 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useMatomo } from '@datapunt/matomo-tracker-react';
 
 const PrivacyAndCookiePolicy = () => {
+  const { trackPageView } = useMatomo();
+
+  useEffect(() => {
+    trackPageView();
+  }, []);
+
   return (
     <div className="govuk-width-container">
       <main className="govuk-main-wrapper">

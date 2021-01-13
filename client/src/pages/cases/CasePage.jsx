@@ -1,11 +1,17 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useMatomo } from '@datapunt/matomo-tracker-react';
 import CasesResultsPanel from './CasesResultsPanel';
 import CaseDetailsPanel from './CaseDetailsPanel';
 import './CasesPage.scss';
 
 const CasePage = () => {
   const { t } = useTranslation();
+  const { trackPageView } = useMatomo();
+
+  useEffect(() => {
+    trackPageView();
+  }, []);
 
   return (
     <>
