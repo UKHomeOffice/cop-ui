@@ -393,16 +393,15 @@ describe('TaskPage', () => {
     );
 
     await waitFor(() => {
-      expect(screen.queryByText('cancel')).not.toBeInTheDocument();
       expect(screen.queryByText('Change priority')).not.toBeInTheDocument();
-      expect(screen.queryByText('change')).toBeInTheDocument();
+      // There are 2 instances of change on first render, one for due date and one for priority
+      expect(screen.queryAllByText('change')[1]).toBeInTheDocument();
     });
 
-    fireEvent.click(screen.getAllByText('change')[0]);
+    fireEvent.click(screen.getAllByText('change')[1]);
 
     expect(screen.queryByText('cancel')).toBeInTheDocument();
     expect(screen.queryByText('Change priority')).toBeInTheDocument();
-    expect(screen.queryByText('change')).not.toBeInTheDocument();
 
     const dropDown = getById(container, 'change-priority');
 

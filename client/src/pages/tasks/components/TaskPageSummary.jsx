@@ -15,8 +15,12 @@ const TaskPageSummary = ({
 }) => {
   const { t } = useTranslation();
   const [isEditingPriority, setIsEditingPriority] = useState(false);
+  const [isEditingDueDate, setIsEditingDueDate] = useState(false);
   const handlePriorityEdit = () => {
     setIsEditingPriority(!isEditingPriority);
+  };
+  const handleDueDateEdit = () => {
+    setIsEditingDueDate(!isEditingDueDate);
   };
 
   return (
@@ -42,7 +46,20 @@ const TaskPageSummary = ({
           <h4 className="govuk-heading-m govuk-!-font-size-19">{category}</h4>
         </div>
         <div className="govuk-grid-column-one-quarter" id="taskDueDate">
-          <span className="govuk-caption-m govuk-!-font-size-19">{t('pages.task.due')}</span>
+          <span className="govuk-caption-m govuk-!-font-size-19">
+            {t('pages.task.due')}
+            &nbsp; (
+            <button
+              className="govuk-accordion__open-all"
+              aria-hidden="true"
+              type="button"
+              onClick={handleDueDateEdit}
+              onKeyDown={handleDueDateEdit}
+            >
+              {isEditingDueDate ? 'cancel' : 'change'}
+            </button>
+            )
+          </span>
           <h4 className="govuk-heading-m govuk-!-font-size-19">
             {moment().to(moment(taskInfo.due))}
           </h4>
