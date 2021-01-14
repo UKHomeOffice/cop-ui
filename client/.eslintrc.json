@@ -42,12 +42,6 @@
       "rules": {
         "no-param-reassign": "off"
       }
-    },
-    {
-      "files": ["TaskPageSummary.jsx"],
-      "rules": {
-        "jsx-a11y/anchor-is-valid": "off"
-      }
     }
   ],
   "rules": {
