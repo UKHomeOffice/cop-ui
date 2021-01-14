@@ -78,7 +78,7 @@ You can then run the final output with
 
 # Matomo
 
-[Matomo](https://matomo.org/) tracking is implemented in this project. If you wish a particular route to to be tracked, just add the following code to the relevant component:
+[Matomo](https://matomo.org/) tracking is implemented in this project. If you wish a particular route to be tracked, just add the following code to the relevant component:
 
 ```javascript
 import { useEffect } from 'react';
