@@ -3,7 +3,7 @@ import { shallow, mount } from 'enzyme';
 import MockAdapter from 'axios-mock-adapter';
 import axios from 'axios';
 import moment from 'moment';
-import { act, screen, render, waitFor, fireEvent } from '@testing-library/react';
+import { act, screen, render, waitFor, fireEvent, queryByAttribute } from '@testing-library/react';
 import TaskPage from './TaskPage';
 import ApplicationSpinner from '../../components/ApplicationSpinner';
 import { AlertContextProvider } from '../../utils/AlertContext';
@@ -12,6 +12,8 @@ import { mockNavigate } from '../../setupTests';
 
 describe('TaskPage', () => {
   const mockAxios = new MockAdapter(axios);
+  const getById = queryByAttribute.bind(null, 'id');
+
   beforeEach(() => {
     jest.spyOn(console, 'error').mockImplementation(() => {});
     mockAxios.reset();
@@ -384,22 +386,30 @@ describe('TaskPage', () => {
     });
     mockAxios.onPut('/camunda/engine-rest/task/taskId').reply(204);
 
+    const { container } = render(
+      <AlertContextProvider>
+        <TaskPage taskId="taskId" />
+      </AlertContextProvider>
+    );
+
     await waitFor(() => {
-      render(
-        <AlertContextProvider>
-          <TaskPage taskId="taskId" />
-        </AlertContextProvider>
-      );
+      expect(screen.queryByText('cancel')).not.toBeInTheDocument();
+      expect(screen.queryByText('Change priority')).not.toBeInTheDocument();
+      expect(screen.queryByText('change')).toBeInTheDocument();
     });
-    fireEvent.click(screen.getByText('change'));
+
+    fireEvent.click(screen.getAllByText('change')[0]);
 
     expect(screen.queryByText('cancel')).toBeInTheDocument();
     expect(screen.queryByText('Change priority')).toBeInTheDocument();
     expect(screen.queryByText('change')).not.toBeInTheDocument();
 
-    fireEvent.click(screen.getByText('High'));
+    const dropDown = getById(container, 'change-priority');
+
+    fireEvent.change(dropDown, { target: { value: '150' } });
     await waitFor(() => fireEvent.click(screen.getByText('Change priority')));
 
+    // We expect 2 GET requests in the lifecycle of the test, one for the initial fetch and one to fetch the updated task
     expect(mockAxios.history.get.length).toBe(2);
     expect(mockAxios.history.put.length).toBe(1);
     expect(screen.queryByText('Change priority')).not.toBeInTheDocument();

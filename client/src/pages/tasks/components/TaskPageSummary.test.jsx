@@ -35,6 +35,7 @@ describe('TaskPageSummary', () => {
 
     fireEvent.click(screen.getAllByText('change')[0]);
 
+    // We expect Low, Medium and High to exist here as this signifies the dropdown is rendered
     expect(screen.queryAllByText('cancel')[0]).toBeInTheDocument();
     expect(screen.queryByText('Change priority')).toBeInTheDocument();
     expect(screen.queryByText('Low')).toBeInTheDocument();
@@ -43,6 +44,7 @@ describe('TaskPageSummary', () => {
 
     fireEvent.click(screen.getAllByText('cancel')[0]);
 
+    // We expect only Medium to exist here as this signifies the dropdown is not rendered
     expect(screen.getAllByText('change')[0]).toBeInTheDocument();
     expect(screen.queryByText('Change priority')).not.toBeInTheDocument();
     expect(screen.queryByText('Low')).not.toBeInTheDocument();
