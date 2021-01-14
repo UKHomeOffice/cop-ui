@@ -14,22 +14,24 @@ const ChangePriority = ({
   const [updatedTaskInfo, setUpdatedTaskInfo] = useState(taskInfo);
 
   const cleanSubmissionData = (submissionData) => {
-    const propsToRemove = [
-      'id',
-      'caseDefinitionId',
-      'caseExecutionId',
-      'created',
-      'executionId',
-      'formKey',
-      'processDefinitionId',
-      'processInstanceId',
-      'suspended',
-      'taskDefinitionKey',
-      'variables',
+    const propsToKeep = [
+      'name',
+      'description',
+      'priority',
+      'assignee',
+      'owner',
+      'delegationState',
+      'due',
+      'followUp',
+      'parentTaskId',
+      'caseInstanceId',
+      'tenantId',
     ];
-    const result = { ...submissionData };
+    const result = {};
 
-    propsToRemove.forEach((key) => delete result[key]);
+    propsToKeep.forEach((key) => {
+      result[key] = submissionData[key];
+    });
     return result;
   };
   const submitPriorityChange = async () => {
