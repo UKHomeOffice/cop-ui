@@ -75,3 +75,20 @@ You can then run the final output with
 ```bash
  AWS_ACCESS_KEY=XXXXX AWS_SECRET_KEY=XXXXXX AWS_REGION=eu-west-2 AWS_SECRETS_MANAGER_ENABLED=true SPRING_PROFILES_ACTIVE=local java -jar server/build/libs/workflow-ui.jar
 ```
+
+# Matomo
+
+[Matomo](https://matomo.org/) tracking is implemented in this project. If you wish a particular route to to be tracked, just add the following code to the relevant component:
+
+```javascript
+import { useEffect } from 'react';
+import { useMatomo } from '@datapunt/matomo-tracker-react';
+
+const { trackPageView } = useMatomo();
+
+useEffect(() => {
+  trackPageView();
+}, []);
+```
+
+See [further documentation](https://www.npmjs.com/package/@datapunt/matomo-tracker-react#usage) for `@datapunt/matomo-tracker-react` in order to track events, too.
