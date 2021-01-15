@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import axios from 'axios';
 import { useAxios } from '../../../utils/hooks';
 import determinePriority from '../../../utils/priority';
+import { cleanSubmissionData } from './utils';
 
 const ChangePriority = ({
   isEditingPriority,
@@ -13,27 +14,6 @@ const ChangePriority = ({
   const axiosInstance = useAxios();
   const [updatedTaskInfo, setUpdatedTaskInfo] = useState(taskInfo);
 
-  const cleanSubmissionData = (submissionData) => {
-    const propsToKeep = [
-      'name',
-      'description',
-      'priority',
-      'assignee',
-      'owner',
-      'delegationState',
-      'due',
-      'followUp',
-      'parentTaskId',
-      'caseInstanceId',
-      'tenantId',
-    ];
-    const result = {};
-
-    propsToKeep.forEach((key) => {
-      result[key] = submissionData[key];
-    });
-    return result;
-  };
   const submitPriorityChange = async () => {
     const cleanedData = cleanSubmissionData(updatedTaskInfo);
     const source = axios.CancelToken.source();
