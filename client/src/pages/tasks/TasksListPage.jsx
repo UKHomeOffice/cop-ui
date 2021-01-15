@@ -10,16 +10,21 @@ import { useIsMounted, useAxios } from '../../utils/hooks';
 import TaskList from './components/TaskList';
 import TaskFilters from './components/TaskFilters';
 import TaskPagination from './components/TaskPagination';
-import secureLocalStorage from '../../utils/SecureLocalStorage';
+import SecureLocalStorageManager from '../../utils/SecureLocalStorageManager';
 
 const TasksListPage = ({ taskType }) => {
   const { t } = useTranslation();
   const [keycloak] = useKeycloak();
   const [filters, setFilters] = useState({
-    sortBy: secureLocalStorage.setInitialValue(`${taskType}-tasksSortBy`, 'asc-dueDate'),
-    groupBy: secureLocalStorage.setInitialValue(`${taskType}-tasksGroupBy`, 'category'),
+    sortBy: SecureLocalStorageManager.get(`${taskType}-tasksSortBy`)
+      ? SecureLocalStorageManager.get(`${taskType}-tasksSortBy`)
+      : 'asc-dueDate',
+    groupBy: SecureLocalStorageManager.get(`${taskType}-tasksGroupBy`)
+      ? SecureLocalStorageManager.get(`${taskType}-tasksGroupBy`)
+      : 'category',
     search: '',
   });
+
   const [data, setData] = useState({
     isLoading: true,
     tasks: [],
@@ -33,8 +38,8 @@ const TasksListPage = ({ taskType }) => {
     const newFilterValues = { ...filters, [e.target.name]: e.target.value };
     setFilters(newFilterValues);
     if (e.target.name !== 'search') {
-      secureLocalStorage.updateStoredValue(`${taskType}-tasksSortBy`, newFilterValues.sortBy);
-      secureLocalStorage.updateStoredValue(`${taskType}-tasksGroupBy`, newFilterValues.groupBy);
+      SecureLocalStorageManager.set(`${taskType}-tasksSortBy`, newFilterValues.sortBy);
+      SecureLocalStorageManager.set(`${taskType}-tasksGroupBy`, newFilterValues.groupBy);
     }
   };
   const formatSortByValue = (sortValue) => {
