@@ -14,6 +14,7 @@ const FormPage = ({ formId }) => {
   const { submitForm } = apiHooks();
   const isMounted = useIsMounted();
   const navigation = useNavigation();
+  const [repeat, setRepeat] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [pageTitle, setPageTitle] = useState();
 
@@ -31,6 +32,7 @@ const FormPage = ({ formId }) => {
 
   useEffect(() => {
     const source = axios.CancelToken.source();
+    setRepeat(false);
 
     const formPageTitle = async () => {
       if (axiosInstance) {
@@ -90,7 +92,7 @@ const FormPage = ({ formId }) => {
     return () => {
       source.cancel('cancelling request');
     };
-  }, [axiosInstance, formId, setForm, isMounted, setSubmitting]);
+  }, [axiosInstance, formId, setForm, isMounted, setSubmitting, repeat]);
 
   if (form.isLoading) {
     return <ApplicationSpinner />;
@@ -102,6 +104,11 @@ const FormPage = ({ formId }) => {
   const businessKeyComponent = FormioUtils.getComponent(form.data.components, 'businessKey');
   const handleOnFailure = () => {
     setSubmitting(false);
+  };
+  const handleOnRepeat = () => {
+    setSubmitting(false);
+    setRepeat(true);
+    console.log('repeat');
   };
 
   return (
@@ -124,8 +131,9 @@ const FormPage = ({ formId }) => {
             id: formId,
             businessKey: businessKeyComponent ? businessKeyComponent.defaultValue : null,
             handleOnFailure,
-            submitPath: 'process-definition/key'
-          })
+            handleOnRepeat,
+            submitPath: 'process-definition/key',
+          });
         }}
       />
     </>
