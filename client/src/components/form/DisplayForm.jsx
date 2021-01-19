@@ -7,13 +7,13 @@ import PropTypes from 'prop-types';
 import gds from '@digitalpatterns/formio-gds-template';
 import Loader from '@highpoint/react-loader-advanced';
 import { BLACK, WHITE } from 'govuk-colours';
-import { AlertContext } from '../../utils/AlertContext';
 import { TeamContext } from '../../utils/TeamContext';
 import { StaffIdContext } from '../../utils/StaffIdContext';
 import { augmentRequest, interpolate } from '../../utils/formioSupport';
 import Logger from '../../utils/logger';
 import ApplicationSpinner from '../ApplicationSpinner';
 import FileService from '../../utils/FileService';
+import FormErrorsAlert from '../alert/FormErrorsAlert';
 import './DisplayForm.scss';
 
 Formio.use(gds);
@@ -26,7 +26,7 @@ const DisplayForm = ({
   interpolateContext,
   submitting,
 }) => {
-  const { alertContext, setAlertContext } = useContext(AlertContext);
+  const [errorAlert, setErrorAlert] = useState();
   const [submissionData, setSubmissionData] = useState(null);
   const formRef = useRef();
   const host = `${window.location.protocol}//${window.location.hostname}${
@@ -154,7 +154,7 @@ const DisplayForm = ({
   }, [time, keycloak.token, form]);
 
   const validate = (formInstance, data) => {
-    if (!formInstance || !alertContext) {
+    if (!formInstance || !errorAlert) {
       return;
     }
     let instance;
@@ -167,17 +167,17 @@ const DisplayForm = ({
     }
 
     if (instance && instance.isValid(data.value, true)) {
-      setAlertContext(null);
+      setErrorAlert(null);
     } else {
       const errors = _.filter(
-        alertContext.errors,
+        errorAlert.errors,
         (error) => data.changed && error.component.key !== data.changed.component.key
       );
 
       if (errors.length === 0) {
-        setAlertContext(null);
+        setErrorAlert(null);
       } else {
-        setAlertContext({
+        setErrorAlert({
           type: 'form-error',
           errors,
           form: formRef.current,
@@ -210,6 +210,7 @@ const DisplayForm = ({
       foregroundStyle={{ color: BLACK }}
       backgroundStyle={{ backgroundColor: WHITE }}
     >
+      {errorAlert && <FormErrorsAlert errors={errorAlert.errors} form={errorAlert.form} />}
       <Form
         form={form}
         ref={formRef}
@@ -225,6 +226,7 @@ const DisplayForm = ({
         }}
         onPrevPage={() => {
           window.scrollTo(0, 0);
+          setErrorAlert(null);
         }}
         submission={augmentedSubmission}
         onSubmit={() => {
@@ -253,7 +255,7 @@ const DisplayForm = ({
           }
         }}
         onError={(errors) => {
-          setAlertContext({
+          setErrorAlert({
             type: 'form-error',
             errors,
             form: formRef.current,
