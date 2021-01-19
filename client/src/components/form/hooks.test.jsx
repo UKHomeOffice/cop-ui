@@ -36,10 +36,20 @@ describe('hooks - can submit a form from a new form instance', () => {
       },
     },
   };
+  const submissionWithSubmitAgain = {
+    data: {
+      textField: 'test',
+      form: {
+        submittedBy: 'test@digital.homeoffice.gov.uk',
+      },
+      submitAgain: true,
+    },
+  };
   const form = { name: 'test', id: 'formId' };
   const id = 'formId';
   const businessKey = 'businessKey';
   const handleOnFailure = jest.fn();
+  const handleOnRepeat = jest.fn();
   const submitPath = 'process-definition/key';
 
   // Scenarios
@@ -54,6 +64,7 @@ describe('hooks - can submit a form from a new form instance', () => {
         id,
         businessKey,
         handleOnFailure,
+        handleOnRepeat,
         submitPath,
       });
     });
@@ -74,6 +85,7 @@ describe('hooks - can submit a form from a new form instance', () => {
         id,
         businessKey,
         handleOnFailure,
+        handleOnRepeat,
         submitPath,
       });
     });
@@ -97,6 +109,7 @@ describe('hooks - can submit a form from a new form instance', () => {
         id,
         businessKey,
         handleOnFailure,
+        handleOnRepeat,
         submitPath,
       });
     });
@@ -117,6 +130,7 @@ describe('hooks - can submit a form from a new form instance', () => {
         id,
         businessKey,
         handleOnFailure,
+        handleOnRepeat,
         submitPath,
       });
     });
@@ -140,10 +154,36 @@ describe('hooks - can submit a form from a new form instance', () => {
         id,
         businessKey,
         handleOnFailure,
+        handleOnRepeat,
         submitPath,
       });
     });
     expect(mockNavigate).toHaveBeenCalledWith('/');
+  });
+
+  it('can handle successful submit, and call handleOnRepeat function when submitAgain is true', async () => {
+    mockAxios
+      .onPost('/camunda/engine-rest/process-definition/key/formId/submit-form')
+      .reply(200, {});
+    mockAxios.onGet('/camunda/engine-rest/task?processInstanceBusinessKey=businessKey').reply(200, [
+      {
+        id: 'testId',
+        assignee: 'notUserWhoSubmittedForm',
+      },
+    ]);
+    await act(async () => {
+      result.current.submitForm({
+        submission: submissionWithSubmitAgain,
+        form,
+        id,
+        businessKey,
+        handleOnFailure,
+        handleOnRepeat,
+        submitPath,
+      });
+    });
+
+    expect(handleOnRepeat).toHaveBeenCalledTimes(1);
   });
 });
 
