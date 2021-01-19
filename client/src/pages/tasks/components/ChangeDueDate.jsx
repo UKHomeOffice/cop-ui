@@ -1,8 +1,23 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
+import dayjs from 'dayjs';
 import { isOverDue } from './utils';
 
 const ChangeDueDate = ({ isEditingDueDate, taskInfo }) => {
+  const due = dayjs(taskInfo.due);
+  const [dueDate, setDueDate] = useState({
+    day: due.$D,
+    month: due.$M + 1,
+    year: due.$y,
+    hour: due.$H,
+    minute: due.$m,
+    second: due.$s,
+  });
+
+  const handleDueDateChange = (e) => {
+    setDueDate({ ...dueDate, [e.target.name]: e.target.value });
+  };
+
   if (!isEditingDueDate) {
     return <h4 className="govuk-heading-m govuk-!-font-size-19">{isOverDue(taskInfo.due)}</h4>;
   }
@@ -19,6 +34,9 @@ const ChangeDueDate = ({ isEditingDueDate, taskInfo }) => {
               type="text"
               pattern="[0-9]*"
               inputMode="numeric"
+              name="day"
+              value={dueDate.day}
+              onChange={handleDueDateChange}
             />
           </div>
         </div>
@@ -32,6 +50,9 @@ const ChangeDueDate = ({ isEditingDueDate, taskInfo }) => {
               type="text"
               pattern="[0-9]*"
               inputMode="numeric"
+              name="month"
+              value={dueDate.month}
+              onChange={handleDueDateChange}
             />
           </div>
         </div>
@@ -45,6 +66,9 @@ const ChangeDueDate = ({ isEditingDueDate, taskInfo }) => {
               type="text"
               pattern="[0-9]*"
               inputMode="numeric"
+              name="year"
+              value={dueDate.year}
+              onChange={handleDueDateChange}
             />
           </div>
         </div>

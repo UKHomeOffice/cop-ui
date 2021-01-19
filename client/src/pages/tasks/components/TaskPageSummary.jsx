@@ -60,7 +60,12 @@ const TaskPageSummary = ({
             </button>
             )
           </span>
-          <ChangeDueDate isEditingDueDate={isEditingDueDate} taskInfo={taskInfo} />
+          <ChangeDueDate
+            isEditingDueDate={isEditingDueDate}
+            taskInfo={taskInfo}
+            taskUpdateSubmitted={taskUpdateSubmitted}
+            setTaskUpdateSubmitted={setTaskUpdateSubmitted}
+          />
         </div>
         <div className="govuk-grid-column-one-quarter" id="taskPriority">
           <span className="govuk-caption-m govuk-!-font-size-19">
