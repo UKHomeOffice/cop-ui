@@ -108,7 +108,7 @@ const FormPage = ({ formId }) => {
   const handleOnRepeat = () => {
     setSubmitting(false);
     setRepeat(true);
-    console.log('repeat');
+    window.scrollTo(0, 0);
   };
 
   return (
