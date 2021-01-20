@@ -45,3 +45,5 @@ export const isOverDue = (due) => {
     </span>
   );
 };
+
+export const isDateValid = (date, format) => dayjs(date).format(format) === date;
