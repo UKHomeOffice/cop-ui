@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import dayjs from 'dayjs';
 import axios from 'axios';
+import { useTranslation } from 'react-i18next';
 import { useAxios } from '../../../utils/hooks';
 import { cleanSubmissionData, isOverDue, isDateValid } from './utils';
 
@@ -11,6 +12,7 @@ const ChangeDueDate = ({
   taskUpdateSubmitted,
   setTaskUpdateSubmitted,
 }) => {
+  const { t } = useTranslation();
   const axiosInstance = useAxios();
   const due = dayjs(taskInfo.due);
   const [dueDate, setDueDate] = useState({
@@ -22,6 +24,7 @@ const ChangeDueDate = ({
     second: due.$s,
     millisecond: due.$ms,
   });
+  const [isError, setIsError] = useState(false);
 
   const handleDueDateChange = (e) => {
     setDueDate({ ...dueDate, [e.target.name]: e.target.value });
@@ -35,7 +38,7 @@ const ChangeDueDate = ({
     const updatedDueDate = `${year}-${`0${month}`.slice(-2)}-${`0${day}`.slice(-2)}`;
 
     if (isDateValid(updatedDueDate, 'YYYY-MM-DD')) {
-      // Add time back on here as only date is changed, not the time in the UI
+      // Add time back on here as only date is changed in the UI, not the time
       cleanedData.due = dayjs(
         `${updatedDueDate}T${hour}:${minute}:${second}.${millisecond}`
       ).format('YYYY-MM-DDTHH:mm:ss.SSS[+0000]');
@@ -47,6 +50,8 @@ const ChangeDueDate = ({
         data: cleanedData,
       });
       setTaskUpdateSubmitted(!taskUpdateSubmitted);
+    } else {
+      setIsError(true);
     }
   };
 
@@ -54,7 +59,13 @@ const ChangeDueDate = ({
     return <h4 className="govuk-heading-m govuk-!-font-size-19">{isOverDue(taskInfo.due)}</h4>;
   }
   return (
-    <div className="govuk-form-group">
+    <div className={`govuk-form-group ${isError ? 'govuk-form-group--error' : null}`}>
+      {isError && (
+        <span className="govuk-error-message">
+          <span className="govuk-visually-hidden">Error:</span>
+          {t(`pages.task.submission.error.due-date-change`)}
+        </span>
+      )}
       <div className="govuk-date-input">
         <div className="govuk-date-input__item">
           <div className="govuk-form-group">
