@@ -14,7 +14,8 @@ const ChangePriority = ({
   const axiosInstance = useAxios();
   const [updatedTaskInfo, setUpdatedTaskInfo] = useState(taskInfo);
 
-  const submitPriorityChange = async () => {
+  const submitPriorityChange = async (e) => {
+    e.preventDefault();
     const cleanedData = cleanSubmissionData(updatedTaskInfo);
     const source = axios.CancelToken.source();
     await axiosInstance({
