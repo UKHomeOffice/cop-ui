@@ -73,6 +73,7 @@ const ChangeDueDate = ({
               Day
             </label>
             <input
+              id="day"
               className="govuk-input govuk-date-input__input govuk-input--width-2"
               type="text"
               pattern="[0-9]*"
@@ -89,6 +90,7 @@ const ChangeDueDate = ({
               Month
             </label>
             <input
+              id="month"
               className="govuk-input govuk-date-input__input govuk-input--width-2"
               type="text"
               pattern="[0-9]*"
@@ -105,6 +107,7 @@ const ChangeDueDate = ({
               Year
             </label>
             <input
+              id="year"
               className="govuk-input govuk-date-input__input govuk-input--width-4"
               type="text"
               pattern="[0-9]*"
