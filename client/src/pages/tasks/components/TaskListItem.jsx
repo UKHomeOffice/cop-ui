@@ -7,6 +7,7 @@ import axios from 'axios';
 import { useKeycloak } from '@react-keycloak/web';
 import { useAxios } from '../../../utils/hooks';
 import './TaskListItem.scss';
+import { isOverDue } from './utils';
 
 dayjs.extend(relativeTime);
 
@@ -17,26 +18,6 @@ const TaskListItem = ({ id, due, name, assignee, businessKey }) => {
   const currentUser = keycloak.tokenParsed.email;
   const [unclaimActionMade, setUnclaimActionMade] = useState(false);
 
-  const isOverDue = () => {
-    if (dayjs(due).fromNow().includes('ago')) {
-      return (
-        <span
-          aria-label={`due ${dayjs(due).fromNow()}`}
-          className="govuk-!-font-size-19 govuk-!-font-weight-bold overdue"
-        >
-          {`Overdue ${dayjs(due).fromNow()}`}
-        </span>
-      );
-    }
-    return (
-      <span
-        aria-label={`due ${dayjs(due).fromNow()}`}
-        className="govuk-!-font-size-19 govuk-!-font-weight-bold not-overdue"
-      >
-        {`Due ${dayjs(due).fromNow()}`}
-      </span>
-    );
-  };
   const isAssigned = () => {
     if (!assignee || unclaimActionMade) {
       return 'Unassigned';
@@ -100,7 +81,9 @@ const TaskListItem = ({ id, due, name, assignee, businessKey }) => {
       </div>
       <div className="govuk-grid-column-one-half">
         <div className="govuk-grid-row">
-          <div className="govuk-grid-column-one-third govuk-!-margin-bottom-3">{isOverDue()}</div>
+          <div className="govuk-grid-column-one-third govuk-!-margin-bottom-3">
+            {isOverDue(due)}
+          </div>
           <div className="govuk-grid-column-one-third govuk-!-margin-bottom-3">
             <span className="govuk-!-font-size-19 govuk-!-font-weight-bold">{isAssigned()}</span>
           </div>

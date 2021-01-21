@@ -2,7 +2,7 @@ import React from 'react';
 import { shallow, mount } from 'enzyme';
 import MockAdapter from 'axios-mock-adapter';
 import axios from 'axios';
-import moment from 'moment';
+import dayjs from 'dayjs';
 import { act, screen, render, waitFor, fireEvent, queryByAttribute } from '@testing-library/react';
 import TaskPage from './TaskPage';
 import ApplicationSpinner from '../../components/ApplicationSpinner';
@@ -33,7 +33,7 @@ describe('TaskPage', () => {
       task: {
         id: 'taskId',
         name: 'task name',
-        due: moment(),
+        due: dayjs(),
         priority: '1000',
         assignee: null,
       },
@@ -79,7 +79,7 @@ describe('TaskPage', () => {
       task: {
         id: 'taskId',
         name: 'task name',
-        due: moment(),
+        due: dayjs(),
         priority: '1000',
         assignee: 'test',
         variables: {
@@ -158,7 +158,7 @@ describe('TaskPage', () => {
         id: 'taskId',
         assignee: 'test', // this is declared in setupTests.js
         name: 'task name',
-        due: moment(),
+        due: dayjs(),
         priority: '1000',
         variables: {
           taskVariableA: {
@@ -227,7 +227,7 @@ describe('TaskPage', () => {
       task: {
         id: 'taskId',
         name: 'task name',
-        due: moment(),
+        due: dayjs(),
         priority: '1000',
         assignee: 'not-test',
         variables: {
@@ -297,7 +297,7 @@ describe('TaskPage', () => {
         id: 'taskId',
         assignee: 'test',
         name: 'task name',
-        due: moment(),
+        due: dayjs(),
         priority: '1000',
       },
       variables: {
@@ -368,12 +368,12 @@ describe('TaskPage', () => {
     expect(mockNavigate).toBeCalledWith('/tasks');
   });
 
-  it('can update task priority', async () => {
+  it('should update task priority', async () => {
     mockAxios.onGet('/ui/tasks/taskId').reply(200, {
       task: {
         id: 'taskId',
         name: 'Cheese',
-        due: moment(),
+        due: dayjs(),
         priority: '100',
         assignee: null,
       },
@@ -393,16 +393,15 @@ describe('TaskPage', () => {
     );
 
     await waitFor(() => {
-      expect(screen.queryByText('cancel')).not.toBeInTheDocument();
       expect(screen.queryByText('Change priority')).not.toBeInTheDocument();
-      expect(screen.queryByText('change')).toBeInTheDocument();
+      // There are 2 instances of change on first render, one for due date and one for priority
+      expect(screen.queryAllByText('change')[1]).toBeInTheDocument();
     });
 
-    fireEvent.click(screen.getAllByText('change')[0]);
+    fireEvent.click(screen.getAllByText('change')[1]);
 
     expect(screen.queryByText('cancel')).toBeInTheDocument();
     expect(screen.queryByText('Change priority')).toBeInTheDocument();
-    expect(screen.queryByText('change')).not.toBeInTheDocument();
 
     const dropDown = getById(container, 'change-priority');
 
@@ -413,6 +412,51 @@ describe('TaskPage', () => {
     expect(mockAxios.history.get.length).toBe(2);
     expect(mockAxios.history.put.length).toBe(1);
     expect(screen.queryByText('Change priority')).not.toBeInTheDocument();
+    expect(screen.queryByText('cancel')).not.toBeInTheDocument();
+    expect(screen.queryByText('Cheese')).toBeInTheDocument();
+  });
+
+  it('should update due date', async () => {
+    mockAxios.onGet('/ui/tasks/taskId').reply(200, {
+      task: {
+        id: 'taskId',
+        name: 'Cheese',
+        due: dayjs().add(1, 'day').format('YYYY-MM-DDTHH:mm:ss.SSS[+0000]'),
+        priority: '100',
+        assignee: null,
+      },
+      processDefinition: {
+        category: 'test',
+      },
+      processInstance: {
+        businessKey: 'BUSINESS KEY',
+      },
+    });
+    mockAxios.onPut('/camunda/engine-rest/task/taskId').reply(204);
+
+    const { container } = render(
+      <AlertContextProvider>
+        <TaskPage taskId="taskId" />
+      </AlertContextProvider>
+    );
+
+    await waitFor(() => {
+      expect(screen.queryByText('Change due date')).not.toBeInTheDocument();
+      // There are 2 instances of change on first render, one for due date and one for priority
+      expect(screen.queryAllByText('change')[0]).toBeInTheDocument();
+    });
+
+    fireEvent.click(screen.getAllByText('change')[0]);
+
+    expect(screen.queryByText('cancel')).toBeInTheDocument();
+    expect(screen.queryByText('Change due date')).toBeInTheDocument();
+
+    fireEvent.change(getById(container, 'month'), { target: { value: '03' } });
+    await waitFor(() => fireEvent.click(screen.getByText('Change due date')));
+
+    expect(mockAxios.history.get.length).toBe(2);
+    expect(mockAxios.history.put.length).toBe(1);
+    expect(screen.queryByText('Change due date')).not.toBeInTheDocument();
     expect(screen.queryByText('cancel')).not.toBeInTheDocument();
     expect(screen.queryByText('Cheese')).toBeInTheDocument();
   });

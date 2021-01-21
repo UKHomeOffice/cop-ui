@@ -26,29 +26,48 @@ describe('TaskPageSummary', () => {
     mockAxios.reset();
   });
 
-  it('can render without error', () => {
+  it('should render without error', () => {
     render(<TaskPageSummary {...mockProps} />);
   });
 
-  it('can toggle priority editing', () => {
+  it('should toggle priority editing', () => {
     render(<TaskPageSummary {...mockProps} />);
 
-    fireEvent.click(screen.getAllByText('change')[0]);
+    // 2 'change' values on initial render, the second 'change' refers to the priority field
+    fireEvent.click(screen.getAllByText('change')[1]);
 
-    // We expect Low, Medium and High to exist here as this signifies the dropdown is rendered
-    expect(screen.queryAllByText('cancel')[0]).toBeInTheDocument();
+    // Should only be one cancel on the screen as due date change has not been toggled
+    expect(screen.queryByText('cancel')).toBeInTheDocument();
     expect(screen.queryByText('Change priority')).toBeInTheDocument();
+    // We expect Low, Medium and High to exist here as this signifies the dropdown is rendered
     expect(screen.queryByText('Low')).toBeInTheDocument();
     expect(screen.queryByText('Medium')).toBeInTheDocument();
     expect(screen.queryByText('High')).toBeInTheDocument();
 
-    fireEvent.click(screen.getAllByText('cancel')[0]);
+    fireEvent.click(screen.getByText('cancel'));
 
     // We expect only Medium to exist here as this signifies the dropdown is not rendered
-    expect(screen.getAllByText('change')[0]).toBeInTheDocument();
+    expect(screen.getAllByText('change')[1]).toBeInTheDocument();
     expect(screen.queryByText('Change priority')).not.toBeInTheDocument();
     expect(screen.queryByText('Low')).not.toBeInTheDocument();
     expect(screen.queryByText('Medium')).toBeInTheDocument();
     expect(screen.queryByText('High')).not.toBeInTheDocument();
+  });
+
+  it('should toggle due date editing', () => {
+    render(<TaskPageSummary {...mockProps} />);
+
+    fireEvent.click(screen.getAllByText('change')[0]);
+
+    expect(screen.queryByText('cancel')).toBeInTheDocument();
+    expect(screen.queryByText('Change due date')).toBeInTheDocument();
+
+    fireEvent.click(screen.getByText('cancel'));
+
+    expect(screen.getAllByText('change')[0]).toBeInTheDocument();
+    expect(screen.queryByText('Change due date')).not.toBeInTheDocument();
+    expect(screen.queryByText('Day')).not.toBeInTheDocument();
+    expect(screen.queryByText('Month')).not.toBeInTheDocument();
+    expect(screen.queryByText('Year')).not.toBeInTheDocument();
   });
 });

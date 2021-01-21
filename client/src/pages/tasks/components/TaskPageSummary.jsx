@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-navi';
-import moment from 'moment';
 import ChangePriority from './ChangePriority';
+import ChangeDueDate from './ChangeDueDate';
 
 const TaskPageSummary = ({
   businessKey,
@@ -15,8 +15,12 @@ const TaskPageSummary = ({
 }) => {
   const { t } = useTranslation();
   const [isEditingPriority, setIsEditingPriority] = useState(false);
+  const [isEditingDueDate, setIsEditingDueDate] = useState(false);
   const handlePriorityEdit = () => {
     setIsEditingPriority(!isEditingPriority);
+  };
+  const handleDueDateEdit = () => {
+    setIsEditingDueDate(!isEditingDueDate);
   };
 
   return (
@@ -42,10 +46,26 @@ const TaskPageSummary = ({
           <h4 className="govuk-heading-m govuk-!-font-size-19">{category}</h4>
         </div>
         <div className="govuk-grid-column-one-quarter" id="taskDueDate">
-          <span className="govuk-caption-m govuk-!-font-size-19">{t('pages.task.due')}</span>
-          <h4 className="govuk-heading-m govuk-!-font-size-19">
-            {moment().to(moment(taskInfo.due))}
-          </h4>
+          <span className="govuk-caption-m govuk-!-font-size-19">
+            {t('pages.task.due')}
+            &nbsp; (
+            <button
+              className="govuk-accordion__open-all"
+              aria-hidden="true"
+              type="button"
+              onClick={handleDueDateEdit}
+              onKeyDown={handleDueDateEdit}
+            >
+              {isEditingDueDate ? 'cancel' : 'change'}
+            </button>
+            )
+          </span>
+          <ChangeDueDate
+            isEditingDueDate={isEditingDueDate}
+            taskInfo={taskInfo}
+            taskUpdateSubmitted={taskUpdateSubmitted}
+            setTaskUpdateSubmitted={setTaskUpdateSubmitted}
+          />
         </div>
         <div className="govuk-grid-column-one-quarter" id="taskPriority">
           <span className="govuk-caption-m govuk-!-font-size-19">
@@ -61,13 +81,13 @@ const TaskPageSummary = ({
               {isEditingPriority ? 'cancel' : 'change'}
             </button>
             )
-            <ChangePriority
-              isEditingPriority={isEditingPriority}
-              taskInfo={taskInfo}
-              taskUpdateSubmitted={taskUpdateSubmitted}
-              setTaskUpdateSubmitted={setTaskUpdateSubmitted}
-            />
           </span>
+          <ChangePriority
+            isEditingPriority={isEditingPriority}
+            taskInfo={taskInfo}
+            taskUpdateSubmitted={taskUpdateSubmitted}
+            setTaskUpdateSubmitted={setTaskUpdateSubmitted}
+          />
         </div>
         <div className="govuk-grid-column-one-quarter" id="taskAssignee">
           <span className="govuk-caption-m govuk-!-font-size-19">{t('pages.task.assignee')}</span>

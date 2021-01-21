@@ -159,7 +159,10 @@
     },
     "task": {
       "submission": {
-        "success-message": "You have successfully completed the task"
+        "success-message": "You have successfully completed the task",
+        "error": {
+          "due-date-change": "Task due date must be a real date"
+        }
       },
       "actions": {
         "complete": "Complete"
