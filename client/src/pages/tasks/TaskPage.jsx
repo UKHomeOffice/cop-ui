@@ -19,6 +19,7 @@ const TaskPage = ({ taskId }) => {
   const navigation = useNavigation();
   const [keycloak] = useKeycloak();
   const currentUser = keycloak.tokenParsed.email;
+  const [repeat, setRepeat] = useState(false);
   const { submitForm } = apiHooks();
   const [submitting, setSubmitting] = useState(false);
   const [assigneeText, setAssigneeText] = useState();
@@ -36,8 +37,9 @@ const TaskPage = ({ taskId }) => {
   useEffect(() => {
     // Reset state so that when task page is reloaded with 'next task' it starts fresh
     const source = axios.CancelToken.source();
-    setTask({ isLoading: true, data: null });
+    setRepeat(false);
     setSubmitting(false);
+    setTask({ isLoading: true, data: null });
 
     // Get task data
     const loadTask = async () => {
@@ -127,7 +129,7 @@ const TaskPage = ({ taskId }) => {
     return () => {
       source.cancel('Cancelling request');
     };
-  }, [axiosInstance, setTask, isMounted, taskId, currentUser, taskUpdateSubmitted]);
+  }, [axiosInstance, setTask, isMounted, taskId, currentUser, taskUpdateSubmitted, repeat]);
 
   if (task.isLoading) {
     return <ApplicationSpinner />;
@@ -148,6 +150,11 @@ const TaskPage = ({ taskId }) => {
 
   const handleOnFailure = () => {
     setSubmitting(false);
+  };
+  const handleOnRepeat = () => {
+    setSubmitting(false);
+    setRepeat(true);
+    window.scrollTo(0, 0);
   };
 
   return (
@@ -186,6 +193,7 @@ const TaskPage = ({ taskId }) => {
                   id: taskId,
                   businessKey: processInstance.businessKey,
                   handleOnFailure,
+                  handleOnRepeat,
                   submitPath: 'task',
                 });
               }}

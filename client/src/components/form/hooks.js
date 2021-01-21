@@ -14,7 +14,7 @@ export default () => {
   const currentUser = keycloak.tokenParsed.email;
 
   const submitForm = useCallback(
-    ({ submission, form, id, businessKey, handleOnFailure, submitPath }) => {
+    ({ submission, form, id, businessKey, handleOnFailure, handleOnRepeat, submitPath }) => {
       if (form) {
         const variables = {
           [form.name]: {
@@ -40,6 +40,8 @@ export default () => {
                 // We can only ever open one task in this manner and so always take the first available
                 if (response.data.length > 0 && response.data[0].assignee === currentUser) {
                   navigation.navigate(`/tasks/${response.data[0].id}`);
+                } else if (submission.data.submitAgain === true) {
+                  handleOnRepeat();
                 } else {
                   setAlertContext({
                     type: 'form-submission',
