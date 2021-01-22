@@ -107,7 +107,7 @@ const DisplayForm = ({
         subject,
         url,
       },
-      shiftDetailsDataContext: {
+      shiftDetailsContext: {
         email,
         locationid: defaultlocationid,
         phone,
