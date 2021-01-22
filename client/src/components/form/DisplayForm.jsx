@@ -287,7 +287,7 @@ const DisplayForm = ({
 };
 
 DisplayForm.defaultProps = {
-  existingSubmission: null,
+  existingSubmission: {},
   interpolateContext: null,
   submitting: false,
 };
