@@ -180,6 +180,7 @@ const TaskPage = ({ taskId }) => {
               interpolateContext={{
                 processContext: {
                   variables,
+                  ...variables,
                   instance: processInstance,
                   definition: processDefinition,
                 },
