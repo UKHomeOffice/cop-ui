@@ -30,7 +30,7 @@ const CaseDetailsPanel = ({ caseSelected }) => {
 };
 
 CaseDetailsPanel.propTypes = {
-  caseSelected: PropTypes.node.isRequired,
+  caseSelected: PropTypes.shape(PropTypes.object).isRequired,
 };
 
 export default CaseDetailsPanel;

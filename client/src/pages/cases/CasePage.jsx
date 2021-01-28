@@ -19,6 +19,7 @@ const CasePage = () => {
   const [caseSearchResults, setCaseSearchResults] = useState(null);
   const [caseArray, setCaseArray] = useState(null);
   const [searching, setSearching] = useState(false);
+  // eslint-disable-next-line no-unused-vars
   const [error, setError] = useState(null);
   const [caseSelected, setCaseSelected] = useState(null);
   const [caseLoading, setCaseLoading] = useState(false);
@@ -28,6 +29,7 @@ const CasePage = () => {
     if (!input || input.length < 3) {
       setCaseSearchResults(null);
       setCaseSelected(null);
+      setNextUrl(null);
       return;
     }
     try {
@@ -36,7 +38,7 @@ const CasePage = () => {
       const resp = await axiosInstance.get(`/camunda/cases?query=${input}`);
       setCaseSearchResults(resp.data);
       setCaseArray(resp.data._embedded ? resp.data._embedded.cases : null);
-      setNextUrl(resp.data._links.next.href);
+      setNextUrl(resp.data._links.next ? resp.data._links.next.href : null);
     } catch (err) {
       setError(err);
     } finally {
@@ -46,12 +48,13 @@ const CasePage = () => {
 
   const loadMoreCases = async (nextQuery) => {
     try {
+      setCaseSelected(null);
       const resp = await axiosInstance.get(`/camunda/cases${nextQuery}`);
       setCaseArray(caseArray.concat(resp.data._embedded ? resp.data._embedded.cases : null));
       setCaseSearchResults(resp.data);
-      setNextUrl(resp.data._links.next.href);
-    } catch {
-      setError(error);
+      setNextUrl(resp.data._links.next ? resp.data._links.next.href : null);
+    } catch (err) {
+      setError(err);
     }
   };
 

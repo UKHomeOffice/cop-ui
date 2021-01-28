@@ -75,7 +75,7 @@ describe('CaseResultsPage', () => {
       expect(screen.getByText('businessKey1')).toBeTruthy();
     });
 
-    // Renders Case Details Panel when user clicks case link
+    // Renders Case Details Panel when user selects a case link
     const caseSelected = screen.getByText('businessKey1');
     fireEvent.click(caseSelected);
 
@@ -84,6 +84,7 @@ describe('CaseResultsPage', () => {
 
     await waitFor(() => {
       expect(screen.getByText('Submit Intelligence Referral')).toBeTruthy();
+      expect(screen.getByText('Enhance intel')).toBeTruthy();
     });
   });
 
@@ -138,7 +139,7 @@ describe('CaseResultsPage', () => {
       </CasePage>
     );
 
-    // Renders list of case search results when user inputs a query
+    // Renders first page of case search results when user inputs a query
     const input = screen.getByPlaceholderText('pages.cases.search-placeholder');
     fireEvent.change(input, { target: { value: 'multiPageResults' } });
 
@@ -149,10 +150,11 @@ describe('CaseResultsPage', () => {
       expect(screen.getAllByText('Load more')).toBeTruthy();
     });
 
-    // Load More button is visible and loads more cases when clicked
+    // Load More button is visible
     const loadMoreButton = screen.getByText('Load more');
     fireEvent.click(loadMoreButton);
 
+    // Loads more cases when 'Load more' is clicked
     await waitFor(() => {
       expect(screen.getByText('businessKey25')).toBeTruthy();
       expect(screen.getByText('40')).toBeTruthy();
@@ -160,7 +162,7 @@ describe('CaseResultsPage', () => {
     });
   });
 
-  it('renders error message if case details returns an error', async () => {
+  it('renders error message if Case Details API returns an error', async () => {
     mockAxios.onGet('/camunda/cases?query=keyword').reply(200, {
       page: {
         size: 20,

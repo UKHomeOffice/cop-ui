@@ -118,7 +118,7 @@ const CaseHistory = ({ caseSelected }) => {
 };
 
 CaseHistory.propTypes = {
-  caseSelected: PropTypes.node.isRequired,
+  caseSelected: PropTypes.shape(PropTypes.object).isRequired,
 };
 
 export default CaseHistory;

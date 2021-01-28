@@ -15,7 +15,7 @@ describe('Case History page', () => {
     mockAxios.reset();
   });
 
-  it('shows Case History ', async () => {
+  it('shows Case History when a case is selected', async () => {
     mockAxios.onGet('/camunda/cases?query=keyword').reply(200, {
       page: {
         size: 20,
@@ -66,6 +66,32 @@ describe('Case History page', () => {
       ],
     });
 
+    mockAxios.onGet('/camunda/cases/businessKey3').reply(200, {
+      businessKey: 'businessKey3',
+      processInstances: [
+        {
+          definitionId: 'intel-referral:3:85c1a0aa-34bb-11eb-924e-e61a6d54c1b3',
+          endDate: '2021-01-13T10:25:25.065+0000',
+          formReferences: [],
+          id: 'e7e417c4-356b-11eb-b768-863d861ec96a',
+          key: 'intel-referral',
+          name: 'TEST 2 NAME 1',
+          openTasks: [],
+          startDate: '2020-12-03T13:31:53.319+0000',
+        },
+        {
+          definitionId: 'enhance-intel:2:c2d7a5b0-27f7-11eb-b6c2-922e59dab112',
+          endDate: '2021-01-13T10:25:24.993+0000',
+          formReferences: [],
+          id: 'e806bb0c-356b-11eb-b768-863d861ec96a',
+          key: 'enhance-intel',
+          name: 'TEST 2 NAME 2',
+          openTasks: [],
+          startDate: '2020-12-03T13:31:53.546+0000',
+        },
+      ],
+    });
+
     render(
       <CasePage>
         <CaseResultsPanel>
@@ -75,16 +101,18 @@ describe('Case History page', () => {
         </CaseResultsPanel>
       </CasePage>
     );
+    // Search for a case by keyword
     const input = screen.getByPlaceholderText('pages.cases.search-placeholder');
     fireEvent.change(input, { target: { value: 'keyword' } });
 
     await waitFor(() => {
       expect(screen.getByText('businessKey1')).toBeTruthy();
     });
-
+    // Select case with businesskey1
     const caseSelected = screen.getByText('businessKey1');
     fireEvent.click(caseSelected);
 
+    // Correctly displays Case History in Case Details panel
     await waitFor(() => {
       expect(screen.getByText('Submit Intelligence Referral')).toBeTruthy();
       expect(screen.getAllByText('Status')).toHaveLength(2);
@@ -95,6 +123,15 @@ describe('Case History page', () => {
       expect(screen.getByText('No forms available')).toBeTruthy();
       expect(screen.getByText('Intelligence Referral')).toBeTruthy();
       expect(screen.getByText('line-manager@digital.homeoffice.gov.uk')).toBeTruthy();
+    });
+
+    // Changes Case Details panel when new case is selected and displays history correctly
+    const differentCase = screen.getByText('businessKey3');
+    fireEvent.click(differentCase);
+
+    await waitFor(() => {
+      expect(screen.getByText('TEST 2 NAME 1')).toBeTruthy();
+      expect(screen.getByText('TEST 2 NAME 2')).toBeTruthy();
     });
   });
 });
