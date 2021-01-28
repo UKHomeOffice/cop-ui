@@ -14,7 +14,7 @@ const CasePage = () => {
   useEffect(() => {
     trackPageView();
   }, []);
-  
+
   const axiosInstance = useAxios();
   const [caseSearchResults, setCaseSearchResults] = useState(null);
   const [caseArray, setCaseArray] = useState(null);
@@ -50,6 +50,10 @@ const CasePage = () => {
     try {
       setCaseSelected(null);
       const resp = await axiosInstance.get(`/camunda/cases${nextQuery}`);
+      // Below line catches the case where the API is returning more cases than are actually present
+      if (!resp.data._embedded) {
+        return;
+      }
       setCaseArray(caseArray.concat(resp.data._embedded ? resp.data._embedded.cases : null));
       setCaseSearchResults(resp.data);
       setNextUrl(resp.data._links.next ? resp.data._links.next.href : null);
