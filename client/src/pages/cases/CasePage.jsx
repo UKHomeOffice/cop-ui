@@ -19,8 +19,6 @@ const CasePage = () => {
   const [caseSearchResults, setCaseSearchResults] = useState(null);
   const [caseArray, setCaseArray] = useState(null);
   const [searching, setSearching] = useState(false);
-  // eslint-disable-next-line no-unused-vars
-  const [error, setError] = useState(null);
   const [caseSelected, setCaseSelected] = useState(null);
   const [caseLoading, setCaseLoading] = useState(false);
   const [nextUrl, setNextUrl] = useState('');
@@ -68,7 +66,7 @@ const CasePage = () => {
       const resp = await axiosInstance.get(`/camunda/cases/${businessKey}`);
       setCaseSelected(resp.data);
     } catch (err) {
-      setError(err);
+      setCaseSelected(null);
     } finally {
       setCaseLoading(false);
     }
