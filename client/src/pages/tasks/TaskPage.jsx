@@ -179,6 +179,14 @@ const TaskPage = ({ taskId }) => {
               existingSubmission={formSubmission}
               interpolateContext={{
                 processContext: {
+                  /*
+                   * Spread 'variables' and keep 'variables' here so processContext has nested properties directly
+                   * on processContext. Forms/processes make reference to values that exist on 'variables' that
+                   * need to exist on processContext. Forms/processes also make reference to values that need to
+                   * exist on 'variables' directly.
+                   * i.e. processContext.recordBorderEvent and processContext.variables.recordBorderEvent
+                   */
+                  ...variables,
                   variables,
                   instance: processInstance,
                   definition: processDefinition,
