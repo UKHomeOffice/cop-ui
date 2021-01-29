@@ -1,9 +1,18 @@
 import React from 'react';
+import { useNavigation } from 'react-navi';
 import { mount } from 'enzyme';
-import { Form } from 'react-formio';
 import { act } from '@testing-library/react';
+import { Form } from 'react-formio';
+import { testData } from '../../utils/TestData';
 import FormErrorsAlert from '../alert/FormErrorsAlert';
 import DisplayForm from './DisplayForm';
+
+jest.mock('../../utils/logger', () => ({
+  error: jest.fn(),
+}));
+
+const navigation = useNavigation();
+window.scrollTo = jest.fn();
 
 describe('FormPage', () => {
   beforeEach(() => {
@@ -13,109 +22,10 @@ describe('FormPage', () => {
     console.warn = jest.fn();
   });
 
-  const formDetails = {
-    formName: 'test',
-    formDisplay: 'form',
-    formId: 'id',
-    formVersionId: 'version',
-    formTitle: 'title',
-    componentArray: [
-      {
-        id: 'eoduazt',
-        key: 'textField1',
-        case: '',
-        mask: false,
-        tags: '',
-        type: 'textfield',
-        input: true,
-        label: 'Text Field',
-        logic: [],
-        hidden: false,
-        prefix: '',
-        suffix: '',
-        unique: false,
-        validate: {
-          json: '',
-          custom: '',
-          unique: false,
-          pattern: '',
-          multiple: false,
-          required: true,
-          maxLength: '',
-          minLength: '',
-          customMessage: '',
-          customPrivate: false,
-          strictDateValidation: false,
-        },
-        widget: {
-          type: 'input',
-        },
-      },
-      {
-        id: 'eoduazg',
-        key: 'textField2',
-        case: '',
-        mask: false,
-        tags: '',
-        type: 'textfield',
-        input: true,
-        label: 'Text Field',
-        logic: [],
-        hidden: false,
-        prefix: '',
-        suffix: '',
-        unique: false,
-        validate: {
-          json: '',
-          custom: '',
-          unique: false,
-          pattern: '',
-          multiple: false,
-          required: true,
-          maxLength: '',
-          minLength: '',
-          customMessage: '',
-          customPrivate: false,
-          strictDateValidation: false,
-        },
-        widget: {
-          type: 'input',
-        },
-      },
-      {
-        id: 'e23op57',
-        key: 'submit',
-        size: 'md',
-        type: 'button',
-        block: false,
-        input: true,
-        label: 'Submit',
-        theme: 'primary',
-        action: 'submit',
-        hidden: false,
-        prefix: '',
-        suffix: '',
-        unique: false,
-        widget: {
-          type: 'input',
-        },
-      },
-    ],
-  };
-  const errorDetails = [
-    {
-      component: {
-        id: 'id',
-        key: 'textField',
-      },
-      message: 'Textfield is required',
-    },
-  ];
-
-  it('renders overlay when form is being submitted', async () => {
+  it('Should show a spinner (Loader) when form is being submitted', async () => {
     const wrapper = await mount(
       <DisplayForm
-        form={formDetails}
+        form={testData.formData}
         submitting
         handleOnCancel={jest.fn()}
         handleOnSubmit={jest.fn()}
@@ -132,17 +42,15 @@ describe('FormPage', () => {
     expect(wrapper.find('.Loader__content').prop('style')).toHaveProperty('opacity', 1);
   });
 
-  it('scrolls to the top on next', async () => {
-    window.scrollTo = jest.fn();
+  it('Should automatically scroll to the top on next/previous button clicks', async () => {
     const wrapper = await mount(
       <DisplayForm
-        form={formDetails}
+        form={testData.formData}
         submitting
         handleOnCancel={jest.fn()}
         handleOnSubmit={jest.fn()}
       />
     );
-
     const form = wrapper.find(Form).at(0);
 
     form.props().onNextPage();
@@ -152,10 +60,10 @@ describe('FormPage', () => {
     expect(window.scrollTo).toBeCalledWith(0, 0);
   });
 
-  it('renders error on form', async () => {
+  it('Should display an error alert box at the top of the form when there are errors', async () => {
     const wrapper = await mount(
       <DisplayForm
-        form={formDetails}
+        form={testData.formData}
         submitting
         handleOnCancel={jest.fn()}
         handleOnSubmit={jest.fn()}
@@ -171,7 +79,7 @@ describe('FormPage', () => {
     const form = wrapper.find(Form).at(0);
     await form.instance().createPromise;
 
-    form.instance().props.onError(errorDetails);
+    form.instance().props.onError(testData.formErrors);
     await act(async () => {
       await wrapper.update();
     });
@@ -183,7 +91,7 @@ describe('FormPage', () => {
   it('removes the error alert when you go to a previous page of the form', async () => {
     const wrapper = await mount(
       <DisplayForm
-        form={formDetails}
+        form={testData.formData}
         submitting
         handleOnCancel={jest.fn()}
         handleOnSubmit={jest.fn()}
@@ -198,13 +106,44 @@ describe('FormPage', () => {
     const form = wrapper.find(Form).at(0);
     await form.instance().createPromise;
 
-    form.instance().props.onError(errorDetails);
+    form.instance().props.onError(testData.formErrors);
     await act(async () => {
       await wrapper.update();
     });
     expect(wrapper.find('.govuk-error-summary')).toHaveLength(1);
 
     form.props().onPrevPage();
+    await act(async () => {
+      await wrapper.update();
+    });
+    expect(wrapper.find('.govuk-error-summary')).toHaveLength(0);
+  });
+
+  it('removes the error alert when you leave the form', async () => {
+    const wrapper = await mount(
+      <DisplayForm
+        form={testData.formData}
+        submitting
+        handleOnCancel={jest.fn()}
+        handleOnSubmit={jest.fn()}
+      />
+    );
+    await act(async () => {
+      await Promise.resolve(wrapper);
+      await new Promise((resolve) => setImmediate(resolve));
+      await wrapper.update();
+    });
+
+    const form = wrapper.find(Form).at(0);
+    await form.instance().createPromise;
+
+    form.instance().props.onError(testData.formErrors);
+    await act(async () => {
+      await wrapper.update();
+    });
+    expect(wrapper.find('.govuk-error-summary')).toHaveLength(1);
+
+    navigation.navigate('/');
     await act(async () => {
       await wrapper.update();
     });
