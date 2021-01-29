@@ -1,145 +1,91 @@
 import React from 'react';
-import { shallow, mount } from 'enzyme';
-import MockAdapter from 'axios-mock-adapter';
 import axios from 'axios';
+import MockAdapter from 'axios-mock-adapter';
+import { shallow, mount } from 'enzyme';
 import { act } from '@testing-library/react';
 import { Form } from 'react-formio';
-import FormPage from './FormPage';
+import { testData } from '../../utils/TestData';
 import ApplicationSpinner from '../../components/ApplicationSpinner';
-import { mockNavigate } from '../../setupTests';
-import AlertBanner from '../../components/alert/AlertBanner';
-import { AlertContextProvider } from '../../utils/AlertContext';
-import FormErrorsAlert from '../../components/alert/FormErrorsAlert';
+import FormPage from './FormPage';
 
 jest.mock('../../utils/logger', () => ({
-  info: jest.fn(),
+  error: jest.fn(),
 }));
 
-const mockSubmitForm = jest.fn();
+const mockAxios = new MockAdapter(axios);
 
-jest.mock('../../components/form/hooks', () => () => ({
-  submitForm: mockSubmitForm,
-}));
+function mockLoadFormTitle() {
+  mockAxios.onGet(`/camunda/engine-rest/process-definition/key/id`).reply(200, {
+    name: testData.formData.title,
+  });
+}
+
+function mockLoadFormData() {
+  mockAxios.onGet('/camunda/engine-rest/process-definition/key/id/startForm').reply(200, {
+    key: testData.formData.formKey,
+  });
+  mockAxios.onGet('/form/name/formKey').reply(200, {
+    name: testData.formData.name,
+    display: testData.formData.type,
+    components: testData.formData.components,
+  });
+}
 
 describe('FormPage', () => {
-  const mockAxios = new MockAdapter(axios);
+  let wrapper;
+
   beforeEach(() => {
     jest.spyOn(console, 'error').mockImplementation(() => {});
     mockAxios.reset();
+    wrapper = mount(<FormPage formId={testData.formData.id} />);
   });
 
-  it('renders without crashing', () => {
-    shallow(<FormPage formId="id" />);
+  afterEach(() => {
+    wrapper.unmount();
   });
 
-  it('renders loading when fetching form', () => {
-    const wrapper = shallow(<FormPage formId="id" />);
-    expect(wrapper.find(ApplicationSpinner).exists()).toBe(true);
+  it('Should render without crashing', () => {
+    shallow(<FormPage formId={testData.formData.id} />);
   });
 
-  it('renders a loading', async () => {
-    const wrapper = mount(<FormPage formId="id" />);
-    expect(wrapper.find(ApplicationSpinner).exists()).toBe(true);
+  it('Should show the application spinner when fetching form', () => {
+    expect(wrapper.find(ApplicationSpinner).exists()).toBe(true); // default state is true
   });
 
-  it('loads form', async () => {
-    mockAxios.onGet('/camunda/engine-rest/process-definition/key/id/startForm').reply(200, {
-      key: 'formKey',
-    });
-
-    mockAxios.onGet('/form/name/formKey').reply(200, {
-      name: 'test',
-      display: 'form',
-      components: [],
-    });
-
-    const wrapper = await mount(
-      <AlertContextProvider>
-        <AlertBanner />
-        <FormPage formId="id" />
-      </AlertContextProvider>
-    );
-
+  it('Should render the page with the forms page title', async () => {
+    mockLoadFormTitle();
+    mockLoadFormData();
+    wrapper = await mount(<FormPage formId={testData.formData.id} />);
     await act(async () => {
       await Promise.resolve(wrapper);
       await new Promise((resolve) => setImmediate(resolve));
       await wrapper.update();
     });
+
+    expect(wrapper.find(ApplicationSpinner).exists()).toBe(false);
+    expect(wrapper.find('h1.govuk-heading-l').exists()).toBeTruthy();
+    expect(wrapper.find('h1.govuk-heading-l').text()).toEqual(testData.formData.title);
+  });
+
+  it('Should load and display the form', async () => {
+    mockLoadFormTitle();
+    mockLoadFormData();
+    wrapper = await mount(<FormPage formId={testData.formData.id} />);
+    await act(async () => {
+      await Promise.resolve(wrapper);
+      await new Promise((resolve) => setImmediate(resolve));
+      await wrapper.update();
+    });
+
     expect(wrapper.find(ApplicationSpinner).exists()).toBe(false);
     expect(wrapper.find(Form).exists()).toBe(true);
   });
 
-  it('form does not exist handles gracefully', async () => {
-    mockAxios.onGet('/camunda/engine-rest/process-definition/key/id/startForm').reply(200, null);
+  it('Should handle a failure to get form page title', async () => {
+    mockAxios.onGet(`/camunda/engine-rest/process-definition/key/id`).reply(500);
+    mockLoadFormData();
 
-    const wrapper = mount(<FormPage formId="id" />);
-
-    await act(async () => {
-      await Promise.resolve(wrapper);
-      await new Promise((resolve) => setImmediate(resolve));
-      await wrapper.update();
-    });
-    expect(wrapper.find(ApplicationSpinner).exists()).toBe(false);
-    expect(mockAxios.history.get.length).toBe(2); // call to set formPageTitle, call to loadForm
-  });
-
-  it('can submit the form', async () => {
-    mockAxios.onGet('/camunda/engine-rest/process-definition/key/id/startForm').reply(200, {
-      key: 'formKey',
-    });
-
-    mockAxios.onGet('/form/name/formKey').reply(200, {
-      name: 'test',
-      display: 'form',
-      versionId: 'version',
-      title: 'title',
-      components: [
-        {
-          id: 'eoduazt',
-          key: 'textField1',
-          case: '',
-          mask: false,
-          tags: '',
-          type: 'textfield',
-          input: true,
-          label: 'Text Field',
-          logic: [],
-          hidden: false,
-          prefix: '',
-          suffix: '',
-          unique: false,
-          widget: {
-            type: 'input',
-          },
-        },
-        {
-          id: 'e23op57',
-          key: 'submit',
-          size: 'md',
-          type: 'button',
-          block: false,
-          input: true,
-          label: 'Submit',
-          theme: 'primary',
-          action: 'submit',
-          hidden: false,
-          prefix: '',
-          suffix: '',
-          unique: false,
-          widget: {
-            type: 'input',
-          },
-        },
-      ],
-    });
-
-    const wrapper = await mount(
-      <AlertContextProvider>
-        <AlertBanner />
-        <FormPage formId="id" />
-      </AlertContextProvider>
-    );
-
+    wrapper = await mount(<FormPage formId={testData.formData.id} />);
     await act(async () => {
       await Promise.resolve(wrapper);
       await new Promise((resolve) => setImmediate(resolve));
@@ -147,263 +93,23 @@ describe('FormPage', () => {
     });
 
     expect(wrapper.find(ApplicationSpinner).exists()).toBe(false);
-
-    const form = wrapper.find(Form).at(0);
-
-    form.props().options.hooks.beforeCancel();
-    expect(mockNavigate).toBeCalledWith('/forms');
+    expect(wrapper.find('h1.govuk-heading-l').exists()).toBeTruthy();
+    expect(wrapper.find('h1.govuk-heading-l').text()).toEqual('');
   });
 
-  it('renders error on form', async () => {
-    mockAxios.onGet('/camunda/engine-rest/process-definition/key/id/startForm').reply(200, {
-      key: 'formKey',
-    });
+  it('Should not load the form, and should not show application spinner if the call to get form data fails', async () => {
+    mockLoadFormTitle();
+    mockAxios.onGet('/camunda/engine-rest/process-definition/key/id/startForm').reply(404);
 
-    mockAxios.onGet('/form/name/formKey').reply(200, {
-      name: 'test',
-      display: 'form',
-      versionId: 'version',
-      title: 'title',
-      components: [
-        {
-          id: 'eoduazt',
-          key: 'textField1',
-          case: '',
-          mask: false,
-          tags: '',
-          type: 'textfield',
-          input: true,
-          label: 'Text Field',
-          logic: [],
-          hidden: false,
-          prefix: '',
-          suffix: '',
-          unique: false,
-          validate: {
-            json: '',
-            custom: '',
-            unique: false,
-            pattern: '',
-            multiple: false,
-            required: true,
-            maxLength: '',
-            minLength: '',
-            customMessage: '',
-            customPrivate: false,
-            strictDateValidation: false,
-          },
-          widget: {
-            type: 'input',
-          },
-        },
-        {
-          id: 'e23op57',
-          key: 'submit',
-          size: 'md',
-          type: 'button',
-          block: false,
-          input: true,
-          label: 'Submit',
-          theme: 'primary',
-          action: 'submit',
-          hidden: false,
-          prefix: '',
-          suffix: '',
-          unique: false,
-          widget: {
-            type: 'input',
-          },
-        },
-      ],
-    });
-
-    const wrapper = await mount(
-      <AlertContextProvider>
-        <AlertBanner />
-        <FormPage formId="id" />
-      </AlertContextProvider>
-    );
-
+    wrapper = await mount(<FormPage formId={testData.formData.id} />);
     await act(async () => {
       await Promise.resolve(wrapper);
       await new Promise((resolve) => setImmediate(resolve));
       await wrapper.update();
     });
 
-    const form = wrapper.find(Form).at(0);
-    await form.instance().createPromise;
-    form.instance().props.onError([
-      {
-        component: {
-          id: 'id',
-          key: 'textField',
-        },
-        message: 'Textfield is required',
-      },
-    ]);
-
-    await act(async () => {
-      await wrapper.update();
-    });
-
-    expect(wrapper.find(FormErrorsAlert).exists()).toBe(true);
-  });
-
-  it('clears alert box if no more errors', async () => {
-    mockAxios.onGet('/camunda/engine-rest/process-definition/key/id/startForm').reply(200, {
-      key: 'formKey',
-    });
-
-    mockAxios.onGet('/form/name/formKey').reply(200, {
-      name: 'test',
-      display: 'form',
-      versionId: 'version',
-      title: 'title',
-      components: [
-        {
-          id: 'eoduazt',
-          key: 'textField1',
-          case: '',
-          mask: false,
-          tags: '',
-          type: 'textfield',
-          input: true,
-          label: 'Text Field',
-          logic: [],
-          hidden: false,
-          prefix: '',
-          suffix: '',
-          unique: false,
-          validate: {
-            json: '',
-            custom: '',
-            unique: false,
-            pattern: '',
-            multiple: false,
-            required: true,
-            maxLength: '',
-            minLength: '',
-            customMessage: '',
-            customPrivate: false,
-            strictDateValidation: false,
-          },
-          widget: {
-            type: 'input',
-          },
-        },
-        {
-          id: 'eoduazg',
-          key: 'textField2',
-          case: '',
-          mask: false,
-          tags: '',
-          type: 'textfield',
-          input: true,
-          label: 'Text Field',
-          logic: [],
-          hidden: false,
-          prefix: '',
-          suffix: '',
-          unique: false,
-          validate: {
-            json: '',
-            custom: '',
-            unique: false,
-            pattern: '',
-            multiple: false,
-            required: true,
-            maxLength: '',
-            minLength: '',
-            customMessage: '',
-            customPrivate: false,
-            strictDateValidation: false,
-          },
-          widget: {
-            type: 'input',
-          },
-        },
-        {
-          id: 'e23op57',
-          key: 'submit',
-          size: 'md',
-          type: 'button',
-          block: false,
-          input: true,
-          label: 'Submit',
-          theme: 'primary',
-          action: 'submit',
-          hidden: false,
-          prefix: '',
-          suffix: '',
-          unique: false,
-          widget: {
-            type: 'input',
-          },
-        },
-      ],
-    });
-    const wrapper = await mount(
-      <AlertContextProvider>
-        <AlertBanner />
-        <FormPage formId="id" />
-      </AlertContextProvider>
-    );
-
-    await act(async () => {
-      await Promise.resolve(wrapper);
-      await new Promise((resolve) => setImmediate(resolve));
-      await wrapper.update();
-    });
-
-    const form = wrapper.find(Form).at(0);
-    await form.instance().createPromise;
-
-    form.instance().props.onError([
-      {
-        component: {
-          id: 'eoduazt',
-          key: 'textField1',
-        },
-        message: 'Textfield is required',
-      },
-      {
-        component: {
-          id: 'eoduazg',
-          key: 'textField2',
-        },
-        message: 'Textfield is required',
-      },
-    ]);
-
-    await act(async () => {
-      await wrapper.update();
-    });
-
-    expect(wrapper.find(FormErrorsAlert).exists()).toBe(true);
-    form.instance().props.onChange({
-      changed: {
-        component: {
-          id: 'eoduazt',
-          key: 'textField1',
-        },
-        isValid: true,
-      },
-    });
-
-    expect(wrapper.find(FormErrorsAlert).exists()).toBe(true);
-
-    form.instance().props.onChange({
-      changed: {
-        component: {
-          id: 'eoduazg',
-          key: 'textField2',
-        },
-        isValid: true,
-      },
-    });
-    await act(async () => {
-      await wrapper.update();
-    });
-    expect(wrapper.find(FormErrorsAlert).exists()).toBe(false);
+    expect(wrapper.find(ApplicationSpinner).exists()).toBe(false);
+    expect(wrapper.find(Form).exists()).toBe(false);
+    // src > components > alert > AlertBanner & ApiErrorAlert test that the alert banner is shown on a 404 error
   });
 });
