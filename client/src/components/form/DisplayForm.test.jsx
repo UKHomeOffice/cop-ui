@@ -1,5 +1,4 @@
 import React from 'react';
-import { useNavigation } from 'react-navi';
 import { mount } from 'enzyme';
 import { act } from '@testing-library/react';
 import { Form } from 'react-formio';
@@ -11,7 +10,6 @@ jest.mock('../../utils/logger', () => ({
   error: jest.fn(),
 }));
 
-const navigation = useNavigation();
 window.scrollTo = jest.fn();
 
 describe('FormPage', () => {
@@ -113,37 +111,6 @@ describe('FormPage', () => {
     expect(wrapper.find('.govuk-error-summary')).toHaveLength(1);
 
     form.props().onPrevPage();
-    await act(async () => {
-      await wrapper.update();
-    });
-    expect(wrapper.find('.govuk-error-summary')).toHaveLength(0);
-  });
-
-  it('removes the error alert when you leave the form', async () => {
-    const wrapper = await mount(
-      <DisplayForm
-        form={testData.formData}
-        submitting
-        handleOnCancel={jest.fn()}
-        handleOnSubmit={jest.fn()}
-      />
-    );
-    await act(async () => {
-      await Promise.resolve(wrapper);
-      await new Promise((resolve) => setImmediate(resolve));
-      await wrapper.update();
-    });
-
-    const form = wrapper.find(Form).at(0);
-    await form.instance().createPromise;
-
-    form.instance().props.onError(testData.formErrors);
-    await act(async () => {
-      await wrapper.update();
-    });
-    expect(wrapper.find('.govuk-error-summary')).toHaveLength(1);
-
-    navigation.navigate('/');
     await act(async () => {
       await wrapper.update();
     });
