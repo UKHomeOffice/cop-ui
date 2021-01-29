@@ -324,10 +324,6 @@ const AccessibilityStatement = () => {
               <li>
                 (4.1.2) Aria-hidden elements updated so they do not contain focusable elements.
               </li>
-              <li>
-                Complete accessibility testing across the 2 new forms: EU Transition and PCP Desk
-                Ergonomic Assessment.
-              </li>
             </ul>
 
             <p className="govuk-body">By March 2021</p>
@@ -359,13 +355,6 @@ const AccessibilityStatement = () => {
               </li>
               <li>(3.3.2) Every form element to have a label applied.</li>
             </ul>
-
-            <h3 className="govuk-heading-s">Plan to cover</h3>
-            <p className="govuk-body">
-              Two new services have joined COP since our last audit. We plan to cover both new
-              forms—Record Trade Checks and PCP Desk Ergonomic Assessment—by the end of January
-              2021.
-            </p>
 
             <h3 className="govuk-heading-s">Disproportionate burden</h3>
             <p className="govuk-body">
