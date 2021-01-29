@@ -30,6 +30,9 @@ describe('Case History page', () => {
           { businessKey: 'businessKey3', processInstance: [] },
         ],
       },
+      _links: {
+        last: { href: 'url' },
+      },
     });
 
     mockAxios.onGet('/camunda/cases/businessKey1').reply(200, {

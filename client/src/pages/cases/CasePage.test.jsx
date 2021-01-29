@@ -34,6 +34,9 @@ describe('CasePage', () => {
           { businessKey: 'businessKey3', processInstance: [] },
         ],
       },
+      _links: {
+        last: { href: 'url' },
+      },
     });
     render(<CasePage />);
     const input = screen.getByPlaceholderText('pages.cases.search-placeholder');
@@ -56,6 +59,9 @@ describe('CasePage', () => {
         totalElements: 0,
         totalPages: 0,
         number: 0,
+      },
+      _links: {
+        last: { href: 'url' },
       },
     });
     render(<CasePage />);

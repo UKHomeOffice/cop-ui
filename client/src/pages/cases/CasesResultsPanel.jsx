@@ -1,24 +1,15 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
-import _ from 'lodash';
 
-const CaseResultsPanel = ({
-  caseSearchResults,
-  caseArray,
-  getCaseDetails,
-  loadMoreCases,
-  nextUrl,
-}) => {
+const CaseResultsPanel = ({ totalElements, caseArray, getCaseDetails, loadMoreCases, nextUrl }) => {
   const { t } = useTranslation();
-  // Check if caseSearchResults.links has property 'next'
-  const hasMoreData = _.has(caseSearchResults._links, 'next');
 
   return (
     <>
       <h2 className="govuk-heading-m">{t('pages.cases.results-panel.title')}</h2>
       <p className="govuk-body govuk-!-margin-bottom-1">{t('pages.cases.results-panel.caption')}</p>
-      <p className="govuk-body govuk-!-font-weight-bold">{caseSearchResults.page.totalElements}</p>
+      <p className="govuk-body govuk-!-font-weight-bold">{totalElements}</p>
       <ul className="govuk-list">
         {caseArray &&
           caseArray.map((item) => {
@@ -39,7 +30,7 @@ const CaseResultsPanel = ({
             );
           })}
       </ul>
-      {hasMoreData ? (
+      {nextUrl ? (
         <button
           type="button"
           className="govuk-button"
@@ -57,11 +48,10 @@ const CaseResultsPanel = ({
 
 CaseResultsPanel.defaultProps = {
   caseArray: null,
-  caseSearchResults: null,
 };
 
 CaseResultsPanel.propTypes = {
-  caseSearchResults: PropTypes.shape(PropTypes.object),
+  totalElements: PropTypes.number.isRequired,
   caseArray: PropTypes.arrayOf(PropTypes.object),
   getCaseDetails: PropTypes.func.isRequired,
   loadMoreCases: PropTypes.func.isRequired,

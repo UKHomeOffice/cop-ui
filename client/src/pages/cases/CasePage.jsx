@@ -29,7 +29,7 @@ const CasePage = () => {
     if (!input || input.length < 3) {
       setCaseSearchResults(null);
       setCaseSelected(null);
-      setNextUrl(null);
+      setNextUrl('');
       return;
     }
     try {
@@ -38,9 +38,9 @@ const CasePage = () => {
       const resp = await axiosInstance.get(`/camunda/cases?query=${input}`);
       setCaseSearchResults(resp.data);
       setCaseArray(resp.data._embedded ? resp.data._embedded.cases : null);
-      setNextUrl(resp.data._links.next ? resp.data._links.next.href : null);
+      setNextUrl(resp.data._links.next ? resp.data._links.next.href : '');
     } catch (err) {
-      setError(err);
+      setCaseSearchResults(null);
     } finally {
       setSearching(false);
     }
@@ -56,9 +56,9 @@ const CasePage = () => {
       }
       setCaseArray(caseArray.concat(resp.data._embedded ? resp.data._embedded.cases : null));
       setCaseSearchResults(resp.data);
-      setNextUrl(resp.data._links.next ? resp.data._links.next.href : null);
+      setNextUrl(resp.data._links.next ? resp.data._links.next.href : '');
     } catch (err) {
-      setError(err);
+      setCaseSearchResults(null);
     }
   };
 
@@ -106,7 +106,7 @@ const CasePage = () => {
           {searching && <h4 className="govuk-heading-s">Searching for cases...</h4>}
           {!searching && caseSearchResults && (
             <CasesResultsPanel
-              caseSearchResults={caseSearchResults}
+              totalElements={caseSearchResults.page.totalElements}
               caseArray={caseArray}
               getCaseDetails={getCaseDetails}
               loadMoreCases={loadMoreCases}
@@ -116,7 +116,12 @@ const CasePage = () => {
         </div>
         <div className="govuk-grid-column-three-quarters">
           {caseLoading && <h4 className="govuk-heading-s">Loading case details</h4>}
-          {!caseLoading && caseSelected && <CaseDetailsPanel caseSelected={caseSelected} />}
+          {!caseLoading && caseSelected && (
+            <CaseDetailsPanel
+              businessKey={caseSelected.businessKey}
+              processInstances={caseSelected.processInstances}
+            />
+          )}
         </div>
       </div>
     </>

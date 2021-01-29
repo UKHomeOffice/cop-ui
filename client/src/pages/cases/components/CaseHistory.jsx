@@ -6,7 +6,7 @@ import moment from 'moment';
 import { Accordion } from 'govuk-frontend';
 import FormDetails from './FormDetails';
 
-const CaseHistory = ({ caseSelected }) => {
+const CaseHistory = ({ businessKey, processInstances }) => {
   const { t } = useTranslation();
   const clearAccordionStorage = () => {
     _.forIn(window.sessionStorage, (value, key) => {
@@ -18,7 +18,7 @@ const CaseHistory = ({ caseSelected }) => {
 
   useEffect(() => {
     clearAccordionStorage();
-    new Accordion(document.getElementById(`caseSelected-${caseSelected.businessKey}`)).init();
+    new Accordion(document.getElementById(`caseSelected-${businessKey}`)).init();
   });
 
   return (
@@ -44,11 +44,11 @@ const CaseHistory = ({ caseSelected }) => {
         </div>
 
         <div
-          id={`caseSelected-${caseSelected.businessKey}`}
+          id={`caseSelected-${businessKey}`}
           className="govuk-accordion"
           data-module="govuk-accordion"
         >
-          {caseSelected.processInstances.map((processInstance) => {
+          {processInstances.map((processInstance) => {
             return (
               <div className="govuk-accordion__section" key={processInstance.id}>
                 <div className="govuk-accordion__section-header">
@@ -101,10 +101,9 @@ const CaseHistory = ({ caseSelected }) => {
                       </div>
                     </div>
                   </div>
-                  {processInstance.formReferences.length !== 0 && (
+                  {processInstance.formReferences.length ? (
                     <FormDetails formReferences={processInstance.formReferences} />
-                  )}
-                  {processInstance.formReferences.length === 0 && (
+                  ) : (
                     <h4 className="govuk-heading-s">No forms available</h4>
                   )}
                 </div>
@@ -118,7 +117,8 @@ const CaseHistory = ({ caseSelected }) => {
 };
 
 CaseHistory.propTypes = {
-  caseSelected: PropTypes.shape(PropTypes.object).isRequired,
+  businessKey: PropTypes.string.isRequired,
+  processInstances: PropTypes.arrayOf(PropTypes.object).isRequired,
 };
 
 export default CaseHistory;

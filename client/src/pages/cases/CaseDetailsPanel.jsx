@@ -7,17 +7,17 @@ import CaseHistory from './components/CaseHistory';
 import CaseIntro from './components/CaseIntro';
 import CaseMetrics from './components/CaseMetrics';
 
-const CaseDetailsPanel = ({ caseSelected }) => {
+const CaseDetailsPanel = ({ businessKey, processInstances }) => {
   return (
     <>
       <div className="govuk-grid-row govuk-card">
-        <CaseIntro businessKey={caseSelected.businessKey} />
+        <CaseIntro businessKey={businessKey} />
       </div>
       <div className="govuk-grid-row govuk-card govuk-!-margin-top-4">
         <CaseActions />
       </div>
       <div className="govuk-grid-row govuk-card govuk-!-margin-top-4">
-        <CaseHistory caseSelected={caseSelected} />
+        <CaseHistory processInstances={processInstances} businessKey={businessKey} />
       </div>
       <div className="govuk-grid-row govuk-card govuk-!-margin-top-4">
         <CaseAttachments />
@@ -30,7 +30,8 @@ const CaseDetailsPanel = ({ caseSelected }) => {
 };
 
 CaseDetailsPanel.propTypes = {
-  caseSelected: PropTypes.shape(PropTypes.object).isRequired,
+  businessKey: PropTypes.string.isRequired,
+  processInstances: PropTypes.arrayOf(PropTypes.object).isRequired,
 };
 
 export default CaseDetailsPanel;
