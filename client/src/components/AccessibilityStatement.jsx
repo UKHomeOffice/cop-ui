@@ -219,6 +219,11 @@ const AccessibilityStatement = () => {
                 the page for keyboard only users.
               </li>
               <li>
+                Keyboard (2.1.1) – With drop down lists that contain the “type to search” function,
+                users are unable to scroll through the drop down list and then go back to the “type
+                to search” function.
+              </li>
+              <li>
                 Keyboard trap (2.1.2) – the screen reader does not read out all the options in the
                 drop-down list in the port list for Record Border Event and Intelligence Referral
                 forms as not all options are displayed so users will need to use the “type to
@@ -228,6 +233,10 @@ const AccessibilityStatement = () => {
                 Keyboard trap (2.1.2.) – Help for Events at the Border (EaB) and OAR have pages with
                 tables/collapsible fields that are not read by the screen reader and keyboard only
                 users will be unable to access these.
+              </li>
+              <li>
+                Keyboard trap (2.1.2) – When the user has JAWS running in the background, the focus
+                of the selected option can get stuck in the drop down list.
               </li>
               <li>
                 Bypass block (2.4.1) – the skip to content doesn’t highlight the body of text.
@@ -292,7 +301,7 @@ const AccessibilityStatement = () => {
               set:
             </p>
 
-            <p className="govuk-body">By end of Jan 2021</p>
+            <p className="govuk-body">By end of Feb 2021</p>
             <ul className="govuk-list govuk-list--bullet">
               <li>
                 The main headings on each page will be changed from h2 to h1, subheadings will be
@@ -333,8 +342,16 @@ const AccessibilityStatement = () => {
                 make the form tab to the top of the page for keyboard only users.
               </li>
               <li>
+                (2.1.1) – Ensure users are able to scroll up to the “type to search” function in
+                drop down lists.
+              </li>
+              <li>
                 (2.1.2) Change the presentation of tabular information/collapsible fields in the
                 Help section on the Product Page to be accessible.
+              </li>
+              <li>
+                (2.1.2) – Ensure the user that the focus of the selected option does not get stuck
+                in the drop down list when JAWS is running in the background.
               </li>
               <li>(2.4.7) Ensure that scrollable region has keyboard access.</li>
               <li>
@@ -373,12 +390,12 @@ const AccessibilityStatement = () => {
 
             <h2 className="govuk-heading-m">Preparation of this accessibility statement</h2>
             <p className="govuk-body">
-              This statement was prepared on 17 September 2020. It was last reviewed on 8 December
-              2020.
+              This statement was prepared on 17 September 2020. It was last reviewed on 20 January
+              2021.
             </p>
             <p className="govuk-body">
-              This website was last tested on 11 September 2020. The test was carried out by the
-              Home Office’s Quality Assurance and Testing team.
+              This website was last tested on 20 January 2021. The test was carried out by the Home
+              Office’s Quality Assurance and Testing team.
             </p>
             <p className="govuk-body">
               We tested the service based on a user’s ability to complete key journeys. All parts of
