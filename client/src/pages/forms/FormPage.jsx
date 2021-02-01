@@ -9,6 +9,7 @@ import { useAxios, useIsMounted } from '../../utils/hooks';
 import ApplicationSpinner from '../../components/ApplicationSpinner';
 import apiHooks from '../../components/form/hooks';
 import DisplayForm from '../../components/form/DisplayForm';
+import './Forms.scss';
 
 const FormPage = ({ formId }) => {
   const { submitForm } = apiHooks();
