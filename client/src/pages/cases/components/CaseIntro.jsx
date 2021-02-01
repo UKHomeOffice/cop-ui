@@ -1,13 +1,14 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
 
-const CaseIntro = () => {
+const CaseIntro = ({ businessKey }) => {
   const { t } = useTranslation();
 
   return (
     <>
       <div className="govuk-grid-column-one-half">
-        <h2 className="govuk-heading-m">Case</h2>
+        <h2 className="govuk-heading-m">{businessKey}</h2>
       </div>
       <div className="govuk-grid-column-one-half">
         <button
@@ -20,5 +21,9 @@ const CaseIntro = () => {
       </div>
     </>
   );
+};
+
+CaseIntro.propTypes = {
+  businessKey: PropTypes.string.isRequired,
 };
 export default CaseIntro;
