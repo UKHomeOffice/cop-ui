@@ -2,6 +2,8 @@
 @import '~govuk-frontend/govuk/settings/_colours-applied.scss';
 $govuk-card-border : govuk-colour('blue');
 
+$govuk-page-width: 1400px; 
+
 @import '~govuk-frontend/govuk/all';
 
 .search__input {
