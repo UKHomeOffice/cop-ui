@@ -14,13 +14,13 @@ jest.mock('../../utils/logger', () => ({
 
 const mockAxios = new MockAdapter(axios);
 
-function mockLoadFormTitle() {
+function mockFetchProcessName() {
   mockAxios.onGet(`/camunda/engine-rest/process-definition/key/id`).reply(200, {
     name: testData.formData.title,
   });
 }
 
-function mockLoadFormData() {
+function mockFetchForm() {
   mockAxios.onGet('/camunda/engine-rest/process-definition/key/id/startForm').reply(200, {
     key: testData.formData.formKey,
   });
@@ -53,8 +53,8 @@ describe('FormPage', () => {
   });
 
   it('Should render the page with the forms page title', async () => {
-    mockLoadFormTitle();
-    mockLoadFormData();
+    mockFetchProcessName();
+    mockFetchForm();
     wrapper = await mount(<FormPage formId={testData.formData.id} />);
     await act(async () => {
       await Promise.resolve(wrapper);
@@ -65,11 +65,12 @@ describe('FormPage', () => {
     expect(wrapper.find(ApplicationSpinner).exists()).toBe(false);
     expect(wrapper.find('h1.govuk-heading-l').exists()).toBeTruthy();
     expect(wrapper.find('h1.govuk-heading-l').text()).toEqual(testData.formData.title);
+    expect(global.window.document.title).toMatch(testData.formData.title);
   });
 
   it('Should load and display the form', async () => {
-    mockLoadFormTitle();
-    mockLoadFormData();
+    mockFetchProcessName();
+    mockFetchForm();
     wrapper = await mount(<FormPage formId={testData.formData.id} />);
     await act(async () => {
       await Promise.resolve(wrapper);
@@ -81,9 +82,9 @@ describe('FormPage', () => {
     expect(wrapper.find(Form).exists()).toBe(true);
   });
 
-  it('Should handle a failure to get form page title', async () => {
+  it('Should handle a failure to fetch process name', async () => {
     mockAxios.onGet(`/camunda/engine-rest/process-definition/key/id`).reply(500);
-    mockLoadFormData();
+    mockFetchForm();
 
     wrapper = await mount(<FormPage formId={testData.formData.id} />);
     await act(async () => {
@@ -98,7 +99,7 @@ describe('FormPage', () => {
   });
 
   it('Should not load the form, and should not show application spinner if the call to get form data fails', async () => {
-    mockLoadFormTitle();
+    mockFetchProcessName();
     mockAxios.onGet('/camunda/engine-rest/process-definition/key/id/startForm').reply(404);
 
     wrapper = await mount(<FormPage formId={testData.formData.id} />);

@@ -5,6 +5,7 @@ import { useNavigation } from 'react-navi';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import FormioUtils from 'formiojs/utils';
 import { useMatomo } from '@datapunt/matomo-tracker-react';
+import { useTranslation } from 'react-i18next';
 import { useAxios, useIsMounted } from '../../utils/hooks';
 import ApplicationSpinner from '../../components/ApplicationSpinner';
 import apiHooks from '../../components/form/hooks';
@@ -12,12 +13,13 @@ import DisplayForm from '../../components/form/DisplayForm';
 import './Forms.scss';
 
 const FormPage = ({ formId }) => {
+  const { t } = useTranslation();
   const { submitForm } = apiHooks();
   const isMounted = useIsMounted();
   const navigation = useNavigation();
   const [repeat, setRepeat] = useState(false);
   const [submitting, setSubmitting] = useState(false);
-  const [pageTitle, setPageTitle] = useState();
+  const [pageHeading, setPageHeading] = useState();
 
   const [form, setForm] = useState({
     isLoading: true,
@@ -35,46 +37,38 @@ const FormPage = ({ formId }) => {
     const source = axios.CancelToken.source();
     setRepeat(false);
 
-    const formPageTitle = async () => {
+    const fetchProcessName = async () => {
       if (axiosInstance) {
         try {
-          const formName = await axiosInstance.get(
-            `/camunda/engine-rest/process-definition/key/${formId}`,
-            {
-              cancelToken: source.token,
-            }
-          );
-          if (formName && formName.data) {
-            setPageTitle(formName.data.name);
-          }
+          const {
+            data: { name },
+          } = await axiosInstance.get(`/camunda/engine-rest/process-definition/key/${formId}`, {
+            cancelToken: source.token,
+          });
+          setPageHeading(name);
+          document.title = `${name} | ${t('header.service-name')}`;
         } catch (e) {
-          setPageTitle();
+          setPageHeading();
         }
       }
     };
 
-    const loadForm = async () => {
+    const fetchForm = async () => {
       if (axiosInstance) {
         try {
-          const formKey = await axiosInstance.get(
+          const {
+            data: { key },
+          } = await axiosInstance.get(
             `/camunda/engine-rest/process-definition/key/${formId}/startForm`,
             {
               cancelToken: source.token,
             }
           );
-          if (formKey && formKey.data) {
-            const { key } = formKey.data;
-            const formResponse = await axiosInstance.get(`/form/name/${key}`);
-            if (isMounted.current) {
-              setForm({
-                isLoading: false,
-                data: formResponse.data,
-              });
-            }
-          } else {
+          const { data } = await axiosInstance.get(`/form/name/${key}`);
+          if (isMounted.current) {
             setForm({
               isLoading: false,
-              data: null,
+              data,
             });
           }
         } catch (e) {
@@ -88,8 +82,8 @@ const FormPage = ({ formId }) => {
       }
     };
 
-    loadForm().then(() => {});
-    formPageTitle();
+    fetchForm();
+    fetchProcessName();
     return () => {
       source.cancel('cancelling request');
     };
@@ -114,7 +108,7 @@ const FormPage = ({ formId }) => {
 
   return (
     <>
-      <h1 className="govuk-heading-l">{pageTitle}</h1>
+      <h1 className="govuk-heading-l">{pageHeading}</h1>
       <DisplayForm
         submitting={submitting}
         form={form.data}
