@@ -15,7 +15,7 @@ describe('CaseResultsPage', () => {
     mockAxios.reset();
   });
 
-  it('renders case results list and displays Case Details when selected ', async () => {
+  it('should render case results list and displays Case Details when selected ', async () => {
     mockAxios.onGet('/camunda/cases?query=keyword').reply(200, {
       page: {
         size: 20,
@@ -83,7 +83,7 @@ describe('CaseResultsPage', () => {
     fireEvent.click(caseSelected);
 
     // Displays message when loading case details
-    expect(screen.getByText('Loading case details')).toBeTruthy();
+    expect(screen.getByText('pages.cases.loading-case')).toBeTruthy();
 
     await waitFor(() => {
       expect(screen.getByText('Submit Intelligence Referral')).toBeTruthy();
@@ -91,7 +91,7 @@ describe('CaseResultsPage', () => {
     });
   });
 
-  it('loads more cases when multi page Case search results', async () => {
+  it('should load more cases when multi page Case search results', async () => {
     // Set up mock data for two pages of search results
     const mockData = {
       page: {
@@ -165,7 +165,7 @@ describe('CaseResultsPage', () => {
     });
   });
 
-  it('renders error message if Case Details API returns an error', async () => {
+  it('should render error message if Case Details API returns an error', async () => {
     mockAxios.onGet('/camunda/cases?query=keyword').reply(200, {
       page: {
         size: 20,

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
 import _ from 'lodash';
@@ -8,6 +8,9 @@ import FormDetails from './FormDetails';
 
 const CaseHistory = ({ businessKey, processInstances }) => {
   const { t } = useTranslation();
+  const [orderedArray, setOrderedArray] = useState(processInstances);
+  const [loadCount, setCount] = useState(1);
+
   const clearAccordionStorage = () => {
     _.forIn(window.sessionStorage, (value, key) => {
       if (_.startsWith(key, 'caseSelected-') === true) {
@@ -16,9 +19,21 @@ const CaseHistory = ({ businessKey, processInstances }) => {
     });
   };
 
+  const orderProcessInstances = (order) => {
+    if (order === 'asc') {
+      setOrderedArray(_.orderBy(orderedArray, ['startDate'], ['asc']));
+    } else {
+      setOrderedArray(_.orderBy(orderedArray, ['startDate'], ['desc']));
+    }
+  };
+
   useEffect(() => {
     clearAccordionStorage();
-    new Accordion(document.getElementById(`caseSelected-${businessKey}`)).init();
+    if (loadCount === 1) {
+      new Accordion(document.getElementById(`caseSelected-${businessKey}`)).init();
+      orderProcessInstances('desc');
+      setCount(loadCount + 1);
+    }
   });
 
   return (
@@ -32,11 +47,14 @@ const CaseHistory = ({ businessKey, processInstances }) => {
               className="govuk-select govuk-!-display-block govuk-!-margin-top-1"
               id="sort"
               name="sort"
+              onChange={(e) => {
+                orderProcessInstances(e.target.value);
+              }}
             >
               <option value="desc">
                 {t('pages.cases.details-panel.case-history.select-input-latest')}
               </option>
-              <option value="acs">
+              <option value="asc">
                 {t('pages.cases.details-panel.case-history.select-input-earliest')}
               </option>
             </select>
@@ -48,7 +66,7 @@ const CaseHistory = ({ businessKey, processInstances }) => {
           className="govuk-accordion"
           data-module="govuk-accordion"
         >
-          {processInstances.map((processInstance) => {
+          {orderedArray.map((processInstance) => {
             return (
               <div className="govuk-accordion__section" key={processInstance.id}>
                 <div className="govuk-accordion__section-header">
@@ -119,6 +137,7 @@ const CaseHistory = ({ businessKey, processInstances }) => {
 CaseHistory.propTypes = {
   businessKey: PropTypes.string.isRequired,
   processInstances: PropTypes.arrayOf(PropTypes.object).isRequired,
+  // orderProcessInstances: PropTypes.func.isRequired
 };
 
 export default CaseHistory;

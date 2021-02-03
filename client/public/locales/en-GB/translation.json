@@ -57,6 +57,8 @@
       "heading-help": "Enter a COP number in quotes to search for cases—e.g. \"COP-20200406-24\".",
       "heading-warning": "Please note all actions are audited.",
       "search-placeholder": "Search using a COP prefixed number",
+      "search-message": "Searching for cases...",
+      "loading-case": "Loading case details",
       "results-panel": {
         "title": "Search results",
         "caption": "Number of cases found"

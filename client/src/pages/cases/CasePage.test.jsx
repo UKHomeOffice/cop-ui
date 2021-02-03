@@ -15,11 +15,11 @@ describe('CasePage', () => {
     mockAxios.reset();
   });
 
-  it('renders without crashing', () => {
+  it('should rendder without crashing', () => {
     shallow(<CasePage caseId="id" />);
   });
 
-  it('renders results of case search when applicable', async () => {
+  it('should render results of case search when applicable', async () => {
     mockAxios.onGet('/camunda/cases?query=keyword').reply(200, {
       page: {
         size: 20,
@@ -52,7 +52,7 @@ describe('CasePage', () => {
     });
   });
 
-  it('gracefully renders when no case search results', async () => {
+  it('should gracefully render when no case search results', async () => {
     mockAxios.onGet('/camunda/cases?query=noResults').reply(200, {
       page: {
         size: 20,
@@ -75,7 +75,7 @@ describe('CasePage', () => {
     });
   });
 
-  it('renders error message if case search returns an error', async () => {
+  it('should render error message if case search returns an error', async () => {
     mockAxios.onGet('/camunda/cases?query=keywordError').reply(500, null);
 
     render(
