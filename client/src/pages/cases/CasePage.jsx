@@ -22,6 +22,7 @@ const CasePage = () => {
   const [caseSelected, setCaseSelected] = useState(null);
   const [caseLoading, setCaseLoading] = useState(false);
   const [nextUrl, setNextUrl] = useState('');
+  const [processInstances, setProcessInstances] = useState([]);
 
   const findCases = debounce(async (input) => {
     if (!input || input.length < 3) {
@@ -65,8 +66,10 @@ const CasePage = () => {
       setCaseLoading(true);
       const resp = await axiosInstance.get(`/camunda/cases/${businessKey}`);
       setCaseSelected(resp.data);
+      setProcessInstances(resp.data.processInstances);
     } catch (err) {
       setCaseSelected(null);
+      setProcessInstances([]);
     } finally {
       setCaseLoading(false);
     }
@@ -101,7 +104,7 @@ const CasePage = () => {
       </div>
       <div className="govuk-grid-row">
         <div className="govuk-grid-column-one-quarter">
-          {searching && <h4 className="govuk-heading-s">Searching for cases...</h4>}
+          {searching && <h4 className="govuk-heading-s">{t('pages.cases.search-message')}</h4>}
           {!searching && caseSearchResults && (
             <CasesResultsPanel
               totalElements={caseSearchResults.page.totalElements}
@@ -113,11 +116,11 @@ const CasePage = () => {
           )}
         </div>
         <div className="govuk-grid-column-three-quarters">
-          {caseLoading && <h4 className="govuk-heading-s">Loading case details</h4>}
+          {caseLoading && <h4 className="govuk-heading-s">{t('pages.cases.loading-case')}</h4>}
           {!caseLoading && caseSelected && (
             <CaseDetailsPanel
               businessKey={caseSelected.businessKey}
-              processInstances={caseSelected.processInstances}
+              processInstances={processInstances}
             />
           )}
         </div>

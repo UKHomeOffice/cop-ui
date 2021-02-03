@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-
 import CaseActions from './components/CaseActions';
 import CaseAttachments from './components/CaseAttachments';
 import CaseHistory from './components/CaseHistory';

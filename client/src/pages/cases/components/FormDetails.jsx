@@ -13,7 +13,7 @@ const FormDetails = ({ formReferences }) => {
     document.querySelectorAll('[data-module="govuk-details"]').forEach((element) => {
       new Details(element).init();
     });
-  });
+  }, []);
 
   return (
     <>
