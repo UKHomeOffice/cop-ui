@@ -15,7 +15,7 @@ describe('CasePage', () => {
     mockAxios.reset();
   });
 
-  it('should rendder without crashing', () => {
+  it('should render without crashing', () => {
     shallow(<CasePage caseId="id" />);
   });
 

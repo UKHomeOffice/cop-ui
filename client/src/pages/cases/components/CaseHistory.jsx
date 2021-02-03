@@ -9,7 +9,6 @@ import FormDetails from './FormDetails';
 const CaseHistory = ({ businessKey, processInstances }) => {
   const { t } = useTranslation();
   const [orderedArray, setOrderedArray] = useState(processInstances);
-  const [loadCount, setCount] = useState(1);
 
   const clearAccordionStorage = () => {
     _.forIn(window.sessionStorage, (value, key) => {
@@ -20,21 +19,14 @@ const CaseHistory = ({ businessKey, processInstances }) => {
   };
 
   const orderProcessInstances = (order) => {
-    if (order === 'asc') {
-      setOrderedArray(_.orderBy(orderedArray, ['startDate'], ['asc']));
-    } else {
-      setOrderedArray(_.orderBy(orderedArray, ['startDate'], ['desc']));
-    }
+    setOrderedArray(_.orderBy(orderedArray, ['startDate'], [order]));
   };
 
   useEffect(() => {
     clearAccordionStorage();
-    if (loadCount === 1) {
-      new Accordion(document.getElementById(`caseSelected-${businessKey}`)).init();
-      orderProcessInstances('desc');
-      setCount(loadCount + 1);
-    }
-  });
+    new Accordion(document.getElementById(`caseSelected-${businessKey}`)).init();
+    orderProcessInstances('desc');
+  }, []);
 
   return (
     <>
@@ -137,7 +129,6 @@ const CaseHistory = ({ businessKey, processInstances }) => {
 CaseHistory.propTypes = {
   businessKey: PropTypes.string.isRequired,
   processInstances: PropTypes.arrayOf(PropTypes.object).isRequired,
-  // orderProcessInstances: PropTypes.func.isRequired
 };
 
 export default CaseHistory;
