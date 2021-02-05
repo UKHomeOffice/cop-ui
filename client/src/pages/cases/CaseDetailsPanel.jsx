@@ -19,7 +19,7 @@ const CaseDetailsPanel = ({ businessKey, processInstances }) => {
         <CaseHistory processInstances={processInstances} businessKey={businessKey} />
       </div>
       <div className="govuk-grid-row govuk-card govuk-!-margin-top-4">
-        <CaseAttachments />
+        <CaseAttachments businessKey={businessKey} />
       </div>
       <div className="govuk-grid-row govuk-card govuk-!-margin-top-4">
         <CaseMetrics />
