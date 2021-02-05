@@ -57,7 +57,9 @@ const CaseAttachments = ({ businessKey }) => {
   if (fetching) {
     return (
       <div className="govuk-grid-column-full">
-        <h3 className="govuk-heading-m">Loading attachments...</h3>
+        <h3 className="govuk-heading-m">
+          {t('pages.cases.details-panel.case-attachments.loading-attachments')}
+        </h3>
       </div>
     );
   }
@@ -69,26 +71,28 @@ const CaseAttachments = ({ businessKey }) => {
         </h3>
         <details className="govuk-details" data-module="govuk-details">
           <summary className="govuk-details__summary">
-            <span className="govuk-details__summary-text">View attachments</span>
+            <span className="govuk-details__summary-text">
+              {t('pages.cases.details-panel.case-attachments.subheading')}
+            </span>
           </summary>
           <table className="govuk-table">
             <thead className="govuk-table__head">
               <tr className="govuk-table__row">
                 <th scope="col" className="govuk-table__header">
-                  Name
+                  {t('pages.cases.details-panel.case-attachments.table.header-1')}
                 </th>
                 <th scope="col" className="govuk-table__header">
-                  Uploaded on
+                  {t('pages.cases.details-panel.case-attachments.table.header-2')}
                 </th>
                 <th scope="col" className="govuk-table__header">
-                  Uploaded by
+                  {t('pages.cases.details-panel.case-attachments.table.header-3')}
                 </th>
               </tr>
             </thead>
             <tbody className="govuk-table__body">
               {data.length === 0 ? (
                 <h3 className="govuk-heading-s govuk-!-margin-top-4">
-                  No attachments associated with case
+                  {t('pages.cases.details-panel.case-attachments.table.no-attachments')}
                 </h3>
               ) : (
                 data.map((attachment) => {
