@@ -68,7 +68,15 @@
           "heading": "Case actions"
         },
         "case-attachments": {
-          "heading": "Case attachments"
+          "heading": "Case attachments",
+          "subheading": "View attachments",
+          "loading-attachments": "Loading attachments...",
+          "table": {
+            "header-1": "Name",
+            "header-2": "Uploaded on",
+            "header-3": "Uploaded by",
+            "no-attachments": "No attachments associated with case"
+          }
         },
         "case-history": {
           "heading": "Case history",
