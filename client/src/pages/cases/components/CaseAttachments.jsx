@@ -91,9 +91,11 @@ const CaseAttachments = ({ businessKey }) => {
             </thead>
             <tbody className="govuk-table__body">
               {data.length === 0 ? (
-                <h3 className="govuk-heading-s govuk-!-margin-top-4">
-                  {t('pages.cases.details-panel.case-attachments.table.no-attachments')}
-                </h3>
+                <tr className="govuk-table__row govuk-heading-s govuk-!-margin-top-4">
+                  <th scope="row" className="govuk-table__header">
+                    {t('pages.cases.details-panel.case-attachments.table.no-attachments')}
+                  </th>
+                </tr>
               ) : (
                 data.map((attachment) => {
                   const { url, submittedFilename, submittedDateTime, submittedEmail } = attachment;
