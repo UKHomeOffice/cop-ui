@@ -1,13 +1,65 @@
 import React, { useState, useEffect } from 'react';
 import { Details } from 'govuk-frontend';
+import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
 import moment from 'moment';
+import gds from '@digitalpatterns/formio-gds-template';
+import { Formio, Form } from 'react-formio';
+import { useAxios, useIsMounted } from '../../../utils/hooks';
 
-const FormDetails = ({ formReferences }) => {
-  const [snapshot, setSnapshot] = useState({
-    formVersionId: null,
-    show: false,
+Formio.use(gds);
+
+const FormDetails = ({ formReferences, businessKey }) => {
+  const { t } = useTranslation();
+  const axiosInstance = useAxios();
+  const isMounted = useIsMounted();
+  // const [formShowing, setFormShowing] = useState('');
+
+  const [form, setForm] = useState({
+    formSelected: '',
+    isLoading: false,
+    data: null,
   });
+
+  const [submissionData, setSubmissionData] = useState(null);
+
+  const fetchForm = async (formName, formVersionId) => {
+    if (axiosInstance) {
+      try {
+        setForm({
+          formSelected: formVersionId,
+          isLoading: true,
+        });
+        const { data } = await axiosInstance.get(`/form/name/${formName}`);
+        if (isMounted.current) {
+          setForm({
+            formSelected: formVersionId,
+            isLoading: false,
+            data,
+          });
+        }
+      } catch (e) {
+        if (isMounted.current) {
+          setForm({
+            formSelected: '',
+            isLoading: false,
+            data: null,
+          });
+        }
+      }
+    }
+  };
+
+  const fetchSubmissionData = async (dataPath) => {
+    try {
+      const resp = await axiosInstance.get(
+        `/camunda/cases/${businessKey}/submission?key=${dataPath}`
+      );
+      setSubmissionData(resp.data);
+    } catch (err) {
+      setSubmissionData(null);
+    }
+  };
 
   useEffect(() => {
     document.querySelectorAll('[data-module="govuk-details"]').forEach((element) => {
@@ -17,22 +69,26 @@ const FormDetails = ({ formReferences }) => {
 
   return (
     <>
-      {formReferences.map((form) => {
+      {formReferences.map((formInstance) => {
         return (
-          <details key={form.formVersionId} className="govuk-details" data-module="govuk-details">
+          <details
+            key={formInstance.formVersionId}
+            className="govuk-details"
+            data-module="govuk-details"
+          >
             <summary className="govuk-details__summary">
-              <span className="govuk-details__summary-text">{form.title}</span>
+              <span className="govuk-details__summary-text">{formInstance.title}</span>
             </summary>
             <div className="govuk-details__text">
               <dl className="govuk-summary-list govuk-summary-list--no-border">
                 <div className="govuk-summary-list__row">
                   <dt className="govuk-summary-list__key">Submitted by</dt>
-                  <dd className="govuk-summary-list__value">{form.submittedBy}</dd>
+                  <dd className="govuk-summary-list__value">{formInstance.submittedBy}</dd>
                 </div>
                 <div className="govuk-summary-list__row">
                   <dt className="govuk-summary-list__key">Submitted on</dt>
                   <dd className="govuk-summary-list__value">
-                    {moment(form.submissionDate).format('DD/MM/YYYY HH:mm')}
+                    {moment(formInstance.submissionDate).format('DD/MM/YYYY HH:mm')}
                   </dd>
                 </div>
                 <div className="govuk-summary-list__row">
@@ -45,14 +101,47 @@ const FormDetails = ({ formReferences }) => {
                       className="govuk-button"
                       onClick={(e) => {
                         e.preventDefault();
-                        setSnapshot({
-                          formVersionId: form.formVersionId,
-                          show: !snapshot.show,
-                        });
+                        if (
+                          !form.formSelected ||
+                          form.formSelected !== formInstance.formVersionId
+                        ) {
+                          fetchForm(formInstance.name, formInstance.formVersionId);
+                          fetchSubmissionData(formInstance.dataPath);
+                          // setFormShowing(formInstance.formVersionId)
+                        } else if (form.formSelected === formInstance.formVersionId) {
+                          setForm({
+                            formSelected: '',
+                            isLoading: false,
+                            data: null,
+                          });
+                        }
                       }}
                     >
-                      {snapshot.show ? 'Hide Details' : 'Show details'}
+                      {form.formSelected === formInstance.formVersionId
+                        ? 'Hide Details'
+                        : 'Show details'}
                     </button>
+                    {form.isLoading && form.formSelected === formInstance.formVersionId && (
+                      <h4 className="govuk-body">
+                        {t('pages.cases.details-panel.case-history.form-loading')}
+                      </h4>
+                    )}
+                    {!form.isLoading && form.formSelected === formInstance.formVersionId && (
+                      <Form
+                        form={form.data}
+                        submission={{ data: submissionData }}
+                        options={{
+                          readOnly: true,
+                          noAlerts: true,
+                          buttonSettings: {
+                            showPrevious: true,
+                            showNext: true,
+                            showSubmit: false,
+                            showCancel: false,
+                          },
+                        }}
+                      />
+                    )}
                   </dd>
                 </div>
               </dl>
@@ -66,6 +155,7 @@ const FormDetails = ({ formReferences }) => {
 
 FormDetails.propTypes = {
   formReferences: PropTypes.arrayOf(PropTypes.object).isRequired,
+  businessKey: PropTypes.string.isRequired,
 };
 
 export default FormDetails;

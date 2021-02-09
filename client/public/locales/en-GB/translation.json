@@ -82,7 +82,8 @@
           "heading": "Case history",
           "select-input-order": "Order by",
           "select-input-latest": "Latest process start date",
-          "select-input-earliest": "Earliest process start date"
+          "select-input-earliest": "Earliest process start date",
+          "form-loading": "Loading form..."
         },
         "case-intro": {
           "copy-button": "Copy case link"
