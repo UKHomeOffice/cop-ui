@@ -13,7 +13,6 @@ const FormDetails = ({ formReferences, businessKey }) => {
   const { t } = useTranslation();
   const axiosInstance = useAxios();
   const isMounted = useIsMounted();
-  // const [formShowing, setFormShowing] = useState('');
 
   const [form, setForm] = useState({
     formSelected: '',
@@ -107,7 +106,6 @@ const FormDetails = ({ formReferences, businessKey }) => {
                         ) {
                           fetchForm(formInstance.name, formInstance.formVersionId);
                           fetchSubmissionData(formInstance.dataPath);
-                          // setFormShowing(formInstance.formVersionId)
                         } else if (form.formSelected === formInstance.formVersionId) {
                           setForm({
                             formSelected: '',
