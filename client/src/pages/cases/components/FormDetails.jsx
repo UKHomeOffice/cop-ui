@@ -79,7 +79,7 @@ const FormDetails = ({ formReferences, businessKey }) => {
               <summary className="govuk-details__summary">
                 <span className="govuk-details__summary-text">{formInstance.title}</span>
               </summary>
-              <div className="govuk-details__text">
+              <div className="govuk-details__text--no-border">
                 <dl className="govuk-summary-list govuk-summary-list--no-border">
                   <div className="govuk-summary-list__row">
                     <dt className="govuk-summary-list__key">Submitted by</dt>
