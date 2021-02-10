@@ -6,7 +6,7 @@ import CaseHistory from './components/CaseHistory';
 import CaseIntro from './components/CaseIntro';
 import CaseMetrics from './components/CaseMetrics';
 
-const CaseDetailsPanel = ({ businessKey, processInstances }) => {
+const CaseDetailsPanel = ({ businessKey, processInstances, caseMetrics }) => {
   return (
     <>
       <div className="govuk-grid-row govuk-card">
@@ -22,7 +22,7 @@ const CaseDetailsPanel = ({ businessKey, processInstances }) => {
         <CaseAttachments businessKey={businessKey} />
       </div>
       <div className="govuk-grid-row govuk-card govuk-!-margin-top-4">
-        <CaseMetrics />
+        <CaseMetrics caseMetrics={caseMetrics} businessKey={businessKey} />
       </div>
     </>
   );
@@ -31,6 +31,14 @@ const CaseDetailsPanel = ({ businessKey, processInstances }) => {
 CaseDetailsPanel.propTypes = {
   businessKey: PropTypes.string.isRequired,
   processInstances: PropTypes.arrayOf(PropTypes.object).isRequired,
+  caseMetrics: PropTypes.shape({
+    averageTimeToCompleteProcessInSeconds: PropTypes.number.isRequired,
+    noOfCompletedProcessInstances: PropTypes.number.isRequired,
+    noOfCompletedUserTasks: PropTypes.number.isRequired,
+    noOfOpenUserTasks: PropTypes.number.isRequired,
+    noOfRunningProcessInstances: PropTypes.number.isRequired,
+    overallTimeInSeconds: PropTypes.number.isRequired,
+  }).isRequired,
 };
 
 export default CaseDetailsPanel;

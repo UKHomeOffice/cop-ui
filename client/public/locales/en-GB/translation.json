@@ -89,7 +89,8 @@
           "copy-button": "Copy case link"
         },
         "case-metrics": {
-          "heading": "Case metrics"
+          "heading": "Case metrics",
+          "summary": "Basic metrics related to"
         }
       }
     },

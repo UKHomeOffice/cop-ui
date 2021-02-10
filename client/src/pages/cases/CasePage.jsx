@@ -121,6 +121,7 @@ const CasePage = () => {
             <CaseDetailsPanel
               businessKey={caseSelected.businessKey}
               processInstances={processInstances}
+              caseMetrics={caseSelected.metrics}
             />
           )}
         </div>

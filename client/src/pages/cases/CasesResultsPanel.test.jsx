@@ -37,6 +37,14 @@ describe('CaseResultsPage', () => {
 
     mockAxios.onGet('/camunda/cases/businessKey1').reply(200, {
       businessKey: 'businessKey1',
+      metrics: {
+        averageTimeToCompleteProcessInSeconds: 16,
+        noOfCompletedProcessInstances: 2,
+        noOfCompletedUserTasks: 1,
+        noOfOpenUserTasks: 0,
+        noOfRunningProcessInstances: 0,
+        overallTimeInSeconds: 33,
+      },
       processInstances: [
         {
           definitionId: 'intel-referral:3:85c1a0aa-34bb-11eb-924e-e61a6d54c1b3',
