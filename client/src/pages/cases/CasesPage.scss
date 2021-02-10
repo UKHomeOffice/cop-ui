@@ -22,3 +22,10 @@ $govuk-page-width: 1400px;
   border-bottom: 3px solid $govuk-card-border;
   box-sizing: border-box;
 }
+
+.form-seperator {
+  border-bottom: 2px solid #1d70b8;
+  border-top: none;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}

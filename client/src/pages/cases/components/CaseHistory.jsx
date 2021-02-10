@@ -112,7 +112,10 @@ const CaseHistory = ({ businessKey, processInstances }) => {
                     </div>
                   </div>
                   {processInstance.formReferences.length ? (
-                    <FormDetails formReferences={processInstance.formReferences} />
+                    <FormDetails
+                      businessKey={businessKey}
+                      formReferences={processInstance.formReferences}
+                    />
                   ) : (
                     <h4 className="govuk-heading-s">No forms available</h4>
                   )}
