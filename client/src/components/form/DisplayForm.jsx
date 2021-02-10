@@ -27,7 +27,6 @@ const DisplayForm = ({
   submitting,
 }) => {
   const [errorAlert, setErrorAlert] = useState();
-  const [submissionData, setSubmissionData] = useState(null);
   const formRef = useRef();
   const host = `${window.location.protocol}//${window.location.hostname}${
     window.location.port ? `:${window.location.port}` : ''
@@ -229,27 +228,15 @@ const DisplayForm = ({
           setErrorAlert(null);
         }}
         submission={augmentedSubmission}
-        onSubmit={() => {
+        onSubmit={(submissionData) => {
           setTime({
             ...time,
             end: new Date(),
             submitted: true,
           });
-          // eslint-disable-next-line no-shadow
-          const { versionId, id, title, name } = form;
-          // eslint-disable-next-line no-param-reassign
-          submissionData.data.form = {
-            formVersionId: versionId,
-            formId: id,
-            title,
-            name,
-            submissionDate: new Date(),
-            submittedBy: keycloak.tokenParsed.email,
-          };
           handleOnSubmit(submissionData);
         }}
         onChange={(data) => {
-          setSubmissionData(data);
           if (formRef.current) {
             validate(formRef.current.formio, data);
           }
@@ -278,6 +265,23 @@ const DisplayForm = ({
             },
             buttonSettings: {
               showCancel: true,
+            },
+            beforeSubmit: (submissionData, next) => {
+              /* eslint-disable no-param-reassign, no-shadow */
+              const { versionId, id, title, name } = form;
+              submissionData.data.form = {
+                formVersionId: versionId,
+                formId: id,
+                title,
+                name,
+                submissionDate: new Date(),
+                submittedBy: keycloak.tokenParsed.email,
+              };
+              // processContext and taskContext not need in request payload
+              delete submissionData.data.processContext;
+              delete submissionData.data.taskContext;
+              /* eslint-enable no-param-reassign, no-shadow */
+              next();
             },
           },
         }}
