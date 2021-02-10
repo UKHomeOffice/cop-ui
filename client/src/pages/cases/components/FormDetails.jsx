@@ -68,83 +68,86 @@ const FormDetails = ({ formReferences, businessKey }) => {
 
   return (
     <>
-      {formReferences.map((formInstance) => {
+      {formReferences.map((formInstance, index) => {
         return (
-          <details
-            key={formInstance.formVersionId}
-            className="govuk-details"
-            data-module="govuk-details"
-          >
-            <summary className="govuk-details__summary">
-              <span className="govuk-details__summary-text">{formInstance.title}</span>
-            </summary>
-            <div className="govuk-details__text">
-              <dl className="govuk-summary-list govuk-summary-list--no-border">
-                <div className="govuk-summary-list__row">
-                  <dt className="govuk-summary-list__key">Submitted by</dt>
-                  <dd className="govuk-summary-list__value">{formInstance.submittedBy}</dd>
-                </div>
-                <div className="govuk-summary-list__row">
-                  <dt className="govuk-summary-list__key">Submitted on</dt>
-                  <dd className="govuk-summary-list__value">
-                    {moment(formInstance.submissionDate).format('DD/MM/YYYY HH:mm')}
-                  </dd>
-                </div>
-                <div className="govuk-summary-list__row">
-                  <dt className="govuk-summary-list__key">
-                    <span className="govuk-tag">Latest</span>
-                  </dt>
-                  <dd className="govuk-summary-list__value">
-                    <button
-                      type="button"
-                      className="govuk-button"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        if (
-                          !form.formSelected ||
-                          form.formSelected !== formInstance.formVersionId
-                        ) {
-                          fetchForm(formInstance.name, formInstance.formVersionId);
-                          fetchSubmissionData(formInstance.dataPath);
-                        } else if (form.formSelected === formInstance.formVersionId) {
-                          setForm({
-                            formSelected: '',
-                            isLoading: false,
-                            data: null,
-                          });
-                        }
-                      }}
-                    >
-                      {form.formSelected === formInstance.formVersionId
-                        ? 'Hide Details'
-                        : 'Show details'}
-                    </button>
-                    {form.isLoading && form.formSelected === formInstance.formVersionId && (
-                      <h4 className="govuk-body">
-                        {t('pages.cases.details-panel.case-history.form-loading')}
-                      </h4>
-                    )}
-                    {!form.isLoading && form.formSelected === formInstance.formVersionId && (
-                      <Form
-                        form={form.data}
-                        submission={{ data: submissionData }}
-                        options={{
-                          readOnly: true,
-                          noAlerts: true,
-                          buttonSettings: {
-                            showPrevious: true,
-                            showNext: true,
-                            showSubmit: false,
-                            showCancel: false,
-                          },
+          <>
+            <details
+              key={formInstance.formVersionId}
+              className="govuk-details"
+              data-module="govuk-details"
+            >
+              <summary className="govuk-details__summary">
+                <span className="govuk-details__summary-text">{formInstance.title}</span>
+              </summary>
+              <div className="govuk-details__text">
+                <dl className="govuk-summary-list govuk-summary-list--no-border">
+                  <div className="govuk-summary-list__row">
+                    <dt className="govuk-summary-list__key">Submitted by</dt>
+                    <dd className="govuk-summary-list__value">{formInstance.submittedBy}</dd>
+                  </div>
+                  <div className="govuk-summary-list__row">
+                    <dt className="govuk-summary-list__key">Submitted on</dt>
+                    <dd className="govuk-summary-list__value">
+                      {moment(formInstance.submissionDate).format('DD/MM/YYYY HH:mm')}
+                    </dd>
+                  </div>
+                  <div className="govuk-summary-list__row">
+                    <dt className="govuk-summary-list__key">
+                      <span className="govuk-tag">Latest</span>
+                    </dt>
+                    <dd className="govuk-summary-list__value">
+                      <button
+                        type="button"
+                        className="govuk-button"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          if (
+                            !form.formSelected ||
+                            form.formSelected !== formInstance.formVersionId
+                          ) {
+                            fetchForm(formInstance.name, formInstance.formVersionId);
+                            fetchSubmissionData(formInstance.dataPath);
+                          } else if (form.formSelected === formInstance.formVersionId) {
+                            setForm({
+                              formSelected: '',
+                              isLoading: false,
+                              data: null,
+                            });
+                          }
                         }}
-                      />
-                    )}
-                  </dd>
-                </div>
-              </dl>
-            </div>
-          </details>
+                      >
+                        {form.formSelected === formInstance.formVersionId
+                          ? 'Hide Details'
+                          : 'Show details'}
+                      </button>
+                      {form.isLoading && form.formSelected === formInstance.formVersionId && (
+                        <h4 className="govuk-body">
+                          {t('pages.cases.details-panel.case-history.form-loading')}
+                        </h4>
+                      )}
+                      {!form.isLoading && form.formSelected === formInstance.formVersionId && (
+                        <Form
+                          form={form.data}
+                          submission={{ data: submissionData }}
+                          options={{
+                            readOnly: true,
+                            noAlerts: true,
+                            buttonSettings: {
+                              showPrevious: true,
+                              showNext: true,
+                              showSubmit: false,
+                              showCancel: false,
+                            },
+                          }}
+                        />
+                      )}
+                    </dd>
+                  </div>
+                </dl>
+              </div>
+            </details>
+            {index < formReferences.length - 1 ? <hr className="form-seperator" /> : null}
+          </>
         );
       })}
     </>
