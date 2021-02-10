@@ -228,13 +228,13 @@ const DisplayForm = ({
           setErrorAlert(null);
         }}
         submission={augmentedSubmission}
-        onSubmit={(data) => {
+        onSubmit={(submissionData) => {
           setTime({
             ...time,
             end: new Date(),
             submitted: true,
           });
-          handleOnSubmit(data);
+          handleOnSubmit(submissionData);
         }}
         onChange={(data) => {
           if (formRef.current) {
