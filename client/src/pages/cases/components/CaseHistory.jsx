@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
 import _ from 'lodash';
-import moment from 'moment';
+import dayjs from 'dayjs';
 import { Accordion } from 'govuk-frontend';
 import FormDetails from './FormDetails';
 
@@ -96,7 +96,7 @@ const CaseHistory = ({ businessKey, processInstances }) => {
                         <div className="govuk-grid-column-one-half">
                           <span className="govuk-caption-m">Start date</span>
                           <h3 className="govuk-heading-s">
-                            {moment(processInstance.startDate).format('DD/MM/YYYY HH:mm')}
+                            {dayjs(processInstance.startDate).format('DD/MM/YYYY HH:mm')}
                           </h3>
                         </div>
                         <div className="govuk-grid-column-one-half">
@@ -104,7 +104,7 @@ const CaseHistory = ({ businessKey, processInstances }) => {
 
                           <h3 className="govuk-heading-s">
                             {processInstance.endDate
-                              ? moment(processInstance.endDate).format('DD/MM/YYYY HH:mm')
+                              ? dayjs(processInstance.endDate).format('DD/MM/YYYY HH:mm')
                               : 'Active'}
                           </h3>
                         </div>

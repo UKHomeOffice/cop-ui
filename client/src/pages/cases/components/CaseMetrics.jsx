@@ -1,7 +1,12 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
-import moment from 'moment';
+import dayjs from 'dayjs';
+import duration from 'dayjs/plugin/duration';
+import relativeTime from 'dayjs/plugin/relativeTime';
+
+dayjs.extend(duration);
+dayjs.extend(relativeTime);
 
 const CaseMetrics = ({ caseMetrics, businessKey }) => {
   const { t } = useTranslation();
@@ -63,7 +68,7 @@ const CaseMetrics = ({ caseMetrics, businessKey }) => {
                   <div className="metrics-card">
                     <div className="metrics-card-body ">
                       <span className="govuk-!-font-size-36 govuk-!-font-weight-bold">
-                        {moment.duration(caseMetrics.overallTimeInSeconds, 'seconds').humanize()}
+                        {dayjs.duration(caseMetrics.overallTimeInSeconds, 'seconds').humanize()}
                       </span>
                       <span className="govuk-!-font-size-19">Total time</span>
                     </div>
@@ -73,7 +78,7 @@ const CaseMetrics = ({ caseMetrics, businessKey }) => {
                   <div className="metrics-card">
                     <div className="metrics-card-body ">
                       <span className="govuk-!-font-size-36 govuk-!-font-weight-bold">
-                        {moment
+                        {dayjs
                           .duration(caseMetrics.averageTimeToCompleteProcessInSeconds, 'seconds')
                           .humanize()}
                       </span>

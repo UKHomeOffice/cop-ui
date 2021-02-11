@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Details } from 'govuk-frontend';
 import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
-import moment from 'moment';
+import dayjs from 'dayjs';
 import gds from '@digitalpatterns/formio-gds-template';
 import { Formio, Form } from 'react-formio';
 import { useAxios, useIsMounted } from '../../../utils/hooks';
@@ -88,7 +88,7 @@ const FormDetails = ({ formReferences, businessKey }) => {
                   <div className="govuk-summary-list__row">
                     <dt className="govuk-summary-list__key">Submitted on</dt>
                     <dd className="govuk-summary-list__value">
-                      {moment(formInstance.submissionDate).format('DD/MM/YYYY HH:mm')}
+                      {dayjs(formInstance.submissionDate).format('DD/MM/YYYY HH:mm')}
                     </dd>
                   </div>
                   <div className="govuk-summary-list__row">
