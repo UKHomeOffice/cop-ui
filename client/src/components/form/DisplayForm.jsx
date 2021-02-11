@@ -27,6 +27,7 @@ const DisplayForm = ({
   submitting,
 }) => {
   const [errorAlert, setErrorAlert] = useState();
+  const [hasFormChanged, setHasFormChanged] = useState(false);
   const formRef = useRef();
   const host = `${window.location.protocol}//${window.location.hostname}${
     window.location.port ? `:${window.location.port}` : ''
@@ -237,6 +238,8 @@ const DisplayForm = ({
           handleOnSubmit(submissionData);
         }}
         onChange={(data) => {
+          // If we remove this set state the context does not load correctly
+          setHasFormChanged(!hasFormChanged);
           if (formRef.current) {
             validate(formRef.current.formio, data);
           }
