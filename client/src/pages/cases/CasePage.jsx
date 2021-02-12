@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useHistory } from 'react-navi';
 import { useTranslation } from 'react-i18next';
 import { useMatomo } from '@datapunt/matomo-tracker-react';
 import { debounce } from 'lodash';
@@ -16,6 +17,7 @@ const CasePage = (caseId) => {
   }, []);
 
   const axiosInstance = useAxios();
+  const history = useHistory();
   const [caseSearchResults, setCaseSearchResults] = useState(null);
   const [caseArray, setCaseArray] = useState(null);
   const [searching, setSearching] = useState(false);
@@ -72,6 +74,7 @@ const CasePage = (caseId) => {
       setProcessInstances([]);
     } finally {
       setCaseLoading(false);
+      history.push(businessKey);
     }
   };
 
@@ -79,7 +82,7 @@ const CasePage = (caseId) => {
     if (axiosInstance) {
       getCaseDetails(caseId.caseId);
     }
-  }, [caseId, axiosInstance]);
+  }, [axiosInstance]);
 
   return (
     <>
