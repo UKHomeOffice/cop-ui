@@ -69,20 +69,24 @@ const CasePage = (caseId) => {
       const resp = await axiosInstance.get(`/camunda/cases/${businessKey}`);
       setCaseSelected(resp.data);
       setProcessInstances(resp.data.processInstances);
+      history.push(businessKey);
     } catch (err) {
       setCaseSelected(null);
       setProcessInstances([]);
     } finally {
       setCaseLoading(false);
-      history.push(businessKey);
     }
   };
 
   useEffect(() => {
-    if (axiosInstance) {
+    // When user loads page with a caseId in the route we want to load that case
+    // If user then enters a search and clicks a businessKey, we do not want to run this useEffect
+    // So we check caseId against caseSelected.businessKey and if it's a match we do not run this function
+    // Because we want to run this useEffect when the user clicks 'back' in their browser, if caseId does not match caseSelected.businessKey, then we do run this function
+    if (axiosInstance && (!caseSelected || caseId.caseId !== caseSelected.businessKey)) {
       getCaseDetails(caseId.caseId);
     }
-  }, [axiosInstance]);
+  }, [axiosInstance, caseId]);
 
   return (
     <>
