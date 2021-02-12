@@ -280,9 +280,11 @@ const DisplayForm = ({
                 submissionDate: new Date(),
                 submittedBy: keycloak.tokenParsed.email,
               };
-              // processContext and taskContext not need in request payload
+              // processContext, taskContext, keycloakContext and staffDetailsDataContext not needed in request payload
               delete submissionData.data.processContext;
               delete submissionData.data.taskContext;
+              delete submissionData.data.keycloakContext;
+              delete submissionData.data.staffDetailsDataContext;
               /* eslint-enable no-param-reassign, no-shadow */
               next();
             },

@@ -12,7 +12,7 @@ jest.mock('../../utils/logger', () => ({
 
 window.scrollTo = jest.fn();
 
-describe('FormPage', () => {
+describe('DisplayForm', () => {
   beforeEach(() => {
     // eslint-disable-next-line no-console
     console.error = jest.fn();
@@ -20,7 +20,7 @@ describe('FormPage', () => {
     console.warn = jest.fn();
   });
 
-  it('Should show a spinner (Loader) when form is being submitted', async () => {
+  it('Should show a spinner (Loader) when form is being loaded', async () => {
     const wrapper = await mount(
       <DisplayForm
         form={testData.formData}
@@ -115,5 +115,46 @@ describe('FormPage', () => {
       await wrapper.update();
     });
     expect(wrapper.find('.govuk-error-summary')).toHaveLength(0);
+  });
+
+  it('should remove context objects from on form submission', async () => {
+    const mockHandleOnSubmit = jest.fn();
+    const wrapper = await mount(
+      <DisplayForm
+        form={testData.formData}
+        submitting
+        handleOnCancel={jest.fn()}
+        handleOnSubmit={mockHandleOnSubmit}
+      />
+    );
+
+    await act(async () => {
+      await Promise.resolve(wrapper);
+      await new Promise((resolve) => setImmediate(resolve));
+      await wrapper.update();
+    });
+
+    const form = wrapper.find(Form).at(0);
+    const next = jest.fn();
+    const submission = {
+      data: {
+        processContext: {},
+        taskContext: {},
+        keycloakContext: {},
+        staffDetailsDataContext: {},
+        doNotRemove: 'hello',
+      },
+    };
+
+    form.props().options.hooks.beforeSubmit(submission, next);
+    /*
+     * Could check for object equality however the form object has dynamic values that may
+     * change throughout the test
+     */
+    expect(submission.data.processContext).toBeFalsy();
+    expect(submission.data.taskContext).toBeFalsy();
+    expect(submission.data.keycloakContext).toBeFalsy();
+    expect(submission.data.staffDetailsDataContext).toBeFalsy();
+    expect(submission.data.doNotRemove).toBeTruthy();
   });
 });
