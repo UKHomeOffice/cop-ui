@@ -7,7 +7,7 @@ import CasesResultsPanel from './CasesResultsPanel';
 import CaseDetailsPanel from './CaseDetailsPanel';
 import './CasesPage.scss';
 
-const CasePage = () => {
+const CasePage = (caseId) => {
   const { t } = useTranslation();
   const { trackPageView } = useMatomo();
 
@@ -74,6 +74,12 @@ const CasePage = () => {
       setCaseLoading(false);
     }
   };
+
+  useEffect(() => {
+    if (axiosInstance) {
+      getCaseDetails(caseId.caseId);
+    }
+  }, [caseId, axiosInstance]);
 
   return (
     <>
