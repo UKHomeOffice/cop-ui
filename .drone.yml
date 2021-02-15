@@ -27,6 +27,25 @@ steps:
     target:
     - secrets
 
+- name: synch_staging_secrets
+  pull: if-not-exists
+  image: quay.io/ukhomeofficedigital/cop-secrets
+  environment:
+    AWS_ACCESS_KEY_ID:
+      from_secret: STAGING_DRONE_AWS_ACCESS_KEY_ID
+    AWS_SECRET_ACCESS_KEY:
+      from_secret: STAGING_DRONE_AWS_SECRET_ACCESS_KEY
+    DEPLOY_ENV: staging
+    DRONE_SERVER: https://drone-gh.acp.homeoffice.gov.uk
+    DRONE_TOKEN:
+      from_secret: DRONE_V1_PUBLIC_TOKEN
+    DRONE_VERSION: ${DRONE_SYSTEM_VERSION}
+  when:
+    event:
+    - promote
+    target:
+    - secrets
+
 - name: synch_production_secrets
   pull: if-not-exists
   image: quay.io/ukhomeofficedigital/cop-secrets
@@ -90,6 +109,53 @@ steps:
     - promote
     target:
     - dev
+
+
+- name: deploy_to_staging
+  pull: if-not-exists
+  image: quay.io/ukhomeofficedigital/kd
+  commands:
+  - export SPRING_PROFILES_ACTIVE="staging"
+  - export COP_UI_TAG=$${DRONE_COMMIT_SHA}
+  - kd --insecure-skip-tls-verify -f kube/cert.yml
+  - kd --insecure-skip-tls-verify -f kube/secret.yml
+  - kd --insecure-skip-tls-verify -f kube/network-policy.yml
+  - kd --insecure-skip-tls-verify -f kube/service.yml
+  - kd --insecure-skip-tls-verify -f kube/deployment.yml --timeout=5m
+  - kd --insecure-skip-tls-verify -f kube/ingress.yml
+  environment:
+    AWS_ACCESS_KEY:
+      from_secret: STAGING_COP_UI_AWS_ACCESS_KEY_ID
+    AWS_REGION:
+      from_secret: AWS_REGION
+    AWS_SECRETS_MANAGER_ENABLED:
+      from_secret: STAGING_COP_UI_AWS_SECRETS_MANAGER_ENABLED
+    AWS_SECRET_KEY:
+      from_secret: STAGING_COP_UI_AWS_SECRET_ACCESS_KEY
+    COP_UI_IMAGE:
+      from_secret: COP_UI_IMAGE
+    COP_UI_NAME:
+      from_secret: COP_UI_NAME
+    COP_UI_URL:
+      from_secret: STAGING_COP_UI_URL
+    KUBE_NAMESPACE:
+      from_secret: STAGING_KUBE_NAMESPACE_PRIVATE_COP
+    KUBE_SERVER:
+      from_secret: STAGING_KUBE_SERVER
+    KUBE_TOKEN:
+      from_secret: STAGING_KUBE_TOKEN
+    NGINX_IMAGE:
+      from_secret: NGINX_IMAGE
+    NGINX_TAG:
+      from_secret: NGINX_TAG
+  when:
+    branch:
+    - master
+    event:
+    - promote
+    target:
+    - staging
+
 
 - name: deploy_to_production
   pull: if-not-exists
