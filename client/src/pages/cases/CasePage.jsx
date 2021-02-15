@@ -3,12 +3,13 @@ import { useHistory } from 'react-navi';
 import { useTranslation } from 'react-i18next';
 import { useMatomo } from '@datapunt/matomo-tracker-react';
 import { debounce } from 'lodash';
+import PropTypes from 'prop-types';
 import { useAxios } from '../../utils/hooks';
 import CasesResultsPanel from './CasesResultsPanel';
 import CaseDetailsPanel from './CaseDetailsPanel';
 import './CasesPage.scss';
 
-const CasePage = (caseId) => {
+const CasePage = ({ caseId }) => {
   const { t } = useTranslation();
   const { trackPageView } = useMatomo();
 
@@ -82,12 +83,8 @@ const CasePage = (caseId) => {
     // This useEffect function should only run getCaseDetails
     // when a user enters a URL that contains a caseId (either manually, or by clicking a link to it)
     // or when a user clicks 'back' in their browser and the URL they go back to is a case URL with a caseId
-    if (
-      axiosInstance &&
-      (!caseSelected || caseId.caseId !== caseSelected.businessKey) &&
-      caseId.caseId
-    ) {
-      getCaseDetails(caseId.caseId);
+    if (axiosInstance && (!caseSelected || caseId !== caseSelected.businessKey) && caseId) {
+      getCaseDetails(caseId);
     }
   }, [axiosInstance, caseId]);
 
@@ -143,6 +140,14 @@ const CasePage = (caseId) => {
       </div>
     </>
   );
+};
+
+CasePage.defaultProps = {
+  caseId: null,
+};
+
+CasePage.propTypes = {
+  caseId: PropTypes.string,
 };
 
 export default CasePage;
