@@ -118,7 +118,7 @@ const CasePage = ({ caseId }) => {
       <div className="govuk-grid-row">
         <div className="govuk-grid-column-one-quarter">
           {searching && <h4 className="govuk-heading-s">{t('pages.cases.search-message')}</h4>}
-          {!searching && (
+          {!searching && (caseSearchResults || caseSelected) && (
             <CasesResultsPanel
               totalElements={!caseSearchResults ? null : caseSearchResults.page.totalElements}
               caseArray={caseArray}
