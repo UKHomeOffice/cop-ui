@@ -48,10 +48,11 @@ const CaseResultsPanel = ({ totalElements, caseArray, getCaseDetails, loadMoreCa
 
 CaseResultsPanel.defaultProps = {
   caseArray: null,
+  totalElements: null,
 };
 
 CaseResultsPanel.propTypes = {
-  totalElements: PropTypes.number.isRequired,
+  totalElements: PropTypes.number,
   caseArray: PropTypes.arrayOf(PropTypes.object),
   getCaseDetails: PropTypes.func.isRequired,
   loadMoreCases: PropTypes.func.isRequired,

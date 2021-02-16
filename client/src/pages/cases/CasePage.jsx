@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from 'react';
+import { useHistory } from 'react-navi';
 import { useTranslation } from 'react-i18next';
 import { useMatomo } from '@datapunt/matomo-tracker-react';
 import { debounce } from 'lodash';
+import PropTypes from 'prop-types';
 import { useAxios } from '../../utils/hooks';
 import CasesResultsPanel from './CasesResultsPanel';
 import CaseDetailsPanel from './CaseDetailsPanel';
 import './CasesPage.scss';
 
-const CasePage = () => {
+const CasePage = ({ caseId }) => {
   const { t } = useTranslation();
   const { trackPageView } = useMatomo();
 
@@ -16,6 +18,7 @@ const CasePage = () => {
   }, []);
 
   const axiosInstance = useAxios();
+  const history = useHistory();
   const [caseSearchResults, setCaseSearchResults] = useState(null);
   const [caseArray, setCaseArray] = useState(null);
   const [searching, setSearching] = useState(false);
@@ -67,6 +70,7 @@ const CasePage = () => {
       const resp = await axiosInstance.get(`/camunda/cases/${businessKey}`);
       setCaseSelected(resp.data);
       setProcessInstances(resp.data.processInstances);
+      history.push(`/cases/${businessKey}`);
     } catch (err) {
       setCaseSelected(null);
       setProcessInstances([]);
@@ -74,6 +78,15 @@ const CasePage = () => {
       setCaseLoading(false);
     }
   };
+
+  useEffect(() => {
+    // This useEffect function should only run getCaseDetails
+    // when a user enters a URL that contains a caseId (either manually, or by clicking a link to it)
+    // or when a user clicks 'back' in their browser and the URL they go back to is a case URL with a caseId
+    if (axiosInstance && (!caseSelected || caseId !== caseSelected.businessKey) && caseId) {
+      getCaseDetails(caseId);
+    }
+  }, [axiosInstance, caseId]);
 
   return (
     <>
@@ -105,9 +118,9 @@ const CasePage = () => {
       <div className="govuk-grid-row">
         <div className="govuk-grid-column-one-quarter">
           {searching && <h4 className="govuk-heading-s">{t('pages.cases.search-message')}</h4>}
-          {!searching && caseSearchResults && (
+          {!searching && (caseSearchResults || caseSelected) && (
             <CasesResultsPanel
-              totalElements={caseSearchResults.page.totalElements}
+              totalElements={!caseSearchResults ? null : caseSearchResults.page.totalElements}
               caseArray={caseArray}
               getCaseDetails={getCaseDetails}
               loadMoreCases={loadMoreCases}
@@ -128,6 +141,14 @@ const CasePage = () => {
       </div>
     </>
   );
+};
+
+CasePage.defaultProps = {
+  caseId: null,
+};
+
+CasePage.propTypes = {
+  caseId: PropTypes.string,
 };
 
 export default CasePage;

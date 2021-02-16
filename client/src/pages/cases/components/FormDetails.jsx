@@ -70,7 +70,7 @@ const FormDetails = ({ formReferences, businessKey }) => {
     <>
       {formReferences.map((formInstance, index) => {
         return (
-          <>
+          <React.Fragment key={formInstance.formVersionId}>
             <details
               key={formInstance.formVersionId}
               className="govuk-details"
@@ -147,7 +147,7 @@ const FormDetails = ({ formReferences, businessKey }) => {
               </div>
             </details>
             {index < formReferences.length - 1 ? <hr className="form-seperator" /> : null}
-          </>
+          </React.Fragment>
         );
       })}
     </>
