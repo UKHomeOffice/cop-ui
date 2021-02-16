@@ -15,8 +15,12 @@ describe('CasePage', () => {
     mockAxios.reset();
   });
 
-  it('should render without crashing', () => {
+  it('should render without crashing when there is a caseId prop', () => {
     shallow(<CasePage caseId="id" />);
+  });
+
+  it('should render without crashing when there is NO caseId prop', () => {
+    shallow(<CasePage />);
   });
 
   it('should render results of case search when applicable', async () => {
