@@ -133,7 +133,64 @@ const DisplayForm = ({
       ...interpolateContext,
     },
   };
+
+  const reformattedContexts = {
+    keycloakContext: {
+      accessToken: keycloak.token,
+      refreshToken: keycloak.refreshToken,
+      sessionId: keycloak.tokenParsed.session_state,
+      email: keycloak.tokenParsed.email,
+      givenName: keycloak.tokenParsed.given_name,
+      familyName: keycloak.tokenParsed.family_name,
+      subject: keycloak.subject,
+      url: keycloak.authServerUrl,
+      realm: keycloak.realm,
+      roles: keycloak.tokenParsed.realm_access.roles,
+      groups: keycloak.tokenParsed.groups,
+    },
+    ...contexts.data,
+  };
+  /*
+   * augmentedSubmission is fed into the form (on the 'submission' prop) and pre-populates fields where possible.
+   * interpolate() is used to pass the context objects to the parent form - this only applies to the parent form, not nested forms
+   * Both augmentedSubmission and interpolate() pass context into the <Form> component
+   * augmentedSubmission must have context included or it cannot pre-populate fields that rely on context.
+   * We have kept interpolate() context to prevent any unwanted side effects of removing it from the parent form.
+   */
   const [augmentedSubmission] = useState(_.merge(existingSubmission, contexts));
+  interpolate(form, { ...reformattedContexts });
+
+  /*
+   * The plugin below is required for when nested forms are present. These nested forms
+   * require interpolation as they can also make reference to context
+   */
+  Formio.registerPlugin(
+    {
+      priority: 0,
+      requestResponse(response) {
+        return {
+          ok: response.ok,
+          json: () =>
+            response.json().then((result) => {
+              if (!Array.isArray(result) && _.has(result, 'display')) {
+                interpolate(result, { ...reformattedContexts });
+                return result;
+              }
+              return result;
+            }),
+          status: response.status,
+          headers: response.headers,
+        };
+      },
+    },
+    'processSubFormInterpolation'
+  );
+
+  useEffect(() => {
+    return () => {
+      Formio.deregisterPlugin('processSubFormInterpolation');
+    };
+  }, []);
 
   useEffect(() => {
     if (form && form.name && time.end) {
@@ -185,23 +242,6 @@ const DisplayForm = ({
       }
     }
   };
-
-  interpolate(form, {
-    keycloakContext: {
-      accessToken: keycloak.token,
-      refreshToken: keycloak.refreshToken,
-      sessionId: keycloak.tokenParsed.session_state,
-      email: keycloak.tokenParsed.email,
-      givenName: keycloak.tokenParsed.given_name,
-      familyName: keycloak.tokenParsed.family_name,
-      subject: keycloak.subject,
-      url: keycloak.authServerUrl,
-      realm: keycloak.realm,
-      roles: keycloak.tokenParsed.realm_access.roles,
-      groups: keycloak.tokenParsed.groups,
-    },
-    ...contexts.data,
-  });
 
   return (
     <Loader
