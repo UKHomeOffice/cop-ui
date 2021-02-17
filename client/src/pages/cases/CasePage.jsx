@@ -135,6 +135,7 @@ const CasePage = ({ caseId }) => {
               businessKey={caseSelected.businessKey}
               processInstances={processInstances}
               caseMetrics={caseSelected.metrics}
+              caseActions={caseSelected.actions}
             />
           )}
         </div>
