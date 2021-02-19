@@ -59,6 +59,7 @@ jest.mock('react-navi', () => ({
   })),
   useHistory: jest.fn(() => ({
     push: mockHistoryPush,
+    listen: jest.fn(),
   })),
   NotFoundBoundary: ({ children }) => children,
   Link: ({ children }) => children,

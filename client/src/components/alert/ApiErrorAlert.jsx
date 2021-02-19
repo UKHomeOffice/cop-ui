@@ -1,25 +1,38 @@
-import React from 'react';
+import React, { useContext, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import PropType from 'prop-types';
 import { v4 as uuidv4 } from 'uuid';
 import config from 'react-global-configuration';
+import { useHistory } from 'react-navi';
+import NotFound from '../NotFound';
+import { AlertContext } from '../../utils/AlertContext';
 
 const ApiErrorAlert = ({ errors }) => {
   const { t } = useTranslation();
+  const history = useHistory();
+  const { setAlertContext } = useContext(AlertContext);
+
+  useEffect(() => {
+    const unlisten = history.listen(() => {
+      setAlertContext(null);
+    });
+    return () => {
+      if (unlisten) {
+        unlisten();
+      }
+    };
+  }, []);
 
   if (errors.length === 0) {
     return null;
   }
 
   const buildMessage = (err) => {
-    const { status, message } = err;
+    const { status } = err;
     let errorMessage;
     switch (status) {
       case 409:
         errorMessage = t('error.api.409');
-        break;
-      case 404:
-        errorMessage = `${message}`;
         break;
       case 401:
       case 403:
@@ -37,6 +50,10 @@ const ApiErrorAlert = ({ errors }) => {
       </li>
     );
   };
+
+  if (errors.find((error) => error.status === 404)) {
+    return <NotFound />;
+  }
 
   return (
     <div
