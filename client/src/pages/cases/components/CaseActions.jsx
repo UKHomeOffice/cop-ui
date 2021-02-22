@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { Accordion } from 'govuk-frontend';
 import CaseAction from './CaseAction';
 
-const CaseActions = ({ caseActions, businessKey }) => {
+const CaseActions = ({ caseActions, businessKey, getCaseDetails }) => {
   const { t } = useTranslation();
   const [selectedAction, setSelectedAction] = useState({});
   const [selectedActionId, setSelectedActionId] = useState('');
@@ -12,14 +12,12 @@ const CaseActions = ({ caseActions, businessKey }) => {
 
   useEffect(() => {
     new Accordion(document.getElementById(`caseActions-${businessKey}`)).init();
-    if (caseActions) {
+    if (caseActions.length) {
       setSelectedAction(caseActions[0].process.formKey);
       setSelectedActionId(caseActions[0].process['process-definition'].key);
       setSelectedActionCompletionMessage(caseActions[0].completionMessage);
     }
   }, []);
-
-  console.log(caseActions[0].completionMessage);
 
   return (
     <>
@@ -80,6 +78,8 @@ const CaseActions = ({ caseActions, businessKey }) => {
                         businessKey={businessKey}
                         selectedActionId={selectedActionId}
                         selectedActionCompletionMessage={selectedActionCompletionMessage}
+                        getCaseDetails={getCaseDetails}
+                        existingSubmission={{}}
                       />
                     </section>
                   ) : null}
@@ -97,5 +97,6 @@ const CaseActions = ({ caseActions, businessKey }) => {
 CaseActions.propTypes = {
   businessKey: PropTypes.string.isRequired,
   caseActions: PropTypes.arrayOf(PropTypes.object).isRequired,
+  getCaseDetails: PropTypes.func.isRequired,
 };
 export default CaseActions;

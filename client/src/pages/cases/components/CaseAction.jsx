@@ -1,11 +1,9 @@
 import React, { useState, useEffect, useContext } from 'react';
 import PropTypes from 'prop-types';
 import { Formio, Form } from 'react-formio';
-import { useHistory } from 'react-navi';
 import gds from '@digitalpatterns/formio-gds-template';
 import { useKeycloak } from '@react-keycloak/web';
-import _ from 'lodash';
-import { interpolate } from '../../../utils/formioSupport';
+import { augmentRequest, interpolate } from '../../../utils/formioSupport';
 import { useAxios, useIsMounted } from '../../../utils/hooks';
 import { TeamContext } from '../../../utils/TeamContext';
 import { StaffIdContext } from '../../../utils/StaffIdContext';
@@ -16,41 +14,23 @@ Formio.use(gds);
 const CaseAction = ({
   selectedAction,
   businessKey,
-  existingSubmission,
   selectedActionId,
   selectedActionCompletionMessage,
+  getCaseDetails,
 }) => {
-  const history = useHistory();
   const axiosInstance = useAxios();
   const isMounted = useIsMounted();
   const [submitting, setSubmitting] = useState(false);
   const [submissionConfirmation, showSubmissionConfirmation] = useState(false);
+  const [hasFormChanged, setHasFormChanged] = useState(false);
+  const host = `${window.location.protocol}//${window.location.hostname}${
+    window.location.port ? `:${window.location.port}` : ''
+  }`;
+
   const [form, setForm] = useState({
     isLoading: false,
     data: null,
   });
-
-  const fetchForm = async (formKey) => {
-    try {
-      setForm({
-        isLoading: true,
-      });
-      const { data } = await axiosInstance.get(`/form/name/${formKey}`);
-      if (isMounted.current) {
-        setForm({
-          isLoading: false,
-          data,
-        });
-      }
-    } catch (e) {
-      if (isMounted.current) {
-        setForm({
-          isLoading: false,
-          data: null,
-        });
-      }
-    }
-  };
 
   const [keycloak] = useKeycloak();
 
@@ -78,6 +58,11 @@ const CaseAction = ({
       session_state: sessionId,
     },
   } = keycloak;
+
+  /* istanbul ignore next */
+  Formio.baseUrl = host;
+  Formio.projectUrl = host;
+  Formio.plugins = [augmentRequest(keycloak, form.id)];
 
   const fileService = new FileService(keycloak);
 
@@ -143,9 +128,11 @@ const CaseAction = ({
     },
   };
 
-  const [augmentedSubmission] = useState(_.merge(existingSubmission, contexts));
-
   const handleOnSubmit = async (dataToSubmit, formToSubmit) => {
+    setForm({
+      isLoading: false,
+      data: null,
+    });
     const variables = {
       [formToSubmit.name]: {
         value: JSON.stringify(dataToSubmit.data),
@@ -157,25 +144,43 @@ const CaseAction = ({
       },
     };
     try {
-      const actionResponse = await axiosInstance.post(
+      await axiosInstance.post(
         `/camunda/engine-rest/process-definition/key/${selectedActionId}/submit-form`,
         {
           variables,
           businessKey,
         }
       );
-      console.log(actionResponse);
-      setForm({
-        isLoading: false,
-        data: null,
-      });
+      setSubmitting(false);
       showSubmissionConfirmation(true);
       setTimeout(() => {
-        history.push(`/cases/${businessKey}`);
+        getCaseDetails(businessKey);
         showSubmissionConfirmation(false);
       }, 5000);
     } catch (e) {
-      console.log(e);
+      setSubmitting(false);
+    }
+  };
+
+  const fetchForm = async (formKey) => {
+    try {
+      setForm({
+        isLoading: true,
+      });
+      const { data } = await axiosInstance.get(`/form/name/${formKey}`);
+      if (isMounted.current) {
+        setForm({
+          isLoading: false,
+          data,
+        });
+      }
+    } catch (e) {
+      if (isMounted.current) {
+        setForm({
+          isLoading: false,
+          data: null,
+        });
+      }
     }
   };
 
@@ -183,35 +188,52 @@ const CaseAction = ({
     fetchForm(selectedAction);
   }, [axiosInstance, selectedAction]);
 
-  interpolate(form, {
-    keycloakContext: {
-      accessToken: keycloak.token,
-      refreshToken: keycloak.refreshToken,
-      sessionId: keycloak.tokenParsed.session_state,
-      email: keycloak.tokenParsed.email,
-      givenName: keycloak.tokenParsed.given_name,
-      familyName: keycloak.tokenParsed.family_name,
-      subject: keycloak.subject,
-      url: keycloak.authServerUrl,
-      realm: keycloak.realm,
-      roles: keycloak.tokenParsed.realm_access.roles,
-      groups: keycloak.tokenParsed.groups,
-    },
-    ...contexts.data,
-  });
+  useEffect(() => {
+    if (form.data) {
+      interpolate(form.data, {
+        keycloakContext: {
+          accessToken: keycloak.token,
+          refreshToken: keycloak.refreshToken,
+          sessionId: keycloak.tokenParsed.session_state,
+          email: keycloak.tokenParsed.email,
+          givenName: keycloak.tokenParsed.given_name,
+          familyName: keycloak.tokenParsed.family_name,
+          subject: keycloak.subject,
+          url: keycloak.authServerUrl,
+          realm: keycloak.realm,
+          roles: keycloak.tokenParsed.realm_access.roles,
+          groups: keycloak.tokenParsed.groups,
+        },
+        ...contexts.data,
+      });
+    }
+  }, [form]);
 
-  console.log(selectedActionCompletionMessage);
   return (
     <>
-      {submissionConfirmation ? <div>{selectedActionCompletionMessage}</div> : null}
+      {submitting && <div className="govuk-body">Submitting action...</div>}
+      {submissionConfirmation && (
+        <div className="govuk-panel govuk-panel--confirmation">
+          <div
+            id="completion-message"
+            className="govuk-panel__body govuk-!-font-size-24 govuk-!-font-weight-bold"
+          >
+            {selectedActionCompletionMessage}
+          </div>
+        </div>
+      )}
+      {form.isLoading && <div className="govuk-body">Loading</div>}
       {!form.isLoading && form.data && (
         <Form
           form={form.data}
           submitting={submitting}
-          submission={augmentedSubmission}
           onSubmit={(submissionData) => {
             setSubmitting(true);
             handleOnSubmit(submissionData, form.data);
+          }}
+          onChange={() => {
+            // If we remove this set state the context does not load correctly
+            setHasFormChanged(!hasFormChanged);
           }}
           options={{
             noAlerts: true,
@@ -231,11 +253,10 @@ const CaseAction = ({
                   submissionDate: new Date(),
                   submittedBy: keycloak.tokenParsed.email,
                 };
-                // processContext, taskContext, keycloakContext and staffDetailsDataContext not needed in request payload
-                delete submissionData.data.processContext;
-                delete submissionData.data.taskContext;
-                delete submissionData.data.keycloakContext;
-                delete submissionData.data.staffDetailsDataContext;
+                submissionData.data.shiftDetailsContext = contexts.data.shiftDetailsContext;
+                submissionData.data.extendedStaffDetailsContext =
+                  contexts.data.extendedStaffDetailsContext;
+                submissionData.data.environmentContext = contexts.data.environmentContext;
                 /* eslint-enable no-param-reassign, no-shadow */
                 next();
               },
@@ -247,16 +268,12 @@ const CaseAction = ({
   );
 };
 
-CaseAction.defaultProps = {
-  existingSubmission: {},
-};
-
 CaseAction.propTypes = {
   selectedAction: PropTypes.string.isRequired,
   selectedActionId: PropTypes.string.isRequired,
   selectedActionCompletionMessage: PropTypes.string.isRequired,
   businessKey: PropTypes.string.isRequired,
-  existingSubmission: PropTypes.shape({ root: PropTypes.shape() }),
+  getCaseDetails: PropTypes.func.isRequired,
 };
 
 export default CaseAction;
