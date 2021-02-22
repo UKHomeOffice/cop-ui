@@ -1,8 +1,8 @@
-# COP UI
+# COP Workflow Service UI
 
 ![Build Status](https://github.com/UKHomeOffice/cop-ui/workflows/Publish%20Docker/badge.svg)
 
-Provides a UI for completing forms and actioning tasks.
+Provides a UI for completing forms and actioning tasks for COP.
 
 # Server
 
