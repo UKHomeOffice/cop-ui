@@ -16,6 +16,7 @@ export const mockLogin = jest.fn();
 export const mockGoBack = jest.fn();
 export const mockExtractState = jest.fn();
 export const mockHistoryPush = jest.fn();
+export const mockHistoryListen = jest.fn();
 
 jest.mock('@react-keycloak/web', () => ({
   KeycloakProvider: ({ children }) => children,
@@ -59,6 +60,7 @@ jest.mock('react-navi', () => ({
   })),
   useHistory: jest.fn(() => ({
     push: mockHistoryPush,
+    listen: mockHistoryListen,
   })),
   NotFoundBoundary: ({ children }) => children,
   Link: ({ children }) => children,

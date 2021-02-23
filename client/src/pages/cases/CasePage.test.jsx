@@ -88,6 +88,7 @@ describe('CasePage', () => {
         <CasePage />
       </AlertContextProvider>
     );
+
     const input = screen.getByPlaceholderText('pages.cases.search-placeholder');
 
     fireEvent.change(input, { target: { value: 'keywordError' } });
