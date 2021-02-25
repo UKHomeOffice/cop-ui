@@ -18,14 +18,7 @@ import './DisplayForm.scss';
 
 Formio.use(gds);
 
-const DisplayForm = ({
-  form,
-  handleOnCancel,
-  handleOnSubmit,
-  existingSubmission,
-  interpolateContext,
-  submitting,
-}) => {
+const DisplayForm = ({ form, handleOnCancel, handleOnSubmit, interpolateContext, submitting }) => {
   const [errorAlert, setErrorAlert] = useState();
   const [hasFormChanged, setHasFormChanged] = useState(false);
   const formRef = useRef();
@@ -157,7 +150,7 @@ const DisplayForm = ({
    * augmentedSubmission must have context included or it cannot pre-populate fields that rely on context.
    * We have kept interpolate() context to prevent any unwanted side effects of removing it from the parent form.
    */
-  const [augmentedSubmission] = useState(_.merge(existingSubmission, contexts));
+  const [augmentedSubmission] = useState(contexts);
   interpolate(form, { ...reformattedContexts });
 
   /*
@@ -336,7 +329,6 @@ const DisplayForm = ({
 };
 
 DisplayForm.defaultProps = {
-  existingSubmission: {},
   interpolateContext: null,
   submitting: false,
 };
@@ -351,7 +343,6 @@ DisplayForm.propTypes = {
   }).isRequired,
   handleOnCancel: PropTypes.func.isRequired,
   handleOnSubmit: PropTypes.func.isRequired,
-  existingSubmission: PropTypes.shape({ root: PropTypes.shape() }),
   interpolateContext: PropTypes.shape({ root: PropTypes.shape() }),
   submitting: PropTypes.bool,
 };
