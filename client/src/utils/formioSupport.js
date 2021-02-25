@@ -48,6 +48,9 @@ export const interpolate = (form, submission) => {
         );
         component.customDefaultValue = '';
       }
+      if (component.id === 'ehaf4wa') {
+        component.data.url = `/camunda/cases/${submission.caseDetails.businessKey}`;
+      }
     },
     true
   );

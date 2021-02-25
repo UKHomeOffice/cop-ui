@@ -9,6 +9,7 @@ const CaseActions = ({ caseActions, businessKey, getCaseDetails }) => {
   const [selectedAction, setSelectedAction] = useState({});
   const [selectedActionId, setSelectedActionId] = useState('');
   const [selectedActionCompletionMessage, setSelectedActionCompletionMessage] = useState('');
+  const [selectedActionProcessId, setSelectedActionProcessId] = useState('');
 
   useEffect(() => {
     new Accordion(document.getElementById(`caseActions-${businessKey}`)).init();
@@ -16,6 +17,7 @@ const CaseActions = ({ caseActions, businessKey, getCaseDetails }) => {
       setSelectedAction(caseActions[0].process.formKey);
       setSelectedActionId(caseActions[0].process['process-definition'].key);
       setSelectedActionCompletionMessage(caseActions[0].completionMessage);
+      setSelectedActionProcessId(caseActions[0].process['process-definition'].id);
     }
   }, []);
 
@@ -79,7 +81,7 @@ const CaseActions = ({ caseActions, businessKey, getCaseDetails }) => {
                         selectedActionId={selectedActionId}
                         selectedActionCompletionMessage={selectedActionCompletionMessage}
                         getCaseDetails={getCaseDetails}
-                        existingSubmission={{}}
+                        selectedActionProcessId={selectedActionProcessId}
                       />
                     </section>
                   ) : null}

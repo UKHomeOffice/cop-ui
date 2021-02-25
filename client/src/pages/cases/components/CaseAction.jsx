@@ -17,6 +17,7 @@ const CaseAction = ({
   selectedActionId,
   selectedActionCompletionMessage,
   getCaseDetails,
+  selectedActionProcessId,
 }) => {
   const axiosInstance = useAxios();
   const isMounted = useIsMounted();
@@ -123,6 +124,9 @@ const CaseAction = ({
         staffid,
         surname: familyName,
         teamid,
+      },
+      caseDetails: {
+        businessKey,
       },
       businessKey,
     },
@@ -252,11 +256,18 @@ const CaseAction = ({
                   name,
                   submissionDate: new Date(),
                   submittedBy: keycloak.tokenParsed.email,
+                  process: {
+                    definitionId: selectedActionProcessId,
+                  },
                 };
                 submissionData.data.shiftDetailsContext = contexts.data.shiftDetailsContext;
                 submissionData.data.extendedStaffDetailsContext =
                   contexts.data.extendedStaffDetailsContext;
                 submissionData.data.environmentContext = contexts.data.environmentContext;
+                submissionData.data.caseBusinessKey = contexts.data.businessKey;
+                submissionData.data.businessKey = contexts.data.businessKey;
+                submissionData.data.processKey = selectedActionId;
+                submissionData.data.variableName = form.data.name;
                 /* eslint-enable no-param-reassign, no-shadow */
                 next();
               },
@@ -273,6 +284,7 @@ CaseAction.propTypes = {
   selectedActionId: PropTypes.string.isRequired,
   selectedActionCompletionMessage: PropTypes.string.isRequired,
   businessKey: PropTypes.string.isRequired,
+  selectedActionProcessId: PropTypes.string.isRequired,
   getCaseDetails: PropTypes.func.isRequired,
 };
 
