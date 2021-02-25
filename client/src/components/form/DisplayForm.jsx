@@ -171,12 +171,12 @@ const DisplayForm = ({
    */
   useEffect(() => {
     // Create a reference based on whether this is a task or a new form instance
-    if (interpolateContext.taskContext) {
+    if (!interpolateContext || !interpolateContext.taskContext) {
+      setLocalStorageReference(`form-${form.name}`);
+    } else {
       setLocalStorageReference(
         `form-${interpolateContext.taskContext.formKey}-${interpolateContext.taskContext.processInstanceId}`
       );
-    } else {
-      setLocalStorageReference(`form-${form.name}`);
     }
   }, []);
 
