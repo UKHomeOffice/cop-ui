@@ -305,7 +305,7 @@ const DisplayForm = ({
             end: new Date(),
             submitted: true,
           });
-          handleOnSubmit(submissionData);
+          handleOnSubmit(submissionData, localStorageReference);
         }}
         onChange={(data) => {
           // If we remove this set state the context does not load correctly

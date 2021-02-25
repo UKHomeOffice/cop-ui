@@ -10,6 +10,7 @@ import { useAxios, useIsMounted } from '../../utils/hooks';
 import ApplicationSpinner from '../../components/ApplicationSpinner';
 import apiHooks from '../../components/form/hooks';
 import DisplayForm from '../../components/form/DisplayForm';
+import SecureLocalStorageManager from '../../utils/SecureLocalStorageManager';
 import './Forms.scss';
 
 const FormPage = ({ formId }) => {
@@ -100,9 +101,10 @@ const FormPage = ({ formId }) => {
   const handleOnFailure = () => {
     setSubmitting(false);
   };
-  const handleOnRepeat = () => {
+  const handleOnRepeat = (reference) => {
     setSubmitting(false);
     setRepeat(true);
+    SecureLocalStorageManager.remove(reference);
     window.scrollTo(0, 0);
   };
 
@@ -119,7 +121,7 @@ const FormPage = ({ formId }) => {
           businessKey: businessKeyComponent ? businessKeyComponent.defaultValue : null,
         }}
         existingSubmission={{}}
-        handleOnSubmit={(data) => {
+        handleOnSubmit={(data, reference) => {
           setSubmitting(true);
           submitForm({
             submission: data,
@@ -129,6 +131,7 @@ const FormPage = ({ formId }) => {
             handleOnFailure,
             handleOnRepeat,
             submitPath: 'process-definition/key',
+            reference,
           });
         }}
       />
