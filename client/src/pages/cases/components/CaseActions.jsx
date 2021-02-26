@@ -6,7 +6,7 @@ import CaseAction from './CaseAction';
 
 const CaseActions = ({ caseActions, businessKey, getCaseDetails }) => {
   const { t } = useTranslation();
-  const [selectedAction, setSelectedAction] = useState({});
+  const [selectedAction, setSelectedAction] = useState('');
   const [selectedActionId, setSelectedActionId] = useState('');
   const [selectedActionCompletionMessage, setSelectedActionCompletionMessage] = useState('');
   const [selectedActionProcessId, setSelectedActionProcessId] = useState('');
