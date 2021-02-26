@@ -48,6 +48,11 @@ export const interpolate = (form, submission) => {
         );
         component.customDefaultValue = '';
       }
+      // The lines below are a temporary fix to overwrite the URL in the generateCasePdf form (relevant in Case actions)
+      // The URL is hard coded in formbuilder to the v1 value. Here we change it to be v2 compatable.
+      if (component.id === 'ehaf4wa' && form.name === 'generateCasePdf') {
+        component.data.url = `/camunda/cases/${submission.caseDetails.businessKey}`;
+      }
     },
     true
   );

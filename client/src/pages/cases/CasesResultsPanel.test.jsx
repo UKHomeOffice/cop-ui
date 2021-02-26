@@ -6,6 +6,7 @@ import CaseResultsPanel from './CasesResultsPanel';
 import CasePage from './CasePage';
 import { AlertContextProvider } from '../../utils/AlertContext';
 import AlertBanner from '../../components/alert/AlertBanner';
+import { casesResultsPanelData } from './utils/CasesTestData.json';
 
 describe('CaseResultsPage', () => {
   const mockAxios = new MockAdapter(axios);
@@ -35,39 +36,7 @@ describe('CaseResultsPage', () => {
       },
     });
 
-    mockAxios.onGet('/camunda/cases/businessKey1').reply(200, {
-      businessKey: 'businessKey1',
-      metrics: {
-        averageTimeToCompleteProcessInSeconds: 16,
-        noOfCompletedProcessInstances: 2,
-        noOfCompletedUserTasks: 1,
-        noOfOpenUserTasks: 0,
-        noOfRunningProcessInstances: 0,
-        overallTimeInSeconds: 33,
-      },
-      processInstances: [
-        {
-          definitionId: 'intel-referral:3:85c1a0aa-34bb-11eb-924e-e61a6d54c1b3',
-          endDate: '2021-01-13T10:25:25.065+0000',
-          formReferences: [{ name: 'intelligenceReferral', title: 'Intelligence Referral' }],
-          id: 'e7e417c4-356b-11eb-b768-863d861ec96a',
-          key: 'intel-referral',
-          name: 'Submit Intelligence Referral',
-          openTasks: [],
-          startDate: '2020-12-03T13:31:53.319+0000',
-        },
-        {
-          definitionId: 'enhance-intel:2:c2d7a5b0-27f7-11eb-b6c2-922e59dab112',
-          endDate: '2021-01-13T10:25:24.993+0000',
-          formReferences: [],
-          id: 'e806bb0c-356b-11eb-b768-863d861ec96a',
-          key: 'enhance-intel',
-          name: 'Enhance intel',
-          openTasks: [],
-          startDate: '2020-12-03T13:31:53.546+0000',
-        },
-      ],
-    });
+    mockAxios.onGet('/camunda/cases/businessKey1').reply(200, casesResultsPanelData);
 
     render(
       <CasePage>
