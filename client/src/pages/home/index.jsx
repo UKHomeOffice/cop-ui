@@ -42,10 +42,7 @@ const Home = () => {
         removeArray.push(localStorage.key(i));
       }
     }
-    // eslint-disable-next-line no-plusplus
-    for (let i = 0; i < removeArray.length; i++) {
-      SecureLocalStorageManager.remove(removeArray[i]);
-    }
+    removeArray.forEach((item) => SecureLocalStorageManager.remove(item));
   }, []);
 
   useEffect(() => {
