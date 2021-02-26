@@ -14,6 +14,7 @@ import Logger from '../../utils/logger';
 import ApplicationSpinner from '../ApplicationSpinner';
 import FileService from '../../utils/FileService';
 import FormErrorsAlert from '../alert/FormErrorsAlert';
+import SecureLocalStorageManager from '../../utils/SecureLocalStorageManager';
 import './DisplayForm.scss';
 
 Formio.use(gds);
@@ -27,7 +28,9 @@ const DisplayForm = ({
   submitting,
 }) => {
   const [errorAlert, setErrorAlert] = useState();
+  const [augmentedSubmission, setAugmentedSubmission] = useState();
   const [hasFormChanged, setHasFormChanged] = useState(false);
+  const [localStorageReference, setLocalStorageReference] = useState();
   const formRef = useRef();
   const host = `${window.location.protocol}//${window.location.hostname}${
     window.location.port ? `:${window.location.port}` : ''
@@ -157,8 +160,35 @@ const DisplayForm = ({
    * augmentedSubmission must have context included or it cannot pre-populate fields that rely on context.
    * We have kept interpolate() context to prevent any unwanted side effects of removing it from the parent form.
    */
-  const [augmentedSubmission] = useState(_.merge(existingSubmission, contexts));
   interpolate(form, { ...reformattedContexts });
+
+  /* Storing users answers to retain them on page refresh:
+   * Answers will persist on return to this page except
+   * - when user has submitted the form
+   * - or when user has gone to the Dashboard (answers are cleared there)
+   * On pageload, once we have obtained the formName, we check if there is data for this form in localStorage
+   * - if there is localStorage data, we use it to create the data for the submission prop for the <Form> component
+   */
+  useEffect(() => {
+    // Create a reference based on whether this is a task or a new form instance
+    if (!interpolateContext || !interpolateContext.taskContext) {
+      setLocalStorageReference(`form-${form.name}`);
+    } else {
+      setLocalStorageReference(
+        `form-${interpolateContext.taskContext.formKey}-${interpolateContext.taskContext.processInstanceId}`
+      );
+    }
+  }, []);
+
+  useEffect(() => {
+    if (localStorageReference && !SecureLocalStorageManager.get(localStorageReference)) {
+      setAugmentedSubmission(_.merge(existingSubmission, contexts));
+    } else {
+      setAugmentedSubmission(
+        _.merge(SecureLocalStorageManager.get(localStorageReference), contexts)
+      );
+    }
+  }, [localStorageReference]);
 
   /*
    * The plugin below is required for when nested forms are present. These nested forms
@@ -275,7 +305,7 @@ const DisplayForm = ({
             end: new Date(),
             submitted: true,
           });
-          handleOnSubmit(submissionData);
+          handleOnSubmit(submissionData, localStorageReference);
         }}
         onChange={(data) => {
           // If we remove this set state the context does not load correctly
@@ -283,6 +313,10 @@ const DisplayForm = ({
           if (formRef.current) {
             validate(formRef.current.formio, data);
           }
+          SecureLocalStorageManager.set(localStorageReference, {
+            data: data.data,
+            metadata: data.metadata,
+          });
         }}
         onError={(errors) => {
           setErrorAlert({
@@ -352,7 +386,7 @@ DisplayForm.propTypes = {
   handleOnCancel: PropTypes.func.isRequired,
   handleOnSubmit: PropTypes.func.isRequired,
   existingSubmission: PropTypes.shape({ root: PropTypes.shape() }),
-  interpolateContext: PropTypes.shape({ root: PropTypes.shape() }),
+  interpolateContext: PropTypes.shape({ taskContext: PropTypes.shape() }),
   submitting: PropTypes.bool,
 };
 

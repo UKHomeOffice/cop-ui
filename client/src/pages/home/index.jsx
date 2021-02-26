@@ -6,6 +6,7 @@ import axios from 'axios';
 import { useMatomo } from '@datapunt/matomo-tracker-react';
 import Card from './components/Card';
 import { useIsMounted, useAxios } from '../../utils/hooks';
+import SecureLocalStorageManager from '../../utils/SecureLocalStorageManager';
 
 const Home = () => {
   const { t } = useTranslation();
@@ -27,6 +28,21 @@ const Home = () => {
 
   useEffect(() => {
     trackPageView();
+  }, []);
+
+  /*
+   * Whenever a user returns to the dashboard we want to clear any form data from localStorage
+   * This currently also clears form data from a successfully submitted form as they return a user to the Dashboard
+   */
+  useEffect(() => {
+    const removeArray = [];
+    // eslint-disable-next-line no-plusplus
+    for (let i = 0; i < localStorage.length; i++) {
+      if (localStorage.key(i).indexOf('form') !== -1) {
+        removeArray.push(localStorage.key(i));
+      }
+    }
+    removeArray.forEach((item) => SecureLocalStorageManager.remove(item));
   }, []);
 
   useEffect(() => {
