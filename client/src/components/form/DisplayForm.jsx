@@ -172,10 +172,10 @@ const DisplayForm = ({
   useEffect(() => {
     // Create a reference based on whether this is a task or a new form instance
     if (!interpolateContext || !interpolateContext.taskContext) {
-      setLocalStorageReference(`form-${form.name}`);
+      setLocalStorageReference(`form-${form.name}-${keycloak.tokenParsed.email}`);
     } else {
       setLocalStorageReference(
-        `form-${interpolateContext.taskContext.formKey}-${interpolateContext.taskContext.processInstanceId}`
+        `form-${interpolateContext.taskContext.formKey}-${interpolateContext.taskContext.processInstanceId}-${keycloak.tokenParsed.email}`
       );
     }
   }, []);
