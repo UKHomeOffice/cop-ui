@@ -28,7 +28,6 @@ const DisplayForm = ({
   submitting,
 }) => {
   const [errorAlert, setErrorAlert] = useState();
-  const [augmentedSubmission, setAugmentedSubmission] = useState();
   const [hasFormChanged, setHasFormChanged] = useState(false);
   const [localStorageReference, setLocalStorageReference] = useState();
   const formRef = useRef();
@@ -180,15 +179,8 @@ const DisplayForm = ({
     }
   }, []);
 
-  useEffect(() => {
-    if (localStorageReference && !SecureLocalStorageManager.get(localStorageReference)) {
-      setAugmentedSubmission(_.merge(existingSubmission, contexts));
-    } else {
-      setAugmentedSubmission(
-        _.merge(SecureLocalStorageManager.get(localStorageReference), contexts)
-      );
-    }
-  }, [localStorageReference]);
+  // Temporarily removed the retrieving from local storage while investigate a bug with existing submission data and contexts
+  const [augmentedSubmission] = useState(_.merge(existingSubmission, contexts));
 
   /*
    * The plugin below is required for when nested forms are present. These nested forms
