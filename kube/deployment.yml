@@ -21,7 +21,7 @@ spec:
     metadata:
       labels:
         name: {{.COP_UI_NAME}}
-        service: {{.WORKFLOW_UI_NAME}}
+        service: {{.COP_UI_NAME}}
     spec:
       restartPolicy: Always
       securityContext:
