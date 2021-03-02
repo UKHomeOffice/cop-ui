@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef, useContext } from 'react';
 import axios from 'axios';
+import _ from 'lodash';
 
 import { useKeycloak } from '@react-keycloak/web';
 import { useCurrentRoute } from 'react-navi';
@@ -90,7 +91,11 @@ export const useFetchTeam = () => {
             );
             if (isMounted.current) {
               const team = response.data.data[0];
-              setTeam(team);
+              // Coerces values of team object from numbers to strings to use in shift
+              const reformattedTeam = _.mapValues(team, (elem) => {
+                return typeof elem === 'number' ? String(elem) : elem;
+              });
+              setTeam(reformattedTeam);
             }
           } else {
             // TODO: Redirect the user here because they have no teamid in KC...

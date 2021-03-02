@@ -104,7 +104,8 @@ const CaseAction = ({
       },
       shiftDetailsContext: {
         email,
-        locationid: defaultlocationid,
+        // Coorce location id to a string in line with v1
+        locationid: String(defaultlocationid),
         phone,
         roles,
         team,

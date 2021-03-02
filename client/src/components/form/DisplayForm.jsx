@@ -111,7 +111,7 @@ const DisplayForm = ({
       },
       shiftDetailsContext: {
         email,
-        locationid: defaultlocationid,
+        locationid: String(defaultlocationid),
         phone,
         roles,
         team,
