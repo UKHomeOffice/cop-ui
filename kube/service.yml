@@ -9,6 +9,7 @@ spec:
   ports:
   - name: https
     port: 443
-    targetPort: 10443
+    targetPort: 8443
+    protocol: TCP
   selector:
     name: {{.COP_UI_NAME}}
