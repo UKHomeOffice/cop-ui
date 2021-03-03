@@ -324,7 +324,7 @@ const DisplayForm = ({
           noAlerts: true,
           fileService,
           hooks: {
-            beforeCancel: async () => {
+            beforeCancel: () => {
               setTime({
                 ...time,
                 end: new Date(),
