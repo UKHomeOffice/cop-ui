@@ -32,6 +32,9 @@ server:
 
 
 zuul:
+  host:
+    connect-timeout-millis: 120000
+    socket-timeout-millis: 120000
   routes:
     fileupload-service:
       path: /files/**
