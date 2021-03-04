@@ -64,7 +64,7 @@ const TasksListPage = ({ taskType }) => {
           const taskTypePayload =
             taskType === 'yours'
               ? {
-                  assignee: keycloak.tokenParsed.email,
+                  involvedUser: keycloak.tokenParsed.email,
                 }
               : {
                   candidateGroups: keycloak.tokenParsed.groups,
