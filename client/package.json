@@ -101,7 +101,7 @@
       "npm run lint"
     ]
   },
-  "proxy": "https://cop-ui.dev.cop.homeoffice.gov.uk/",
+  "proxy": "http://localhost:8004",
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
