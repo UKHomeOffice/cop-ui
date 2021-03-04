@@ -1,9 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
+import { CopyToClipboard } from 'react-copy-to-clipboard';
 
 const CaseIntro = ({ businessKey }) => {
   const { t } = useTranslation();
+  const [caseUrlCopied, setCaseUrlCopied] = useState(false);
 
   return (
     <>
@@ -11,13 +13,20 @@ const CaseIntro = ({ businessKey }) => {
         <h2 className="govuk-heading-m">{businessKey}</h2>
       </div>
       <div className="govuk-grid-column-one-half">
-        <button
-          type="button"
-          style={{ float: 'right' }}
-          className="govuk-button govuk-button--secondary"
+        <CopyToClipboard
+          text={`${window.location.origin}/cases/${businessKey}`}
+          onCopy={() => setCaseUrlCopied(true)}
         >
-          {t('pages.cases.details-panel.case-intro.copy-button')}
-        </button>
+          <button
+            type="button"
+            style={{ float: 'right' }}
+            className="govuk-button govuk-button--secondary"
+          >
+            {caseUrlCopied
+              ? t('pages.cases.details-panel.case-intro.copy-button-copied')
+              : t('pages.cases.details-panel.case-intro.copy-button-uncopied')}
+          </button>
+        </CopyToClipboard>
       </div>
     </>
   );

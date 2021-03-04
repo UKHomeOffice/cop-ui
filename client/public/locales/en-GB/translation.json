@@ -86,7 +86,8 @@
           "form-loading": "Loading form..."
         },
         "case-intro": {
-          "copy-button": "Copy case link"
+          "copy-button-uncopied": "Copy case link",
+          "copy-button-copied": "Case link copied"
         },
         "case-metrics": {
           "heading": "Case metrics",
