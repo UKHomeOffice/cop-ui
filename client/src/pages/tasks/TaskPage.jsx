@@ -38,28 +38,30 @@ const TaskPage = ({ taskId }) => {
     // Get task data
     const loadTask = async () => {
       if (axiosInstance) {
-        axiosInstance
-          .get(`/ui/tasks/${taskId}`, { cancelToken: source.token })
-          .then((response) => {
-            // If user allowed to view this task, set the task details include the form
-            if (response.data.task.assignee === currentUser) {
-              setTask({
-                isLoading: false,
-                data: {
-                  ...response.data,
-                },
-              });
-            } else {
-              setTask({
-                isLoading: false,
-                data: {
-                  ...response.data,
-                  form: '', // force form to null as user should not be able to access it
-                },
-              });
-            }
-          })
-          .catch(() => setTask({ isLoading: false, data: null }));
+        try {
+          const response = await axiosInstance.get(`/ui/tasks/${taskId}`, {
+            cancelToken: source.token,
+          });
+          // If user allowed to view this task, set the task details include the form
+          if (response.data.task.assignee === currentUser) {
+            setTask({
+              isLoading: false,
+              data: {
+                ...response.data,
+              },
+            });
+          } else {
+            setTask({
+              isLoading: false,
+              data: {
+                ...response.data,
+                form: '', // force form to null as user should not be able to access it
+              },
+            });
+          }
+        } catch {
+          setTask({ isLoading: false, data: null });
+        }
       }
     };
     loadTask().then(() => {});
