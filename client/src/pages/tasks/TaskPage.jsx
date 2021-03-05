@@ -4,7 +4,6 @@ import axios from 'axios';
 import { useTranslation } from 'react-i18next';
 import { useKeycloak } from '@react-keycloak/web';
 import { useNavigation } from 'react-navi';
-import _ from 'lodash';
 import { useMatomo } from '@datapunt/matomo-tracker-react';
 import { useIsMounted, useAxios } from '../../utils/hooks';
 import ApplicationSpinner from '../../components/ApplicationSpinner';
@@ -56,46 +55,14 @@ const TaskPage = ({ taskId }) => {
             processDefinition,
             task: taskInfo,
           } = taskData.data;
-          let formSubmission = {};
-          const formVariableSubmissionName = form ? `${form.name}::submissionData` : null;
-
-          if (taskInfo.variables) {
-            Object.keys(taskInfo.variables).forEach((key) => {
-              if (taskInfo.variables[key].type === 'Json') {
-                taskInfo.variables[key] = JSON.parse(taskInfo.variables[key].value);
-              } else {
-                taskInfo.variables[key] = taskInfo.variables[key].value;
-              }
-            });
-          }
-
-          if (variables) {
-            Object.keys(variables).forEach((key) => {
-              if (variables[key].type === 'Json') {
-                variables[key] = JSON.parse(variables[key].value);
-              } else {
-                variables[key] = variables[key].value;
-              }
-            });
-
-            formSubmission = variables[formVariableSubmissionName]
-              ? variables[formVariableSubmissionName]
-              : variables.submissionData;
-          }
-
-          const updatedVariables = _.omit(variables || {}, [
-            'submissionData',
-            formVariableSubmissionName,
-          ]);
 
           // If user allowed to view this task, set the task details include the form
           if (taskData.data.task.assignee === currentUser) {
             setTask({
               isLoading: false,
               data: {
-                variables: updatedVariables,
+                variables,
                 form,
-                formSubmission,
                 processInstance,
                 processDefinition,
                 task: taskInfo,
@@ -106,9 +73,8 @@ const TaskPage = ({ taskId }) => {
             setTask({
               isLoading: false,
               data: {
-                variables: updatedVariables,
+                variables,
                 form: '', // force form to null as user should not be able to access it
-                formSubmission,
                 processInstance,
                 processDefinition,
                 task: taskInfo,
@@ -139,14 +105,7 @@ const TaskPage = ({ taskId }) => {
     return null;
   }
 
-  const {
-    form,
-    processInstance,
-    task: taskInfo,
-    processDefinition,
-    formSubmission,
-    variables,
-  } = task.data;
+  const { form, processInstance, task: taskInfo, processDefinition, variables } = task.data;
 
   const handleOnFailure = () => {
     setSubmitting(false);
@@ -176,7 +135,7 @@ const TaskPage = ({ taskId }) => {
               handleOnCancel={async () => {
                 await navigation.navigate('/tasks');
               }}
-              existingSubmission={formSubmission}
+              existingSubmission={{}}
               interpolateContext={{
                 processContext: {
                   /*
