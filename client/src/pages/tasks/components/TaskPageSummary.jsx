@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
+import { useKeycloak } from '@react-keycloak/web';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-navi';
 import ChangePriority from './ChangePriority';
@@ -8,20 +9,37 @@ import ChangeDueDate from './ChangeDueDate';
 const TaskPageSummary = ({
   businessKey,
   category,
-  assignee,
   taskInfo,
   taskUpdateSubmitted,
   setTaskUpdateSubmitted,
 }) => {
+  const [keycloak] = useKeycloak();
   const { t } = useTranslation();
+  const [assigneeText, setAssigneeText] = useState();
+  const currentUser = keycloak.tokenParsed.email;
   const [isEditingPriority, setIsEditingPriority] = useState(false);
   const [isEditingDueDate, setIsEditingDueDate] = useState(false);
+
   const handlePriorityEdit = () => {
     setIsEditingPriority(!isEditingPriority);
   };
   const handleDueDateEdit = () => {
     setIsEditingDueDate(!isEditingDueDate);
   };
+
+  useEffect(() => {
+    if (taskInfo && !taskInfo.assignee) {
+      setAssigneeText(t('pages.task.unassigned'));
+    } else if (taskInfo && taskInfo.assignee === currentUser) {
+      setAssigneeText(t('pages.task.current-assignee'));
+    } else {
+      setAssigneeText(taskInfo.assignee);
+    }
+  }, [taskInfo]);
+
+  if (!taskInfo) {
+    return null;
+  }
 
   return (
     <>
@@ -91,7 +109,7 @@ const TaskPageSummary = ({
         </div>
         <div className="govuk-grid-column-one-quarter" id="taskAssignee">
           <span className="govuk-caption-m govuk-!-font-size-19">{t('pages.task.assignee')}</span>
-          <h4 className="govuk-heading-m govuk-!-font-size-19">{assignee}</h4>
+          <h4 className="govuk-heading-m govuk-!-font-size-19">{assigneeText}</h4>
         </div>
       </div>
       <div className="govuk-grid-row">
@@ -104,7 +122,6 @@ const TaskPageSummary = ({
 };
 
 TaskPageSummary.defaultProps = {
-  assignee: '',
   taskInfo: {
     description: '',
   },
@@ -113,8 +130,8 @@ TaskPageSummary.defaultProps = {
 TaskPageSummary.propTypes = {
   businessKey: PropTypes.string.isRequired,
   category: PropTypes.string.isRequired,
-  assignee: PropTypes.string,
   taskInfo: PropTypes.shape({
+    assignee: PropTypes.string,
     name: PropTypes.string.isRequired,
     description: PropTypes.string,
     due: PropTypes.string.isRequired,
