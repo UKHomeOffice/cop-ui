@@ -84,7 +84,7 @@ const Home = () => {
         data: {
           orQueries: [
             {
-              assignee: keycloak.tokenParsed.email,
+              involvedUser: keycloak.tokenParsed.email,
             },
           ],
         },
