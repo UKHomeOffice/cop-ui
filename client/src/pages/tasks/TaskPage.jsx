@@ -7,25 +7,22 @@ import { useNavigation } from 'react-navi';
 import { useMatomo } from '@datapunt/matomo-tracker-react';
 import { useAxios } from '../../utils/hooks';
 import ApplicationSpinner from '../../components/ApplicationSpinner';
-import DisplayForm from '../../components/form/DisplayForm';
 import apiHooks from '../../components/form/hooks';
+import DisplayForm from '../../components/form/DisplayForm';
 import TaskPageSummary from './components/TaskPageSummary';
 
 const TaskPage = ({ taskId }) => {
-  const { t } = useTranslation();
   const axiosInstance = useAxios();
-  const navigation = useNavigation();
   const [keycloak] = useKeycloak();
+  const navigation = useNavigation();
+  const { submitForm } = apiHooks();
+  const { t } = useTranslation();
+  const { trackPageView } = useMatomo();
   const currentUser = keycloak.tokenParsed.email;
   const [repeat, setRepeat] = useState(false);
-  const { submitForm } = apiHooks();
   const [submitting, setSubmitting] = useState(false);
-  const [task, setTask] = useState({
-    isLoading: true,
-    data: null,
-  });
+  const [task, setTask] = useState();
   const [taskUpdateSubmitted, setTaskUpdateSubmitted] = useState(false);
-  const { trackPageView } = useMatomo();
 
   useEffect(() => {
     trackPageView();
@@ -41,27 +38,28 @@ const TaskPage = ({ taskId }) => {
     // Get task data
     const loadTask = async () => {
       if (axiosInstance) {
-        axiosInstance.get(`/ui/tasks/${taskId}`, { cancelToken: source.token, })
-        .then((response) => {
-          // If user allowed to view this task, set the task details include the form
-          if (response.data.task.assignee === currentUser) {
-            setTask({
-              isLoading: false,
-              data: {
-                ...response.data
-              }
-            });
-          } else {
-            setTask({
-              isLoading: false,
-              data: {
-                ...response.data,
-                form: '', // force form to null as user should not be able to access it
-              }
-            });
-          }
-        })
-        .catch(() => setTask({ isLoading: false, data: null }));
+        axiosInstance
+          .get(`/ui/tasks/${taskId}`, { cancelToken: source.token })
+          .then((response) => {
+            // If user allowed to view this task, set the task details include the form
+            if (response.data.task.assignee === currentUser) {
+              setTask({
+                isLoading: false,
+                data: {
+                  ...response.data,
+                },
+              });
+            } else {
+              setTask({
+                isLoading: false,
+                data: {
+                  ...response.data,
+                  form: '', // force form to null as user should not be able to access it
+                },
+              });
+            }
+          })
+          .catch(() => setTask({ isLoading: false, data: null }));
       }
     };
     loadTask().then(() => {});
@@ -70,47 +68,39 @@ const TaskPage = ({ taskId }) => {
     };
   }, [axiosInstance, currentUser, repeat, taskId, taskUpdateSubmitted]);
 
-  if (task.isLoading) {
-    return <ApplicationSpinner />;
-  }
-
-  if (!task.data) {
-    return null;
-  }
-
-  const {
-    form,
-    processInstance,
-    task: taskInfo,
-    processDefinition,
-    variables,
-  } = task.data;
-
   const handleOnFailure = () => {
     setSubmitting(false);
   };
+
   const handleOnRepeat = () => {
     setSubmitting(false);
     setRepeat(true);
     window.scrollTo(0, 0);
   };
 
+  if (task && task.isLoading) {
+    return <ApplicationSpinner />;
+  }
+
+  if (!task || !task.data) {
+    return null;
+  }
+
   return (
     <>
       <TaskPageSummary
-        businessKey={processInstance.businessKey}
-        category={processDefinition.category}
-        assignee={assigneeText}
-        taskInfo={taskInfo}
+        businessKey={task.data.processInstance.businessKey}
+        category={task.data.processDefinition.category}
+        taskInfo={task.data.task}
         taskUpdateSubmitted={taskUpdateSubmitted}
         setTaskUpdateSubmitted={setTaskUpdateSubmitted}
       />
-      {form ? (
+      {task.data.form ? (
         <div className="govuk-grid-row">
           <div className="govuk-grid-column-full" id="form">
             <DisplayForm
               submitting={submitting}
-              form={form}
+              form={task.data.form}
               handleOnCancel={async () => {
                 await navigation.navigate('/tasks');
               }}
@@ -124,20 +114,20 @@ const TaskPage = ({ taskId }) => {
                    * exist on 'variables' directly.
                    * i.e. processContext.recordBorderEvent and processContext.variables.recordBorderEvent
                    */
-                  ...variables,
-                  variables,
-                  instance: processInstance,
-                  definition: processDefinition,
+                  ...task.data.variables,
+                  variables: task.data.variables,
+                  instance: task.data.processInstance,
+                  definition: task.data.processDefinition,
                 },
-                taskContext: taskInfo,
+                taskContext: task,
               }}
               handleOnSubmit={(submission) => {
                 setSubmitting(true);
                 submitForm({
                   submission,
-                  form,
+                  form: task.data.form,
                   id: taskId,
-                  businessKey: processInstance.businessKey,
+                  businessKey: task.data.processInstance.businessKey,
                   handleOnFailure,
                   handleOnRepeat,
                   submitPath: 'task',
