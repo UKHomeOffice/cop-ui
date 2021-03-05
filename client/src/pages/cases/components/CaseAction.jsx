@@ -23,17 +23,14 @@ const CaseAction = ({
   const isMounted = useIsMounted();
   const [submitting, setSubmitting] = useState(false);
   const [submissionConfirmation, showSubmissionConfirmation] = useState(false);
-  const [hasFormChanged, setHasFormChanged] = useState(false);
-  const host = `${window.location.protocol}//${window.location.hostname}${
-    window.location.port ? `:${window.location.port}` : ''
-  }`;
-
   const [form, setForm] = useState({
     isLoading: false,
     data: null,
   });
-
   const [keycloak] = useKeycloak();
+  const host = `${window.location.protocol}//${window.location.hostname}${
+    window.location.port ? `:${window.location.port}` : ''
+  }`;
 
   const {
     authServerUrl: url,
@@ -160,7 +157,6 @@ const CaseAction = ({
       showSubmissionConfirmation(true);
       setTimeout(() => {
         getCaseDetails(businessKey);
-        showSubmissionConfirmation(false);
       }, 5000);
     } catch (e) {
       setSubmitting(false);
@@ -236,10 +232,7 @@ const CaseAction = ({
             setSubmitting(true);
             handleOnSubmit(submissionData, form.data);
           }}
-          onChange={() => {
-            // If we remove this set state the context does not load correctly
-            setHasFormChanged(!hasFormChanged);
-          }}
+          submission={{ ...contexts }}
           options={{
             noAlerts: true,
             breadcrumbSettings: {
@@ -261,12 +254,12 @@ const CaseAction = ({
                     definitionId: selectedActionProcessId,
                   },
                 };
-                submissionData.data.shiftDetailsContext = contexts.data.shiftDetailsContext;
-                submissionData.data.extendedStaffDetailsContext =
-                  contexts.data.extendedStaffDetailsContext;
-                submissionData.data.environmentContext = contexts.data.environmentContext;
+                delete submissionData.data.processContext;
+                delete submissionData.data.taskContext;
+                delete submissionData.data.keycloakContext;
+                delete submissionData.data.staffDetailsDataContext;
+                delete submissionData.data.caseDetails;
                 submissionData.data.caseBusinessKey = contexts.data.businessKey;
-                submissionData.data.businessKey = contexts.data.businessKey;
                 submissionData.data.processKey = selectedActionId;
                 submissionData.data.variableName = form.data.name;
                 /* eslint-enable no-param-reassign, no-shadow */
