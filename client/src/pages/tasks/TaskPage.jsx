@@ -5,14 +5,13 @@ import { useTranslation } from 'react-i18next';
 import { useKeycloak } from '@react-keycloak/web';
 import { useNavigation } from 'react-navi';
 import { useMatomo } from '@datapunt/matomo-tracker-react';
-import { useIsMounted, useAxios } from '../../utils/hooks';
+import { useAxios } from '../../utils/hooks';
 import ApplicationSpinner from '../../components/ApplicationSpinner';
 import DisplayForm from '../../components/form/DisplayForm';
 import apiHooks from '../../components/form/hooks';
 import TaskPageSummary from './components/TaskPageSummary';
 
 const TaskPage = ({ taskId }) => {
-  const isMounted = useIsMounted();
   const { t } = useTranslation();
   const axiosInstance = useAxios();
   const navigation = useNavigation();
@@ -21,7 +20,6 @@ const TaskPage = ({ taskId }) => {
   const [repeat, setRepeat] = useState(false);
   const { submitForm } = apiHooks();
   const [submitting, setSubmitting] = useState(false);
-  const [assigneeText, setAssigneeText] = useState();
   const [task, setTask] = useState({
     isLoading: true,
     data: null,
@@ -43,59 +41,34 @@ const TaskPage = ({ taskId }) => {
     // Get task data
     const loadTask = async () => {
       if (axiosInstance) {
-        try {
-          const taskData = await axiosInstance.get(`/ui/tasks/${taskId}`, {
-            cancelToken: source.token,
-          });
-          // Spread the taskData into seperate variables
-          const {
-            variables,
-            form,
-            processInstance,
-            processDefinition,
-            task: taskInfo,
-          } = taskData.data;
-
+        axiosInstance.get(`/ui/tasks/${taskId}`, { cancelToken: source.token, })
+        .then((response) => {
           // If user allowed to view this task, set the task details include the form
-          if (taskData.data.task.assignee === currentUser) {
+          if (response.data.task.assignee === currentUser) {
             setTask({
               isLoading: false,
               data: {
-                variables,
-                form,
-                processInstance,
-                processDefinition,
-                task: taskInfo,
-              },
+                ...response.data
+              }
             });
-            setAssigneeText(currentUser);
           } else {
             setTask({
               isLoading: false,
               data: {
-                variables,
+                ...response.data,
                 form: '', // force form to null as user should not be able to access it
-                processInstance,
-                processDefinition,
-                task: taskInfo,
-              },
+              }
             });
-            if (!taskData.data.task.assignee) {
-              setAssigneeText('Unassigned');
-            } else {
-              setAssigneeText(taskData.data.task.assignee);
-            }
           }
-        } catch (e) {
-          setTask({ isLoading: false, data: null });
-        }
+        })
+        .catch(() => setTask({ isLoading: false, data: null }));
       }
     };
     loadTask().then(() => {});
     return () => {
       source.cancel('Cancelling request');
     };
-  }, [axiosInstance, setTask, isMounted, taskId, currentUser, taskUpdateSubmitted, repeat]);
+  }, [axiosInstance, currentUser, repeat, taskId, taskUpdateSubmitted]);
 
   if (task.isLoading) {
     return <ApplicationSpinner />;
@@ -105,7 +78,13 @@ const TaskPage = ({ taskId }) => {
     return null;
   }
 
-  const { form, processInstance, task: taskInfo, processDefinition, variables } = task.data;
+  const {
+    form,
+    processInstance,
+    task: taskInfo,
+    processDefinition,
+    variables,
+  } = task.data;
 
   const handleOnFailure = () => {
     setSubmitting(false);
