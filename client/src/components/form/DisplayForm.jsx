@@ -61,7 +61,9 @@ const DisplayForm = ({
    * augmentedSubmission must have context included or it cannot pre-populate fields that rely on context.
    * We have kept interpolate() context to prevent any unwanted side effects of removing it from the parent form.
    */
-  interpolate(form, { ...userContexts });
+  if (userContexts) {
+    interpolate(form, { ...userContexts.data });
+  }
 
   /* Storing users answers to retain them on page refresh:
    * Answers will persist on return to this page except
