@@ -15,6 +15,7 @@ import ApplicationSpinner from '../ApplicationSpinner';
 import FileService from '../../utils/FileService';
 import FormErrorsAlert from '../alert/FormErrorsAlert';
 import SecureLocalStorageManager from '../../utils/SecureLocalStorageManager';
+import getUserContexts from './getUserContexts';
 import './DisplayForm.scss';
 
 Formio.use(gds);
@@ -30,36 +31,12 @@ const DisplayForm = ({
   const [errorAlert, setErrorAlert] = useState();
   const [hasFormChanged, setHasFormChanged] = useState(false);
   const [localStorageReference, setLocalStorageReference] = useState();
+  const [userContexts, setUserContexts] = useState();
   const formRef = useRef();
+  const [keycloak] = useKeycloak();
   const host = `${window.location.protocol}//${window.location.hostname}${
     window.location.port ? `:${window.location.port}` : ''
   }`;
-
-  const [keycloak] = useKeycloak();
-  const {
-    authServerUrl: url,
-    realm,
-    refreshToken,
-    subject,
-    token: accessToken,
-    tokenParsed: {
-      adelphi_number: adelphi,
-      dateofleaving,
-      delegate_email: delegateEmails,
-      email,
-      family_name: familyName,
-      given_name: givenName,
-      grade_id: gradeId,
-      groups,
-      line_manager_email: linemanagerEmail,
-      location_id: defaultlocationid,
-      name,
-      phone,
-      realm_access: { roles },
-      team_id: teamid,
-      session_state: sessionId,
-    },
-  } = keycloak;
 
   /* istanbul ignore next */
   Formio.baseUrl = host;
@@ -77,81 +54,6 @@ const DisplayForm = ({
   const { team } = useContext(TeamContext);
   const { staffId: staffid } = useContext(StaffIdContext);
 
-  const contexts = {
-    data: {
-      environmentContext: {
-        attachmentServiceUrl: '/files',
-        operationalDataUrl: '/opdata',
-        privateUiUrl: window.location.origin,
-        referenceDataUrl: '/refdata',
-        workflowUrl: '/camunda',
-      },
-      extendedStaffDetailsContext: {
-        delegateEmails,
-        email,
-        linemanagerEmail,
-        name,
-      },
-      keycloakContext: {
-        accessToken,
-        adelphi,
-        email,
-        familyName,
-        givenName,
-        gradeId,
-        groups,
-        locationId: defaultlocationid,
-        phone,
-        realm,
-        refreshToken,
-        roles,
-        sessionId,
-        subject,
-        url,
-      },
-      shiftDetailsContext: {
-        email,
-        locationid: String(defaultlocationid),
-        phone,
-        roles,
-        team,
-        teamid,
-      },
-      staffDetailsDataContext: {
-        adelphi,
-        dateofleaving,
-        defaultlocationid,
-        defaultteam: team,
-        defaultteamid: teamid,
-        email,
-        firstname: givenName,
-        gradeid: gradeId,
-        locationid: defaultlocationid,
-        phone,
-        staffid,
-        surname: familyName,
-        teamid,
-      },
-      ...interpolateContext,
-    },
-  };
-
-  const reformattedContexts = {
-    keycloakContext: {
-      accessToken: keycloak.token,
-      refreshToken: keycloak.refreshToken,
-      sessionId: keycloak.tokenParsed.session_state,
-      email: keycloak.tokenParsed.email,
-      givenName: keycloak.tokenParsed.given_name,
-      familyName: keycloak.tokenParsed.family_name,
-      subject: keycloak.subject,
-      url: keycloak.authServerUrl,
-      realm: keycloak.realm,
-      roles: keycloak.tokenParsed.realm_access.roles,
-      groups: keycloak.tokenParsed.groups,
-    },
-    ...contexts.data,
-  };
   /*
    * augmentedSubmission is fed into the form (on the 'submission' prop) and pre-populates fields where possible.
    * interpolate() is used to pass the context objects to the parent form - this only applies to the parent form, not nested forms
@@ -159,7 +61,7 @@ const DisplayForm = ({
    * augmentedSubmission must have context included or it cannot pre-populate fields that rely on context.
    * We have kept interpolate() context to prevent any unwanted side effects of removing it from the parent form.
    */
-  interpolate(form, { ...reformattedContexts });
+  interpolate(form, { ...userContexts });
 
   /* Storing users answers to retain them on page refresh:
    * Answers will persist on return to this page except
@@ -169,6 +71,8 @@ const DisplayForm = ({
    * - if there is localStorage data, we use it to create the data for the submission prop for the <Form> component
    */
   useEffect(() => {
+    // Get the contexts for this user
+    setUserContexts(getUserContexts(keycloak, team, staffid));
     // Create a reference based on whether this is a task or a new form instance
     if (!interpolateContext || !interpolateContext.taskContext) {
       setLocalStorageReference(`form-${form.name}-${keycloak.tokenParsed.email}`);
@@ -180,7 +84,7 @@ const DisplayForm = ({
   }, []);
 
   // Temporarily removed the retrieving from local storage while investigate a bug with existing submission data and contexts
-  const [augmentedSubmission] = useState(_.merge(existingSubmission, contexts));
+  const [augmentedSubmission] = useState(_.merge(existingSubmission, userContexts));
 
   /*
    * The plugin below is required for when nested forms are present. These nested forms
@@ -195,7 +99,7 @@ const DisplayForm = ({
           json: () =>
             response.json().then((result) => {
               if (!Array.isArray(result) && _.has(result, 'display')) {
-                interpolate(result, { ...reformattedContexts });
+                interpolate(result, { ...userContexts });
                 return result;
               }
               return result;
