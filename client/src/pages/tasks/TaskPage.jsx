@@ -4,62 +4,114 @@ import axios from 'axios';
 import { useTranslation } from 'react-i18next';
 import { useKeycloak } from '@react-keycloak/web';
 import { useNavigation } from 'react-navi';
+import _ from 'lodash';
 import { useMatomo } from '@datapunt/matomo-tracker-react';
-import { useAxios } from '../../utils/hooks';
+import { useIsMounted, useAxios } from '../../utils/hooks';
 import ApplicationSpinner from '../../components/ApplicationSpinner';
-import apiHooks from '../../components/form/hooks';
 import DisplayForm from '../../components/form/DisplayForm';
+import apiHooks from '../../components/form/hooks';
 import TaskPageSummary from './components/TaskPageSummary';
 
 const TaskPage = ({ taskId }) => {
-  const axiosInstance = useAxios();
-  const [keycloak] = useKeycloak();
-  const navigation = useNavigation();
-  const { submitForm } = apiHooks();
+  const isMounted = useIsMounted();
   const { t } = useTranslation();
-  const { trackPageView } = useMatomo();
+  const axiosInstance = useAxios();
+  const navigation = useNavigation();
+  const [keycloak] = useKeycloak();
   const currentUser = keycloak.tokenParsed.email;
   const [repeat, setRepeat] = useState(false);
+  const { submitForm } = apiHooks();
   const [submitting, setSubmitting] = useState(false);
-  const [task, setTask] = useState();
+  const [task, setTask] = useState({
+    isLoading: true,
+    data: null,
+  });
   const [taskUpdateSubmitted, setTaskUpdateSubmitted] = useState(false);
+  const { trackPageView } = useMatomo();
 
   useEffect(() => {
     trackPageView();
   }, []);
-
   useEffect(() => {
     // Reset state so that when task page is reloaded with 'next task' it starts fresh
     const source = axios.CancelToken.source();
     setRepeat(false);
     setSubmitting(false);
     setTask({ isLoading: true, data: null });
-
     // Get task data
     const loadTask = async () => {
       if (axiosInstance) {
         try {
-          const response = await axiosInstance.get(`/ui/tasks/${taskId}`, {
+          const taskData = await axiosInstance.get(`/ui/tasks/${taskId}`, {
             cancelToken: source.token,
           });
+          // Spread the taskData into seperate variables
+          const {
+            variables,
+            form,
+            processInstance,
+            processDefinition,
+            task: taskInfo,
+          } = taskData.data;
+          let formSubmission = {};
+          const formVariableSubmissionName = form ? `${form.name}::submissionData` : null;
+
+          if (taskInfo.variables) {
+            Object.keys(taskInfo.variables).forEach((key) => {
+              if (taskInfo.variables[key].type === 'Json') {
+                taskInfo.variables[key] = JSON.parse(taskInfo.variables[key].value);
+              } else {
+                taskInfo.variables[key] = taskInfo.variables[key].value;
+              }
+            });
+          }
+
+          if (variables) {
+            Object.keys(variables).forEach((key) => {
+              if (variables[key].type === 'Json') {
+                variables[key] = JSON.parse(variables[key].value);
+              } else {
+                variables[key] = variables[key].value;
+              }
+            });
+
+            formSubmission = variables[formVariableSubmissionName]
+              ? variables[formVariableSubmissionName]
+              : variables.submissionData;
+          }
+
+          const updatedVariables = _.omit(variables || {}, [
+            'submissionData',
+            formVariableSubmissionName,
+          ]);
+
           // If user allowed to view this task, set the task details include the form
-          if (response.data.task.assignee === currentUser) {
+          if (taskData.data.task.assignee === currentUser) {
             setTask({
               isLoading: false,
               data: {
-                ...response.data,
+                variables: updatedVariables,
+                form,
+                formSubmission,
+                processInstance,
+                processDefinition,
+                task: taskInfo,
               },
             });
           } else {
             setTask({
               isLoading: false,
               data: {
-                ...response.data,
+                variables: updatedVariables,
                 form: '', // force form to null as user should not be able to access it
+                formSubmission,
+                processInstance,
+                processDefinition,
+                task: taskInfo,
               },
             });
           }
-        } catch {
+        } catch (e) {
           setTask({ isLoading: false, data: null });
         }
       }
@@ -68,45 +120,53 @@ const TaskPage = ({ taskId }) => {
     return () => {
       source.cancel('Cancelling request');
     };
-  }, [axiosInstance, currentUser, repeat, taskId, taskUpdateSubmitted]);
+  }, [axiosInstance, setTask, isMounted, taskId, currentUser, taskUpdateSubmitted, repeat]);
+
+  if (task.isLoading) {
+    return <ApplicationSpinner />;
+  }
+
+  if (!task.data) {
+    return null;
+  }
+
+  const {
+    form,
+    processInstance,
+    task: taskInfo,
+    processDefinition,
+    formSubmission,
+    variables,
+  } = task.data;
 
   const handleOnFailure = () => {
     setSubmitting(false);
   };
-
   const handleOnRepeat = () => {
     setSubmitting(false);
     setRepeat(true);
     window.scrollTo(0, 0);
   };
 
-  if (task && task.isLoading) {
-    return <ApplicationSpinner />;
-  }
-
-  if (!task || !task.data) {
-    return null;
-  }
-
   return (
     <>
       <TaskPageSummary
-        businessKey={task.data.processInstance.businessKey}
-        category={task.data.processDefinition.category}
-        taskInfo={task.data.task}
+        businessKey={processInstance.businessKey}
+        category={processDefinition.category}
+        taskInfo={taskInfo}
         taskUpdateSubmitted={taskUpdateSubmitted}
         setTaskUpdateSubmitted={setTaskUpdateSubmitted}
       />
-      {task.data.form ? (
+      {form ? (
         <div className="govuk-grid-row">
           <div className="govuk-grid-column-full" id="form">
             <DisplayForm
               submitting={submitting}
-              form={task.data.form}
+              form={form}
               handleOnCancel={async () => {
                 await navigation.navigate('/tasks');
               }}
-              existingSubmission={{}}
+              existingSubmission={formSubmission}
               interpolateContext={{
                 processContext: {
                   /*
@@ -116,20 +176,20 @@ const TaskPage = ({ taskId }) => {
                    * exist on 'variables' directly.
                    * i.e. processContext.recordBorderEvent and processContext.variables.recordBorderEvent
                    */
-                  ...task.data.variables,
-                  variables: task.data.variables,
-                  instance: task.data.processInstance,
-                  definition: task.data.processDefinition,
+                  ...variables,
+                  variables,
+                  instance: processInstance,
+                  definition: processDefinition,
                 },
-                taskContext: task,
+                taskContext: taskInfo,
               }}
               handleOnSubmit={(submission) => {
                 setSubmitting(true);
                 submitForm({
                   submission,
-                  form: task.data.form,
+                  form,
                   id: taskId,
-                  businessKey: task.data.processInstance.businessKey,
+                  businessKey: processInstance.businessKey,
                   handleOnFailure,
                   handleOnRepeat,
                   submitPath: 'task',
@@ -158,7 +218,6 @@ const TaskPage = ({ taskId }) => {
     </>
   );
 };
-
 TaskPage.propTypes = {
   taskId: PropTypes.string.isRequired,
 };
