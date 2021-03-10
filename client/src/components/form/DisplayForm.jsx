@@ -19,10 +19,17 @@ import './DisplayForm.scss';
 
 Formio.use(gds);
 
-const DisplayForm = ({ form, handleOnCancel, handleOnSubmit, interpolateContext, submitting }) => {
+const DisplayForm = ({
+  form,
+  handleOnCancel,
+  handleOnSubmit,
+  interpolateContext,
+  submitting,
+  localStorageReference,
+}) => {
+  const [augmentedSubmission, setAugmentedSubmission] = useState();
   const [errorAlert, setErrorAlert] = useState();
   const [hasFormChanged, setHasFormChanged] = useState(false);
-  const [localStorageReference, setLocalStorageReference] = useState();
   const formRef = useRef();
   const host = `${window.location.protocol}//${window.location.hostname}${
     window.location.port ? `:${window.location.port}` : ''
@@ -158,22 +165,18 @@ const DisplayForm = ({ form, handleOnCancel, handleOnSubmit, interpolateContext,
    * Answers will persist on return to this page except
    * - when user has submitted the form
    * - or when user has gone to the Dashboard (answers are cleared there)
-   * On pageload, once we have obtained the formName, we check if there is data for this form in localStorage
+   * On pageload, once we have obtained the localStorageReference, we check if there is data for this form in localStorage
    * - if there is localStorage data, we use it to create the data for the submission prop for the <Form> component
    */
   useEffect(() => {
-    // Create a reference based on whether this is a task or a new form instance
-    if (!interpolateContext || !interpolateContext.taskContext) {
-      setLocalStorageReference(`form-${form.name}-${keycloak.tokenParsed.email}`);
+    if (!SecureLocalStorageManager.get(localStorageReference)) {
+      setAugmentedSubmission(contexts);
     } else {
-      setLocalStorageReference(
-        `form-${interpolateContext.taskContext.formKey}-${interpolateContext.taskContext.processInstanceId}-${keycloak.tokenParsed.email}`
+      setAugmentedSubmission(
+        _.merge(SecureLocalStorageManager.get(localStorageReference), contexts)
       );
     }
   }, []);
-
-  // Need to revisit to merge existing form answers to prefill corretly
-  const [augmentedSubmission] = useState(contexts);
 
   /*
    * The plugin below is required for when nested forms are present. These nested forms
@@ -371,6 +374,7 @@ DisplayForm.propTypes = {
   handleOnSubmit: PropTypes.func.isRequired,
   interpolateContext: PropTypes.shape({ taskContext: PropTypes.shape() }),
   submitting: PropTypes.bool,
+  localStorageReference: PropTypes.string.isRequired,
 };
 
 export default DisplayForm;

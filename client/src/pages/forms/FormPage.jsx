@@ -113,6 +113,7 @@ const FormPage = ({ formId }) => {
       <h1 className="govuk-heading-l">{pageHeading}</h1>
       <DisplayForm
         submitting={submitting}
+        localStorageReference={form.data.name}
         form={form.data}
         handleOnCancel={async () => {
           await navigation.navigate('/forms');
