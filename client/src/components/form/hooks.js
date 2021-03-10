@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { useNavigation } from 'react-navi';
 import { useAxios } from '../../utils/hooks';
 import { AlertContext } from '../../utils/AlertContext';
+import SecureLocalStorageManager from '../../utils/SecureLocalStorageManager';
 
 export default () => {
   const axiosInstance = useAxios();
@@ -22,7 +23,7 @@ export default () => {
       handleOnFailure,
       handleOnRepeat,
       submitPath,
-      reference,
+      localStorageReference,
     }) => {
       if (form) {
         const variables = {
@@ -45,12 +46,13 @@ export default () => {
             axiosInstance
               .get(`/camunda/engine-rest/task?processInstanceBusinessKey=${businessKey}`)
               .then((response) => {
+                SecureLocalStorageManager.remove(localStorageReference);
                 // This will automatically open the next form available (if one exists for this user)
                 // We can only ever open one task in this manner and so always take the first available
                 if (response.data.length > 0 && response.data[0].assignee === currentUser) {
                   navigation.navigate(`/tasks/${response.data[0].id}`);
                 } else if (submission.data.submitAgain === true) {
-                  handleOnRepeat(reference);
+                  handleOnRepeat();
                 } else {
                   setAlertContext({
                     type: 'form-submission',
