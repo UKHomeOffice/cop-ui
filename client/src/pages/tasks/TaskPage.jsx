@@ -148,7 +148,7 @@ const TaskPage = ({ taskId }) => {
           <div className="govuk-grid-column-full" id="form">
             <DisplayForm
               submitting={submitting}
-              localStorageReference={`${task.data.form.name}-${taskId}`}
+              localStorageReference={`form-${task.data.form.name}-${taskId}`}
               form={form}
               handleOnCancel={async () => {
                 await navigation.navigate('/tasks');

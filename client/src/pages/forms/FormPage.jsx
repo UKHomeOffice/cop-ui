@@ -10,7 +10,6 @@ import { useAxios, useIsMounted } from '../../utils/hooks';
 import ApplicationSpinner from '../../components/ApplicationSpinner';
 import apiHooks from '../../components/form/hooks';
 import DisplayForm from '../../components/form/DisplayForm';
-import SecureLocalStorageManager from '../../utils/SecureLocalStorageManager';
 import './Forms.scss';
 
 const FormPage = ({ formId }) => {
@@ -101,10 +100,9 @@ const FormPage = ({ formId }) => {
   const handleOnFailure = () => {
     setSubmitting(false);
   };
-  const handleOnRepeat = (reference) => {
+  const handleOnRepeat = () => {
     setSubmitting(false);
     setRepeat(true);
-    SecureLocalStorageManager.remove(reference);
     window.scrollTo(0, 0);
   };
 
@@ -113,7 +111,7 @@ const FormPage = ({ formId }) => {
       <h1 className="govuk-heading-l">{pageHeading}</h1>
       <DisplayForm
         submitting={submitting}
-        localStorageReference={form.data.name}
+        localStorageReference={`form-${form.data.name}`}
         form={form.data}
         handleOnCancel={async () => {
           await navigation.navigate('/forms');
@@ -121,7 +119,7 @@ const FormPage = ({ formId }) => {
         interpolateContext={{
           businessKey: businessKeyComponent ? businessKeyComponent.defaultValue : null,
         }}
-        handleOnSubmit={(data, reference) => {
+        handleOnSubmit={(data, localStorageReference) => {
           setSubmitting(true);
           submitForm({
             submission: data,
@@ -131,7 +129,7 @@ const FormPage = ({ formId }) => {
             handleOnFailure,
             handleOnRepeat,
             submitPath: 'process-definition/key',
-            reference,
+            localStorageReference,
           });
         }}
       />
