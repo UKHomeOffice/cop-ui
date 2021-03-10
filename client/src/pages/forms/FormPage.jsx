@@ -120,7 +120,6 @@ const FormPage = ({ formId }) => {
         interpolateContext={{
           businessKey: businessKeyComponent ? businessKeyComponent.defaultValue : null,
         }}
-        existingSubmission={{}}
         handleOnSubmit={(data, reference) => {
           setSubmitting(true);
           submitForm({
