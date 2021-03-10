@@ -173,7 +173,7 @@ const DisplayForm = ({
       setAugmentedSubmission(contexts);
     } else {
       const localData = SecureLocalStorageManager.get(localStorageReference);
-      setAugmentedSubmission(_.merge(localData, contexts));
+      setAugmentedSubmission(_.merge({ ...localData }, contexts));
     }
   }, []);
 
