@@ -53,7 +53,6 @@ const TaskPage = ({ taskId }) => {
             processDefinition,
             task: taskInfo,
           } = taskData.data;
-          let formSubmission = {};
           const formVariableSubmissionName = form ? `${form.name}::submissionData` : null;
 
           if (taskInfo.variables) {
@@ -74,10 +73,6 @@ const TaskPage = ({ taskId }) => {
                 variables[key] = variables[key].value;
               }
             });
-
-            formSubmission = variables[formVariableSubmissionName]
-              ? variables[formVariableSubmissionName]
-              : variables.submissionData;
           }
 
           const updatedVariables = _.omit(variables || {}, [
@@ -92,7 +87,6 @@ const TaskPage = ({ taskId }) => {
               data: {
                 variables: updatedVariables,
                 form,
-                formSubmission,
                 processInstance,
                 processDefinition,
                 task: taskInfo,
@@ -104,7 +98,6 @@ const TaskPage = ({ taskId }) => {
               data: {
                 variables: updatedVariables,
                 form: '', // force form to null as user should not be able to access it
-                formSubmission,
                 processInstance,
                 processDefinition,
                 task: taskInfo,
@@ -130,14 +123,7 @@ const TaskPage = ({ taskId }) => {
     return null;
   }
 
-  const {
-    form,
-    processInstance,
-    task: taskInfo,
-    processDefinition,
-    formSubmission,
-    variables,
-  } = task.data;
+  const { form, processInstance, task: taskInfo, processDefinition, variables } = task.data;
 
   const handleOnFailure = () => {
     setSubmitting(false);
@@ -166,7 +152,6 @@ const TaskPage = ({ taskId }) => {
               handleOnCancel={async () => {
                 await navigation.navigate('/tasks');
               }}
-              existingSubmission={formSubmission}
               interpolateContext={{
                 processContext: {
                   /*

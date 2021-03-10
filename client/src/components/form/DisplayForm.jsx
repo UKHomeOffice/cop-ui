@@ -19,14 +19,7 @@ import './DisplayForm.scss';
 
 Formio.use(gds);
 
-const DisplayForm = ({
-  form,
-  handleOnCancel,
-  handleOnSubmit,
-  existingSubmission,
-  interpolateContext,
-  submitting,
-}) => {
+const DisplayForm = ({ form, handleOnCancel, handleOnSubmit, interpolateContext, submitting }) => {
   const [errorAlert, setErrorAlert] = useState();
   const [hasFormChanged, setHasFormChanged] = useState(false);
   const [localStorageReference, setLocalStorageReference] = useState();
@@ -179,8 +172,8 @@ const DisplayForm = ({
     }
   }, []);
 
-  // Temporarily removed the retrieving from local storage while investigate a bug with existing submission data and contexts
-  const [augmentedSubmission] = useState(_.merge(existingSubmission, contexts));
+  // Need to revisit to merge existing form answers to prefill corretly
+  const [augmentedSubmission] = useState(contexts);
 
   /*
    * The plugin below is required for when nested forms are present. These nested forms
@@ -362,7 +355,6 @@ const DisplayForm = ({
 };
 
 DisplayForm.defaultProps = {
-  existingSubmission: {},
   interpolateContext: null,
   submitting: false,
 };
@@ -377,7 +369,6 @@ DisplayForm.propTypes = {
   }).isRequired,
   handleOnCancel: PropTypes.func.isRequired,
   handleOnSubmit: PropTypes.func.isRequired,
-  existingSubmission: PropTypes.shape({ root: PropTypes.shape() }),
   interpolateContext: PropTypes.shape({ taskContext: PropTypes.shape() }),
   submitting: PropTypes.bool,
 };
