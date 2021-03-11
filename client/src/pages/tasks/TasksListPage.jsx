@@ -54,6 +54,7 @@ const TasksListPage = ({ taskType }) => {
 
   useEffect(() => {
     const source = axios.CancelToken.source();
+    setData({ isLoading: true, tasks: [] });
     const loadTasks = async () => {
       if (axiosInstance) {
         try {
