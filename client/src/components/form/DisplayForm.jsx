@@ -5,8 +5,7 @@ import moment from 'moment';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import gds from '@digitalpatterns/formio-gds-template';
-import Loader from '@highpoint/react-loader-advanced';
-import { BLACK, WHITE } from 'govuk-colours';
+import { BLACK } from 'govuk-colours';
 import { TeamContext } from '../../utils/TeamContext';
 import { StaffIdContext } from '../../utils/StaffIdContext';
 import { augmentRequest, interpolate } from '../../utils/formioSupport';
@@ -260,13 +259,10 @@ const DisplayForm = ({
     }
   };
 
-  return (
-    <Loader
-      show={submitting}
-      message={<ApplicationSpinner translationKey="submitting" colour={BLACK} />}
-      foregroundStyle={{ color: BLACK }}
-      backgroundStyle={{ backgroundColor: WHITE }}
-    >
+  return submitting ? (
+    <ApplicationSpinner translationKey="submitting" colour={BLACK} />
+  ) : (
+    <>
       {errorAlert && <FormErrorsAlert errors={errorAlert.errors} form={errorAlert.form} />}
       <Form
         form={form}
@@ -352,7 +348,7 @@ const DisplayForm = ({
           },
         }}
       />
-    </Loader>
+    </>
   );
 };
 

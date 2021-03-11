@@ -3,6 +3,7 @@ import { mount } from 'enzyme';
 import { act } from '@testing-library/react';
 import { Form } from 'react-formio';
 import { testData } from '../../utils/TestData';
+import ApplicationSpinner from '../ApplicationSpinner';
 import FormErrorsAlert from '../alert/FormErrorsAlert';
 import DisplayForm from './DisplayForm';
 
@@ -20,7 +21,7 @@ describe('DisplayForm', () => {
     console.warn = jest.fn();
   });
 
-  it('Should show a spinner (Loader) when form is being loaded', async () => {
+  it('Should show a spinner when form is being loaded', async () => {
     const wrapper = await mount(
       <DisplayForm
         form={testData.formData}
@@ -36,15 +37,14 @@ describe('DisplayForm', () => {
       await wrapper.update();
     });
 
-    expect(wrapper.find('.Loader').at(0).exists()).toBe(true);
-    expect(wrapper.find('.Loader__content').prop('style')).toHaveProperty('opacity', 1);
+    expect(wrapper.find(ApplicationSpinner).exists()).toBe(true);
   });
 
   it('Should automatically scroll to the top on next/previous button clicks', async () => {
     const wrapper = await mount(
       <DisplayForm
         form={testData.formData}
-        submitting
+        submitting={false}
         handleOnCancel={jest.fn()}
         handleOnSubmit={jest.fn()}
       />
@@ -62,7 +62,7 @@ describe('DisplayForm', () => {
     const wrapper = await mount(
       <DisplayForm
         form={testData.formData}
-        submitting
+        submitting={false}
         handleOnCancel={jest.fn()}
         handleOnSubmit={jest.fn()}
       />
@@ -90,7 +90,7 @@ describe('DisplayForm', () => {
     const wrapper = await mount(
       <DisplayForm
         form={testData.formData}
-        submitting
+        submitting={false}
         handleOnCancel={jest.fn()}
         handleOnSubmit={jest.fn()}
       />
@@ -122,7 +122,7 @@ describe('DisplayForm', () => {
     const wrapper = await mount(
       <DisplayForm
         form={testData.formData}
-        submitting
+        submitting={false}
         handleOnCancel={jest.fn()}
         handleOnSubmit={mockHandleOnSubmit}
       />
