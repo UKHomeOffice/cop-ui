@@ -10,40 +10,43 @@ import ApplicationSpinner from '../../components/ApplicationSpinner';
 
 dayjs.extend(relativeTime);
 
+function createMockData(length) {
+  const mockData = [];
+  for (let i = 0; i < length; i += 1) {
+    mockData.push({
+      id: `id${Math.random() + Math.random()}`,
+      name: 'test-name',
+      processDefinitionId: 'processDefinitionId0',
+      processInstanceId: 'processInstanceId0',
+      due: dayjs().add(i, 'day').format(),
+      created: dayjs().subtract(i, 'day').format(),
+      assignee: 'john@doe.com',
+      priority: 100,
+    });
+  }
+  return mockData;
+}
+
 describe('TasksListPage', () => {
   const mockAxios = new MockAdapter(axios);
   const getById = queryByAttribute.bind(null, 'id');
-  let mockData;
 
   beforeEach(() => {
     jest.spyOn(console, 'error').mockImplementation(() => {});
     mockAxios.reset();
-    mockData = [];
-    for (let i = 0; i < 10; i += 1) {
-      mockData.push({
-        id: `id${Math.random() + Math.random()}`,
-        name: 'test-name',
-        processDefinitionId: 'processDefinitionId0',
-        processInstanceId: 'processInstanceId0',
-        due: dayjs().add(i, 'day').format(),
-        created: dayjs().subtract(i, 'day').format(),
-        assignee: 'john@doe.com',
-        priority: 100,
-      });
-    }
   });
 
-  it('renders without crashing', () => {
+  it('should render without crashing', () => {
     shallow(<TasksListPage />);
   });
 
-  it('renders application spinner when getting data', async () => {
+  it('should render application spinner when getting data', async () => {
     const wrapper = await mount(<TasksListPage />);
 
     expect(wrapper.find(ApplicationSpinner).exists()).toBe(true);
   });
 
-  it('can render a list of tasks', async () => {
+  it('should render a list of tasks', async () => {
     mockAxios.onPost('/camunda/engine-rest/task').reply(200, [
       {
         id: 1,
@@ -79,11 +82,12 @@ describe('TasksListPage', () => {
     });
   });
 
-  it('can group tasks correctly', async () => {
+  it('should group tasks correctly', async () => {
     /*
      * Add more objects with different processDefinitionIds to map different categories to them.
      * Also added differing priorities to test priority grouping
      */
+    let mockData = createMockData(10);
     mockData = mockData.concat([
       {
         id: 'enhance-category',
@@ -169,5 +173,41 @@ describe('TasksListPage', () => {
       expect(screen.getByText('TEST-BUSINESS-KEY0 10 tasks')).toBeTruthy();
       expect(screen.getByText('TEST-BUSINESS-KEY1 2 tasks')).toBeTruthy();
     });
+  });
+
+  it('should render spinner on pagination button click', async () => {
+    const mockData = createMockData(21);
+    mockAxios.onPost('/camunda/engine-rest/task').reply(200, mockData);
+    mockAxios.onPost('/camunda/engine-rest/task/count').reply(200, {
+      count: 21,
+    });
+    mockAxios.onGet('/camunda/engine-rest/process-definition').reply(200, [
+      {
+        category: 'test',
+        id: 'processDefinitionId0',
+      },
+    ]);
+    mockAxios.onPost('/camunda/engine-rest/process-instance').reply(200, [
+      {
+        businessKey: 'TEST-BUSINESS-KEY0',
+        id: 'processInstanceId0',
+      },
+    ]);
+
+    const { container } = render(<TasksListPage />);
+
+    await waitFor(() => {
+      expect(screen.queryByText('loading')).not.toBeInTheDocument();
+      expect(getById(container, 'sort')).not.toBe(null);
+      expect(getById(container, 'group')).not.toBe(null);
+      expect(getById(container, 'filterTaskName')).not.toBe(null);
+    });
+
+    fireEvent.click(screen.getByText('Next ›'));
+
+    expect(screen.queryByText('loading')).toBeInTheDocument();
+    expect(getById(container, 'sort')).not.toBe(null);
+    expect(getById(container, 'group')).not.toBe(null);
+    expect(getById(container, 'filterTaskName')).not.toBe(null);
   });
 });
