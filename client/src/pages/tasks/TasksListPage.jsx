@@ -30,6 +30,7 @@ const TasksListPage = ({ taskType }) => {
     tasks: [],
   });
   const [page, setPage] = useState(0);
+  const [areTasksLoading, setAreTasksLoading] = useState(true);
   const [taskCount, setTaskCount] = useState(0);
   const maxResults = 20;
   const isMounted = useIsMounted();
@@ -54,7 +55,7 @@ const TasksListPage = ({ taskType }) => {
 
   useEffect(() => {
     const source = axios.CancelToken.source();
-    setData({ isLoading: true, tasks: [] });
+    setAreTasksLoading(true);
     const loadTasks = async () => {
       if (axiosInstance) {
         try {
@@ -111,6 +112,7 @@ const TasksListPage = ({ taskType }) => {
               isLoading: false,
               tasks: [],
             });
+            setAreTasksLoading(false);
             setTaskCount(0);
           } else {
             // This generates a unique list of process definition ids to use for a call to camunda for task categories
@@ -162,6 +164,7 @@ const TasksListPage = ({ taskType }) => {
                 tasks: tasksResponse.data,
               });
               setTaskCount(taskCountResponse.data.count);
+              setAreTasksLoading(false);
             }
           }
         } catch (e) {
@@ -169,6 +172,7 @@ const TasksListPage = ({ taskType }) => {
             isLoading: false,
             tasks: [],
           });
+          setAreTasksLoading(false);
         }
       }
     };
@@ -211,19 +215,29 @@ const TasksListPage = ({ taskType }) => {
           handleFilters={handleFilters}
         />
       </div>
-      <div className="govuk-grid-row">
-        <div className="govuk-grid-column-full">
-          <TaskList tasks={data.tasks} groupBy={filters.groupBy} />
-          {data.tasks.length ? (
-            <TaskPagination
-              page={page}
-              setPage={setPage}
-              taskCount={taskCount}
-              maxResults={maxResults}
-            />
-          ) : null}
-        </div>
-      </div>
+      {areTasksLoading ? (
+        <ApplicationSpinner />
+      ) : (
+        <>
+          <div className="govuk-grid-row">
+            <div className="govuk-grid-column-full">
+              <TaskList
+                tasks={data.tasks}
+                groupBy={filters.groupBy}
+                areTasksLoading={areTasksLoading}
+              />
+              {data.tasks.length ? (
+                <TaskPagination
+                  page={page}
+                  setPage={setPage}
+                  taskCount={taskCount}
+                  maxResults={maxResults}
+                />
+              ) : null}
+            </div>
+          </div>
+        </>
+      )}
     </>
   );
 };
