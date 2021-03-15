@@ -4,7 +4,7 @@ import { Formio, Form } from 'react-formio';
 import moment from 'moment';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
-import gds from '@digitalpatterns/formio-gds-template';
+import gds from '@ukhomeoffice/formio-gds-template';
 import Loader from '@highpoint/react-loader-advanced';
 import { BLACK, WHITE } from 'govuk-colours';
 import { TeamContext } from '../../utils/TeamContext';

@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import PropTypes from 'prop-types';
 import { Formio, Form } from 'react-formio';
-import gds from '@digitalpatterns/formio-gds-template';
+import gds from '@ukhomeoffice/formio-gds-template';
 import { useKeycloak } from '@react-keycloak/web';
 import { augmentRequest, interpolate } from '../../../utils/formioSupport';
 import { useAxios, useIsMounted } from '../../../utils/hooks';

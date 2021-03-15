@@ -3,7 +3,7 @@ import { Details } from 'govuk-frontend';
 import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
 import dayjs from 'dayjs';
-import gds from '@digitalpatterns/formio-gds-template';
+import gds from '@ukhomeoffice/formio-gds-template';
 import { Formio, Form } from 'react-formio';
 import { useAxios, useIsMounted } from '../../../utils/hooks';
 
