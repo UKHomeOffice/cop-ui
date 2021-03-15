@@ -1,7 +1,22 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import SecureLocalStorageManager from '../../../utils/SecureLocalStorageManager';
 
-const TaskFilters = ({ search, sortBy, groupBy, handleFilters }) => {
+const TaskFilters = ({ filters, setFilters, setPage, taskType }) => {
+  const handleSortBy = (e) => {
+    setFilters({ ...filters, sortBy: e.target.value });
+    setPage(0);
+    SecureLocalStorageManager.set(`${taskType}-tasksSortBy`, e.target.value);
+  };
+  const handleGroupBy = (e) => {
+    setFilters({ ...filters, groupBy: e.target.value });
+    SecureLocalStorageManager.set(`${taskType}-tasksGroupBy`, e.target.value);
+  };
+  const handleSearch = (e) => {
+    setFilters({ ...filters, search: e.target.value });
+    setPage(0);
+  };
+
   return (
     <div className="govuk-grid-row">
       <div className="govuk-grid-column-one-third">
@@ -13,8 +28,8 @@ const TaskFilters = ({ search, sortBy, groupBy, handleFilters }) => {
             className="govuk-select"
             id="sort"
             name="sortBy"
-            onChange={handleFilters}
-            value={sortBy}
+            onChange={handleSortBy}
+            value={filters.sortBy}
           >
             <option value="asc-dueDate">Oldest due date</option>
             <option value="desc-dueDate">Latest due date</option>
@@ -34,8 +49,8 @@ const TaskFilters = ({ search, sortBy, groupBy, handleFilters }) => {
             className="govuk-select"
             id="group"
             name="groupBy"
-            onChange={handleFilters}
-            value={groupBy}
+            onChange={handleGroupBy}
+            value={filters.groupBy}
           >
             <option value="category">Category</option>
             <option value="businessKey">BF Reference</option>
@@ -54,8 +69,8 @@ const TaskFilters = ({ search, sortBy, groupBy, handleFilters }) => {
             id="filterTaskName"
             type="text"
             name="search"
-            value={search}
-            onChange={handleFilters}
+            value={filters.search}
+            onChange={handleSearch}
           />
         </div>
       </div>
@@ -64,14 +79,20 @@ const TaskFilters = ({ search, sortBy, groupBy, handleFilters }) => {
 };
 
 TaskFilters.defaultProps = {
-  search: '',
+  filters: {
+    search: '',
+  },
 };
 
 TaskFilters.propTypes = {
-  handleFilters: PropTypes.func.isRequired,
-  search: PropTypes.string,
-  sortBy: PropTypes.string.isRequired,
-  groupBy: PropTypes.string.isRequired,
+  filters: PropTypes.shape({
+    sortBy: PropTypes.string.isRequired,
+    groupBy: PropTypes.string.isRequired,
+    search: PropTypes.string,
+  }),
+  setFilters: PropTypes.func.isRequired,
+  setPage: PropTypes.func.isRequired,
+  taskType: PropTypes.string.isRequired,
 };
 
 export default TaskFilters;

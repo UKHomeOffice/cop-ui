@@ -24,7 +24,6 @@ const TasksListPage = ({ taskType }) => {
       : 'category',
     search: '',
   });
-
   const [data, setData] = useState({
     isLoading: true,
     tasks: [],
@@ -35,14 +34,7 @@ const TasksListPage = ({ taskType }) => {
   const maxResults = 20;
   const isMounted = useIsMounted();
   const axiosInstance = useAxios();
-  const handleFilters = (e) => {
-    const newFilterValues = { ...filters, [e.target.name]: e.target.value };
-    setFilters(newFilterValues);
-    if (e.target.name !== 'search') {
-      SecureLocalStorageManager.set(`${taskType}-tasksSortBy`, newFilterValues.sortBy);
-      SecureLocalStorageManager.set(`${taskType}-tasksGroupBy`, newFilterValues.groupBy);
-    }
-  };
+
   const formatSortByValue = (sortValue) => {
     const [sortOrder, sortVariable] = sortValue.split('-');
     return { sortOrder, sortVariable };
@@ -209,10 +201,10 @@ const TasksListPage = ({ taskType }) => {
       </div>
       <div>
         <TaskFilters
-          search={filters.search}
-          sortBy={filters.sortBy}
-          groupBy={filters.groupBy}
-          handleFilters={handleFilters}
+          filters={filters}
+          setFilters={setFilters}
+          setPage={setPage}
+          taskType={taskType}
         />
       </div>
       {areTasksLoading ? (
