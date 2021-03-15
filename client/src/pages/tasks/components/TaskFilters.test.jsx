@@ -1,50 +1,60 @@
 import React from 'react';
-import { shallow } from 'enzyme';
+import { render, queryByAttribute, fireEvent } from '@testing-library/react';
 import TaskFilters from './TaskFilters';
 
 describe('TaskFilters', () => {
-  const mockHandleFilter = jest.fn();
+  const mockFiltersProp = {
+    sortBy: 'test',
+    groupBy: 'test',
+    search: '',
+  };
+  const mockSetFilters = jest.fn();
+  const mockSetPage = jest.fn();
+  const getById = queryByAttribute.bind(null, 'id');
+
+  const renderTaskFilters = () => {
+    return render(
+      <TaskFilters
+        filters={{ ...mockFiltersProp }}
+        setFilters={mockSetFilters}
+        setPage={mockSetPage}
+        taskType="groups"
+      />
+    );
+  };
 
   beforeEach(() => {
-    mockHandleFilter.mockClear();
+    jest.clearAllMocks();
   });
 
   it('renders without crashing', () => {
-    shallow(
-      <TaskFilters search="" sortBy="test" groupBy="test" handleFilters={mockHandleFilter} />
-    );
+    renderTaskFilters();
   });
 
   it('calls handleFilter when sortBy option has been chosen', () => {
-    const wrapper = shallow(
-      <TaskFilters search="" sortBy="test" groupBy="test" handleFilters={mockHandleFilter} />
-    );
-    const sortBy = wrapper.find('select[id="sort"]').at(0);
+    const expectedResult = { ...mockFiltersProp, sortBy: 'desc-dueDate' };
+    const { container } = renderTaskFilters();
 
-    sortBy.simulate('change', { event: { target: { value: 'desc-dueDate' } } });
+    fireEvent.change(getById(container, 'sort'), { target: { value: 'desc-dueDate' } });
 
-    expect(mockHandleFilter).toHaveBeenCalled();
+    expect(mockSetFilters).toHaveBeenCalledWith(expectedResult);
   });
 
   it('calls handleFilter when groupBy option has been chosen', () => {
-    const wrapper = shallow(
-      <TaskFilters search="" sortBy="test" groupBy="test" handleFilters={mockHandleFilter} />
-    );
-    const groupBy = wrapper.find('select[id="group"]').at(0);
+    const expectedResult = { ...mockFiltersProp, groupBy: 'priority' };
+    const { container } = renderTaskFilters();
 
-    groupBy.simulate('change', { event: { target: { value: 'priority' } } });
+    fireEvent.change(getById(container, 'group'), { target: { value: 'priority' } });
 
-    expect(mockHandleFilter).toHaveBeenCalled();
+    expect(mockSetFilters).toHaveBeenCalledWith(expectedResult);
   });
 
   it('calls handleFilter when search bar has input', () => {
-    const wrapper = shallow(
-      <TaskFilters search="" sortBy="test" groupBy="test" handleFilters={mockHandleFilter} />
-    );
-    const searchBar = wrapper.find('input[id="filterTaskName"]').at(0);
+    const expectedResult = { ...mockFiltersProp, search: 'Border' };
+    const { container } = renderTaskFilters();
 
-    searchBar.simulate('change', { event: { target: { value: 'Border' } } });
+    fireEvent.change(getById(container, 'filterTaskName'), { target: { value: 'Border' } });
 
-    expect(mockHandleFilter).toHaveBeenCalled();
+    expect(mockSetFilters).toHaveBeenCalledWith(expectedResult);
   });
 });
