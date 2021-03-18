@@ -146,7 +146,7 @@ describe('DisplayForm', () => {
       },
     };
 
-    form.props().options.hooks.beforeSubmit(submission, next);
+    form.props().options.hooks.customValidation(submission, next);
     /*
      * Could check for object equality however the form object has dynamic values that may
      * change throughout the test
