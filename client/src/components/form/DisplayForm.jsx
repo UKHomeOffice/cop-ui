@@ -330,7 +330,7 @@ const DisplayForm = ({
             buttonSettings: {
               showCancel: true,
             },
-            beforeSubmit: (submissionData, next) => {
+            customValidation: (submissionData, next) => {
               /* eslint-disable no-param-reassign, no-shadow */
               const { versionId, id, title, name } = form;
               submissionData.data.form = {
