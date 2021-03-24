@@ -41,6 +41,7 @@ const keycloakInstance = new Keycloak({
 });
 const keycloakProviderInitConfig = {
   onLoad: 'login-required',
+  checkLoginIframe: false,
 };
 
 const RouterView = () => {
@@ -50,6 +51,18 @@ const RouterView = () => {
   initAll();
   useFetchTeam();
   useFetchStaffId();
+
+  keycloak.onTokenExpired = () => {
+    console.log('refreshing token');
+    keycloak
+      .updateToken()
+      .then(() => {
+        console.log('token refreshed');
+      })
+      .catch(() => {
+        keycloak.logout();
+      });
+  };
 
   const tracker = createInstance({
     urlBase: config.get('analyticsUrlBase'),
