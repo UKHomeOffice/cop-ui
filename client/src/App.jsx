@@ -51,6 +51,18 @@ const RouterView = () => {
   useFetchTeam();
   useFetchStaffId();
 
+  keycloak.onTokenExpired = () => {
+    console.log('refreshing token');
+    keycloak
+      .updateToken()
+      .then(() => {
+        console.log('token refreshed');
+      })
+      .catch(() => {
+        keycloak.logout();
+      });
+  };
+
   const tracker = createInstance({
     urlBase: config.get('analyticsUrlBase'),
     siteId: config.get('analyticsSiteId'),
