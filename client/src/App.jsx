@@ -52,10 +52,12 @@ const RouterView = () => {
   useFetchStaffId();
 
   keycloak.onTokenExpired = () => {
+    // eslint-disable-next-line no-console
     console.log('refreshing token');
     keycloak
       .updateToken()
       .then(() => {
+        // eslint-disable-next-line no-console
         console.log('token refreshed');
       })
       .catch(() => {
