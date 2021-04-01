@@ -74,11 +74,9 @@ describe('ChangeDueDate', () => {
       screen.queryByText('pages.task.submission.error.due-date-change')
     ).not.toBeInTheDocument();
 
-    // Time and time zone value is fixed so is grabbed here to check req payload is correct
-    const timeAndTimeZone = mockProps.taskInfo.due.split('T')[1];
     const requestPayload = JSON.parse(mockAxios.history.put[0].data);
-
-    expect(requestPayload.due).toBe(`1995-03-19T${timeAndTimeZone}`);
+    const expectedTz = requestPayload.due.split('T')[0];
+    expect(expectedTz).toBe('1995-03-19');
   });
 
   it('should handle date input errors gracefully', async () => {
