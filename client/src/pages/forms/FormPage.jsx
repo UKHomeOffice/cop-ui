@@ -10,6 +10,7 @@ import { useAxios, useIsMounted } from '../../utils/hooks';
 import ApplicationSpinner from '../../components/ApplicationSpinner';
 import apiHooks from '../../components/form/hooks';
 import DisplayForm from '../../components/form/DisplayForm';
+import { formSubmitPath } from '../../utils/constants';
 import './Forms.scss';
 
 const FormPage = ({ formId }) => {
@@ -128,7 +129,7 @@ const FormPage = ({ formId }) => {
             businessKey: businessKeyComponent ? businessKeyComponent.defaultValue : null,
             handleOnFailure,
             handleOnRepeat,
-            submitPath: 'process-definition/key',
+            submitPath: formSubmitPath,
             localStorageReference,
           });
         }}
