@@ -11,3 +11,5 @@ export const powerBIBranchNames = [
 ];
 
 export const powerBiSchema = 'http://powerbi.com/product/schema#basic';
+
+export const variableInputFieldKey = 'submitVariableName';

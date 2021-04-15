@@ -5,6 +5,7 @@ import { useNavigation } from 'react-navi';
 import { useAxios } from '../../utils/hooks';
 import { AlertContext } from '../../utils/AlertContext';
 import SecureLocalStorageManager from '../../utils/SecureLocalStorageManager';
+import { variableInputFieldKey } from '../../utils/constants';
 
 export default () => {
   const axiosInstance = useAxios();
@@ -13,6 +14,10 @@ export default () => {
   const navigation = useNavigation();
   const [keycloak] = useKeycloak();
   const currentUser = keycloak.tokenParsed.email;
+  const formName = ({ components, name }) => {
+    const variableInput = components.find((c) => c.key === variableInputFieldKey);
+    return variableInput ? variableInput.defaultValue : name;
+  };
 
   const submitForm = useCallback(
     ({
@@ -27,7 +32,7 @@ export default () => {
     }) => {
       if (form) {
         const variables = {
-          [form.name]: {
+          [formName(form)]: {
             value: JSON.stringify(submission.data),
             type: 'json',
           },
@@ -77,5 +82,6 @@ export default () => {
 
   return {
     submitForm,
+    formName,
   };
 };

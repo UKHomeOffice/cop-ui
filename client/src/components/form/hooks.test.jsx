@@ -45,7 +45,7 @@ describe('hooks - can submit a form from a new form instance', () => {
       submitAgain: true,
     },
   };
-  const form = { name: 'test', id: 'formId' };
+  const form = { name: 'test', id: 'formId', components: { find: () => false } };
   const id = 'formId';
   const businessKey = 'businessKey';
   const handleOnFailure = jest.fn();
@@ -205,7 +205,7 @@ describe('hooks - can submit a form from a task', () => {
       },
     },
   };
-  const form = { name: 'test', id: 'formId' };
+  const form = { name: 'test', id: 'formId', components: { find: () => false } };
   const id = 'taskId';
   const businessKey = 'businessKey';
   const handleOnFailure = jest.fn();
@@ -303,5 +303,23 @@ describe('hooks - can submit a form from a task', () => {
       });
     });
     expect(mockNavigate).toHaveBeenCalledWith('/');
+  });
+
+  describe('formName', () => {
+    it('sets the correct form name when the submitVariableName field is present', () => {
+      const formNameResult = result.current.formName({
+        components: [{ key: 'submitVariableName', defaultValue: 'submitDeclarations' }],
+        name: 'manDec',
+      });
+      expect(formNameResult).toEqual('submitDeclarations');
+    });
+
+    it('sets the correct form name when the submitVariableName field is not present', () => {
+      const formNameResult = result.current.formName({
+        components: [],
+        name: 'manDec',
+      });
+      expect(formNameResult).toEqual('manDec');
+    });
   });
 });
