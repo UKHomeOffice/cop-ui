@@ -11,6 +11,7 @@ import ApplicationSpinner from '../../components/ApplicationSpinner';
 import DisplayForm from '../../components/form/DisplayForm';
 import apiHooks from '../../components/form/hooks';
 import TaskPageSummary from './components/TaskPageSummary';
+import { taskSubmitPath } from '../../utils/constants';
 
 const TaskPage = ({ taskId }) => {
   const isMounted = useIsMounted();
@@ -178,7 +179,7 @@ const TaskPage = ({ taskId }) => {
                   businessKey: processInstance.businessKey,
                   handleOnFailure,
                   handleOnRepeat,
-                  submitPath: 'task',
+                  submitPath: taskSubmitPath,
                 });
               }}
             />
