@@ -5,6 +5,7 @@ import MockAdapter from 'axios-mock-adapter';
 import { AlertContextProvider } from '../../utils/AlertContext';
 import apiHooks from './hooks';
 import { mockNavigate } from '../../setupTests';
+import { formSubmitPath, taskSubmitPath } from '../../utils/constants';
 
 jest.mock('../../utils/logger', () => ({
   error: jest.fn(),
@@ -320,6 +321,20 @@ describe('hooks - can submit a form from a task', () => {
         name: 'manDec',
       });
       expect(formNameResult).toEqual('manDec');
+    });
+  });
+
+  describe('businessKeyValue', () => {
+    const testBusinessKey = 'COP-20200414-824';
+
+    it('sets the business key value for forms', () => {
+      const businessKeyResult = result.current.businessKeyValue(formSubmitPath, testBusinessKey);
+      expect(businessKeyResult).toEqual(testBusinessKey);
+    });
+
+    it('sets an undefined business key value for tasks', () => {
+      const businessKeyResult = result.current.businessKeyValue(taskSubmitPath, testBusinessKey);
+      expect(businessKeyResult).toEqual(undefined);
     });
   });
 });

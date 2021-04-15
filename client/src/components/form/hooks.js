@@ -5,7 +5,7 @@ import { useNavigation } from 'react-navi';
 import { useAxios } from '../../utils/hooks';
 import { AlertContext } from '../../utils/AlertContext';
 import SecureLocalStorageManager from '../../utils/SecureLocalStorageManager';
-import { variableInputFieldKey } from '../../utils/constants';
+import { formSubmitPath, variableInputFieldKey } from '../../utils/constants';
 
 export default () => {
   const axiosInstance = useAxios();
@@ -17,6 +17,9 @@ export default () => {
   const formName = ({ components, name }) => {
     const variableInput = components.find((c) => c.key === variableInputFieldKey);
     return variableInput ? variableInput.defaultValue : name;
+  };
+  const businessKeyValue = (submitPath, businessKey) => {
+    return submitPath === formSubmitPath ? businessKey : undefined;
   };
 
   const submitForm = useCallback(
@@ -45,7 +48,7 @@ export default () => {
         axiosInstance
           .post(`/camunda/engine-rest/${submitPath}/${id}/submit-form`, {
             variables,
-            businessKey,
+            businessKey: businessKeyValue(submitPath, businessKey),
           })
           .then(async () => {
             axiosInstance
@@ -83,5 +86,6 @@ export default () => {
   return {
     submitForm,
     formName,
+    businessKeyValue,
   };
 };
