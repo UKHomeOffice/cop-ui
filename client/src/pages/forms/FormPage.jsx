@@ -11,7 +11,6 @@ import ApplicationSpinner from '../../components/ApplicationSpinner';
 import apiHooks from '../../components/form/hooks';
 import DisplayForm from '../../components/form/DisplayForm';
 import { formSubmitPath } from '../../utils/constants';
-import './Forms.scss';
 
 const FormPage = ({ formId }) => {
   const { t } = useTranslation();

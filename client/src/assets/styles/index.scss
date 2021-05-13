@@ -22,3 +22,21 @@ body {
   content: ' *';
   color: red;
 }
+
+.govuk-input:disabled, .form-control:disabled, .form-control[readonly] {
+  background-color: #e9ecef;
+  opacity: 1;
+};
+
+/* Custom styling for the covid-compliance-check grey box */
+.card-body {
+    padding: 1.25rem;
+};
+.card {
+    border: 1px solid rgba(0, 0, 0, 0.125);
+    border-radius: 0.25rem;
+    background-color: #f8f9fa;
+};
+.form-control {
+  background-color: #ffffff;
+}
