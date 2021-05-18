@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useKeycloak } from '@react-keycloak/web';
 import axios from 'axios';
@@ -11,6 +11,7 @@ import TaskList from './components/TaskList';
 import TaskFilters from './components/TaskFilters';
 import TaskPagination from './components/TaskPagination';
 import SecureLocalStorageManager from '../../utils/SecureLocalStorageManager';
+import { CurrentGroupContext } from '../../utils/CurrentGroupContext';
 
 const TasksListPage = ({ taskType }) => {
   const { t } = useTranslation();
@@ -45,6 +46,8 @@ const TasksListPage = ({ taskType }) => {
     trackPageView();
   }, []);
 
+  const { currentGroup } = useContext(CurrentGroupContext)
+
   useEffect(() => {
     const source = axios.CancelToken.source();
     setAreTasksLoading(true);
@@ -61,7 +64,7 @@ const TasksListPage = ({ taskType }) => {
                   involvedUser: keycloak.tokenParsed.email,
                 }
               : {
-                  candidateGroups: keycloak.tokenParsed.groups,
+                  candidateGroups: [currentGroup.code],
                   includeAssignedTasks: true,
                 };
           const taskCountResponse = await axiosInstance({

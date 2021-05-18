@@ -16,6 +16,7 @@ import FileService from '../../utils/FileService';
 import FormErrorsAlert from '../alert/FormErrorsAlert';
 import SecureLocalStorageManager from '../../utils/SecureLocalStorageManager';
 import './DisplayForm.scss';
+import { CurrentGroupContext } from '../../utils/CurrentGroupContext';
 
 Formio.use(gds);
 
@@ -74,6 +75,7 @@ const DisplayForm = ({
     submitted: false,
   });
 
+  const { currentGroup } = useContext(CurrentGroupContext);
   const { team } = useContext(TeamContext);
   const { staffId: staffid } = useContext(StaffIdContext);
 
@@ -116,6 +118,7 @@ const DisplayForm = ({
         roles,
         team,
         teamid,
+        currentGroup
       },
       staffDetailsDataContext: {
         adelphi,
@@ -259,6 +262,8 @@ const DisplayForm = ({
       }
     }
   };
+
+  console.log(contexts)
 
   return (
     <Loader

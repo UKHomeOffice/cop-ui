@@ -6,12 +6,18 @@ import App from './App';
 import * as serviceWorker from './serviceWorker';
 import { TeamContextProvider } from './utils/TeamContext';
 import { StaffIdContextProvider } from './utils/StaffIdContext';
+import { CurrentGroupContextProvider } from './utils/CurrentGroupContext';
+import { GroupsContextProvider } from './utils/GroupsContext';
 
 ReactDOM.render(
   <React.StrictMode>
     <TeamContextProvider>
       <StaffIdContextProvider>
-        <App />
+        <CurrentGroupContextProvider>
+          <GroupsContextProvider>
+            <App />
+          </GroupsContextProvider>
+        </CurrentGroupContextProvider>
       </StaffIdContextProvider>
     </TeamContextProvider>
   </React.StrictMode>,

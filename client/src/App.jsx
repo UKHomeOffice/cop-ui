@@ -11,7 +11,7 @@ import { MatomoProvider, createInstance } from '@datapunt/matomo-tracker-react';
 import Layout from './components/layout';
 import routes from './routes';
 import ApplicationSpinner from './components/ApplicationSpinner';
-import { useFetchStaffId, useFetchTeam } from './utils/hooks';
+import { useFetchStaffId, useFetchTeam, useFetchCurrentGroup, useFetchGroups } from './utils/hooks';
 
 if (window.ENVIRONMENT_CONFIG) {
   // eslint-disable-next-line no-console
@@ -50,6 +50,8 @@ const RouterView = () => {
   initAll();
   useFetchTeam();
   useFetchStaffId();
+  useFetchCurrentGroup();
+  useFetchGroups();
 
   keycloak.onTokenExpired = () => {
     // eslint-disable-next-line no-console

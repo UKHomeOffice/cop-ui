@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigation } from 'react-navi';
 import { useKeycloak } from '@react-keycloak/web';
@@ -7,6 +7,8 @@ import { useMatomo } from '@datapunt/matomo-tracker-react';
 import Card from './components/Card';
 import { useIsMounted, useAxios } from '../../utils/hooks';
 import SecureLocalStorageManager from '../../utils/SecureLocalStorageManager';
+import { CurrentGroupContext } from '../../utils/CurrentGroupContext';
+import { GroupsContext } from '../../utils/GroupsContext';
 
 const Home = () => {
   const { t } = useTranslation();
@@ -14,6 +16,25 @@ const Home = () => {
   const [keycloak] = useKeycloak();
 
   const axiosInstance = useAxios();
+
+  const { currentGroup, setCurrentGroup, groupLoaded } = useContext(CurrentGroupContext)
+
+  const [groupChanging, setGroupChanging] = useState(false)
+
+  const { groups } = useContext(GroupsContext)
+
+  const GROUP_TYPE_ROLE = 2;
+
+  // const [selectedGroup, setSelectedGroup] = useState(currentGroup?.code)
+
+  // console.log(selectedGroup)
+  const selectRef = React.createRef()
+
+  const handleSubmit = (e) => {
+    e.preventDefault()
+    setCurrentGroup(groups.find(group => group.code === selectRef.current.value))
+    setGroupChanging(false)
+  };
 
   const [groupTasksCount, setGroupTasksCount] = useState({
     isLoading: true,
@@ -47,7 +68,7 @@ const Home = () => {
 
   useEffect(() => {
     const source = axios.CancelToken.source();
-    if (axiosInstance) {
+    if (axiosInstance && currentGroup) {
       axiosInstance({
         method: 'POST',
         url: '/camunda/engine-rest/task/count',
@@ -55,7 +76,7 @@ const Home = () => {
         data: {
           orQueries: [
             {
-              candidateGroups: keycloak.tokenParsed.groups,
+              candidateGroups: [currentGroup.code],
               includeAssignedTasks: true,
             },
           ],
@@ -112,6 +133,7 @@ const Home = () => {
     };
   }, [
     axiosInstance,
+    currentGroup,
     setGroupTasksCount,
     setYourTasksCount,
     isMounted,
@@ -119,14 +141,82 @@ const Home = () => {
     keycloak.tokenParsed.email,
   ]);
 
-  return (
-    <div className="govuk-!-margin-top-7">
-      <div className="govuk-grid-row">
-        <div className="govuk-grid-column-full">
-          <span className="govuk-caption-l">{keycloak.tokenParsed.name}</span>
-          <h1 className="govuk-heading-l">{t('pages.home.heading')}</h1>
+  // console.log(currentGroup)
+  
+  if (!groupLoaded) { return null }
+  if (groupLoaded && !currentGroup) {
+    return (
+      <div className="govuk-error-summary" aria-labelledby="error-summary-title" role="alert" tabIndex="-1" data-module="govuk-error-summary">
+        <h2 className="govuk-error-summary__title" id="error-summary-title">
+          There is a problem
+        </h2>
+        <div className="govuk-error-summary__body">
+          <ul className="govuk-list govuk-error-summary__list">
+            <li>
+              <a href="#passport-issued-error">Your Team is not set on your profile yet.</a>
+            </li>
+            <li>
+              <a href="#postcode-error">Please contact COP support to add your Team.</a>
+            </li>
+          </ul>
         </div>
       </div>
+    )
+  }
+  return (
+    <div className="govuk-!-margin-top-7">
+      {!groupChanging && (
+        <div className="govuk-grid-row">
+          <div className="govuk-grid-column-full">
+            <span className="govuk-caption-l">{keycloak.tokenParsed.name}</span>
+            <h1 className="govuk-heading-l">{`${currentGroup.displayname} `}
+              {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
+              <a
+                href="#"
+                className="govuk-body govuk-link--no-visited-state"
+                onClick={(e) => {
+                  e.preventDefault()
+                  setGroupChanging(true)
+                }}
+              >
+                change
+          </a>
+            </h1>
+          </div>
+        </div>
+      )}
+      {groupChanging && (
+        <div className="govuk-grid-row">
+          <div className="govuk-grid-column-full">
+            <form>
+              <div className="govuk-form-group">
+                <label className="govuk-label" htmlFor="sort">
+                  Select Team
+              </label>
+                <select
+                  className="govuk-select"
+                  defaultValue={currentGroup.code}
+                  ref={selectRef}
+                >
+                  {groups.filter(group => {
+                    return group.grouptypeid !== GROUP_TYPE_ROLE
+                  }).map(group => {
+                    return (
+                      <option key={group.code} checked={group.code === currentGroup.code} value={group.code}>{group.displayname}</option>
+                    )
+                  })}
+                </select>
+                <button
+                  type="submit"
+                  onClick={handleSubmit}
+                  className="govuk-button govuk-!-margin-left-6" data-module="govuk-button">
+                  Save
+              </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
       <div className="govuk-grid-row">
         <ul className="govuk-list">
           <li>

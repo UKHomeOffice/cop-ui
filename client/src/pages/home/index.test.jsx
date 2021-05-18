@@ -22,6 +22,12 @@ describe('Home', () => {
       count: 10,
     });
 
+    mockAxios.onGet('refdata/v2/entities/groups?filter=teamid=eq.21').reply(200, {
+      displayname: 'Portsmouth',
+      code: 'ABC123',
+      grouptypeid: 1
+    })
+
     const wrapper = mount(<Home />);
 
     await act(async () => {
@@ -29,6 +35,8 @@ describe('Home', () => {
       await new Promise((resolve) => setImmediate(resolve));
       await wrapper.update();
     });
+
+    console.log(wrapper.debug())
 
     expect(wrapper.find(Card).length).toBe(5);
     const tasksCard = wrapper.find(Card).at(0);
