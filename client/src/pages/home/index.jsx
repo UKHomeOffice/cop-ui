@@ -10,42 +10,35 @@ import SecureLocalStorageManager from '../../utils/SecureLocalStorageManager';
 import { CurrentGroupContext } from '../../utils/CurrentGroupContext';
 import { GroupsContext } from '../../utils/GroupsContext';
 
+const GROUP_TYPE_ROLE = 2;
+
 const Home = () => {
   const { t } = useTranslation();
   const navigation = useNavigation();
   const [keycloak] = useKeycloak();
-
   const axiosInstance = useAxios();
-
-  const { currentGroup, setCurrentGroup, groupLoaded } = useContext(CurrentGroupContext)
-
-  const [groupChanging, setGroupChanging] = useState(false)
-
-  const { groups } = useContext(GroupsContext)
-
-  const GROUP_TYPE_ROLE = 2;
-
-  // const [selectedGroup, setSelectedGroup] = useState(currentGroup?.code)
-
-  // console.log(selectedGroup)
-  const selectRef = React.createRef()
+  const { currentGroup, setCurrentGroup, groupLoaded } = useContext(CurrentGroupContext);
+  const [groupChanging, setGroupChanging] = useState(false);
+  const { groups } = useContext(GroupsContext);
+  const selectRef = React.createRef();
+  const isMounted = useIsMounted();
+  const { trackPageView } = useMatomo();
 
   const handleSubmit = (e) => {
-    e.preventDefault()
-    setCurrentGroup(groups.find(group => group.code === selectRef.current.value))
-    setGroupChanging(false)
+    e.preventDefault();
+    setCurrentGroup(groups.find((group) => group.code === selectRef.current.value));
+    setGroupChanging(false);
   };
 
   const [groupTasksCount, setGroupTasksCount] = useState({
     isLoading: true,
     count: 0,
   });
+
   const [yourTasksCount, setYourTasksCount] = useState({
     isLoading: true,
     count: 0,
   });
-  const isMounted = useIsMounted();
-  const { trackPageView } = useMatomo();
 
   useEffect(() => {
     trackPageView();
@@ -141,27 +134,28 @@ const Home = () => {
     keycloak.tokenParsed.email,
   ]);
 
-  // console.log(currentGroup)
-  
-  if (!groupLoaded) { return null }
+  if (!groupLoaded) {
+    return null;
+  }
   if (groupLoaded && !currentGroup) {
     return (
-      <div className="govuk-error-summary" aria-labelledby="error-summary-title" role="alert" tabIndex="-1" data-module="govuk-error-summary">
+      <div
+        className="govuk-error-summary"
+        aria-labelledby="error-summary-title"
+        role="alert"
+        tabIndex="-1"
+        data-module="govuk-error-summary"
+      >
         <h2 className="govuk-error-summary__title" id="error-summary-title">
-          There is a problem
+          {t('pages.form.error.form.title')}
         </h2>
         <div className="govuk-error-summary__body">
           <ul className="govuk-list govuk-error-summary__list">
-            <li>
-              <a href="#passport-issued-error">Your Team is not set on your profile yet.</a>
-            </li>
-            <li>
-              <a href="#postcode-error">Please contact COP support to add your Team.</a>
-            </li>
+            <li>{t('pages.groups.user-has-no-team')}</li>
           </ul>
         </div>
       </div>
-    )
+    );
   }
   return (
     <div className="govuk-!-margin-top-7">
@@ -169,18 +163,19 @@ const Home = () => {
         <div className="govuk-grid-row">
           <div className="govuk-grid-column-full">
             <span className="govuk-caption-l">{keycloak.tokenParsed.name}</span>
-            <h1 className="govuk-heading-l">{`${currentGroup.displayname} `}
+            <h1 className="govuk-heading-l">
+              {`${currentGroup.displayname} `}
               {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
               <a
                 href="#"
                 className="govuk-body govuk-link--no-visited-state"
                 onClick={(e) => {
-                  e.preventDefault()
-                  setGroupChanging(true)
+                  e.preventDefault();
+                  setGroupChanging(true);
                 }}
               >
                 change
-          </a>
+              </a>
             </h1>
           </div>
         </div>
@@ -191,27 +186,29 @@ const Home = () => {
             <form>
               <div className="govuk-form-group">
                 <label className="govuk-label" htmlFor="sort">
-                  Select Team
-              </label>
-                <select
-                  className="govuk-select"
-                  defaultValue={currentGroup.code}
-                  ref={selectRef}
-                >
-                  {groups.filter(group => {
-                    return group.grouptypeid !== GROUP_TYPE_ROLE
-                  }).map(group => {
-                    return (
-                      <option key={group.code} checked={group.code === currentGroup.code} value={group.code}>{group.displayname}</option>
-                    )
-                  })}
+                  {t('pages.groups.select-team')}
+                </label>
+                <select className="govuk-select" defaultValue={currentGroup.code} ref={selectRef}>
+                  {groups
+                    .filter((group) => group.grouptypeid !== GROUP_TYPE_ROLE)
+                    .map((group) => (
+                      <option
+                        key={group.code}
+                        selected={group.code === currentGroup.code}
+                        value={group.code}
+                      >
+                        {group.displayname}
+                      </option>
+                    ))}
                 </select>
                 <button
                   type="submit"
                   onClick={handleSubmit}
-                  className="govuk-button govuk-!-margin-left-6" data-module="govuk-button">
+                  className="govuk-button govuk-!-margin-left-6"
+                  data-module="govuk-button"
+                >
                   Save
-              </button>
+                </button>
               </div>
             </form>
           </div>

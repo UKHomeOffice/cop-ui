@@ -4,25 +4,26 @@ import SecureLocalStorageManager from './SecureLocalStorageManager';
 
 export const CurrentGroupContext = createContext({
   currentGroup: undefined,
-  setCurrentGroup: () => { },
+  setCurrentGroup: () => {},
   groupLoaded: false,
-  setGroupLoaded: () => { }
+  setGroupLoaded: () => {},
 });
 
 export const CurrentGroupContextProvider = ({ children }) => {
   const [currentGroup, setCurrentGroup] = useState(SecureLocalStorageManager.get('currentGroup'));
-  const [groupLoaded, setGroupLoaded] = useState(false)
+  const [groupLoaded, setGroupLoaded] = useState(false);
 
   useEffect(() => {
     SecureLocalStorageManager.set('currentGroup', currentGroup);
-  }, [currentGroup])
+  }, [currentGroup]);
 
   return (
     <CurrentGroupContext.Provider
-      value={{ currentGroup, setCurrentGroup, groupLoaded, setGroupLoaded }}>
+      value={{ currentGroup, setCurrentGroup, groupLoaded, setGroupLoaded }}
+    >
       {children}
     </CurrentGroupContext.Provider>
-  )
+  );
 };
 
 CurrentGroupContextProvider.propTypes = {

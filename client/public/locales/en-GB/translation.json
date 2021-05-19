@@ -202,6 +202,10 @@
         "status": "Open",
         "title": "Your team's tasks | Central Operations Platform"
       }
+    },
+    "groups": {
+      "user-has-no-team": "Your Team is not set on your profile yet. Please contact COP support to add your Team.",
+      "select-team": "Select Team"
     }
   }
 }

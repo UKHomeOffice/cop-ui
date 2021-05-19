@@ -7,8 +7,26 @@ import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import TasksListPage from './TasksListPage';
 import ApplicationSpinner from '../../components/ApplicationSpinner';
+import { CurrentGroupContext } from '../../utils/CurrentGroupContext';
 
 dayjs.extend(relativeTime);
+
+// eslint-disable-next-line react/prop-types
+const MockGroupContext = ({ children }) => (
+  <CurrentGroupContext.Provider
+    value={{
+      currentGroup: {
+        displayname: 'Test group',
+        code: 'test',
+      },
+      groupLoaded: true,
+      setCurrentGroup: () => {},
+      setGroupLoaded: () => {},
+    }}
+  >
+    {children}
+  </CurrentGroupContext.Provider>
+);
 
 function createMockData(length) {
   const mockData = [];
@@ -37,11 +55,19 @@ describe('TasksListPage', () => {
   });
 
   it('should render without crashing', () => {
-    shallow(<TasksListPage />);
+    shallow(
+      <MockGroupContext>
+        <TasksListPage />
+      </MockGroupContext>
+    );
   });
 
   it('should render application spinner when getting data', async () => {
-    const wrapper = await mount(<TasksListPage />);
+    const wrapper = await mount(
+      <MockGroupContext>
+        <TasksListPage />
+      </MockGroupContext>
+    );
 
     expect(wrapper.find(ApplicationSpinner).exists()).toBe(true);
   });
@@ -75,7 +101,11 @@ describe('TasksListPage', () => {
       },
     ]);
 
-    render(<TasksListPage />);
+    render(
+      <MockGroupContext>
+        <TasksListPage />
+      </MockGroupContext>
+    );
 
     await waitFor(() => {
       expect(screen.getByText('test-task')).toBeTruthy();
@@ -136,7 +166,11 @@ describe('TasksListPage', () => {
         id: 'processInstanceId1',
       },
     ]);
-    const { container } = render(<TasksListPage />);
+    const { container } = render(
+      <MockGroupContext>
+        <TasksListPage />
+      </MockGroupContext>
+    );
 
     await waitFor(() => {
       /*
@@ -194,7 +228,11 @@ describe('TasksListPage', () => {
       },
     ]);
 
-    const { container } = render(<TasksListPage />);
+    const { container } = render(
+      <MockGroupContext>
+        <TasksListPage />
+      </MockGroupContext>
+    );
 
     await waitFor(() => {
       expect(screen.queryByText('loading')).not.toBeInTheDocument();

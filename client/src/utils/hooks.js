@@ -118,8 +118,8 @@ export const useFetchCurrentGroup = () => {
   const { currentGroup, setCurrentGroup, setGroupLoaded } = useContext(CurrentGroupContext);
   useEffect(() => {
     if (currentGroup) {
-      setGroupLoaded(true)
-      return () => {} 
+      setGroupLoaded(true);
+      return () => {};
     }
     const source = axios.CancelToken.source();
     if (initialized && axiosInstance) {
@@ -135,12 +135,12 @@ export const useFetchCurrentGroup = () => {
                 cancelToken: source.token,
               }
             );
-            setCurrentGroup(response.data.data[0])
-          } 
+            setCurrentGroup(response.data.data[0]);
+          }
         } catch (error) {
           setCurrentGroup(undefined);
         } finally {
-          setGroupLoaded(true)
+          setGroupLoaded(true);
         }
       };
       fetchData();
@@ -148,35 +148,40 @@ export const useFetchCurrentGroup = () => {
     return () => {
       source.cancel('Cancelling request');
     };
-  }, [axiosInstance, initialized])
+  }, [axiosInstance, initialized]);
 };
 
 export const useFetchGroups = () => {
   const [keycloak, initialized] = useKeycloak();
   const axiosInstance = useAxios();
-  const { setGroups } = useContext(GroupsContext)
+  const { setGroups } = useContext(GroupsContext);
+
   useEffect(() => {
     if (initialized && axiosInstance) {
       const {
         tokenParsed: { team_id: teamid },
       } = keycloak;
-      const allUserGroups = keycloak.tokenParsed.groups.join(',')
+      const allUserGroups = keycloak.tokenParsed.groups.join(',');
       const fetchData = async () => {
         try {
           if (teamid) {
-            const response = await axiosInstance.get(
-              `refdata/v2/entities/groups?mode=dataOnly&select=displayname,code,grouptypeid&filter=keycloakgrouppath=in.(${allUserGroups})`)
-            setGroups(response.data.data)
+            const response = await axiosInstance.get('refdata/v2/entities/groups', {
+              params: {
+                mode: 'dataOnly',
+                select: 'displayname,code,grouptypeid',
+                filter: `keycloakgrouppath=in.(${allUserGroups})`,
+              },
+            });
+            setGroups(response.data.data);
           }
-        }
-        catch (error) {
+        } catch (error) {
           setGroups([]);
         }
       };
       fetchData();
     }
-  }, [axiosInstance, initialized, keycloak, setGroups])
-}
+  }, [axiosInstance, initialized, keycloak, setGroups]);
+};
 
 export const useFetchStaffId = () => {
   const [keycloak, initialized] = useKeycloak();

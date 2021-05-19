@@ -5,7 +5,25 @@ import MockAdapter from 'axios-mock-adapter';
 import { act } from '@testing-library/react';
 import Home from './index';
 import Card from './components/Card';
+import { CurrentGroupContext } from '../../utils/CurrentGroupContext';
 import { mockNavigate } from '../../setupTests';
+
+// eslint-disable-next-line react/prop-types
+const MockGroupContext = ({ children }) => (
+  <CurrentGroupContext.Provider
+    value={{
+      currentGroup: {
+        displayname: 'Test group',
+        code: 'test',
+      },
+      groupLoaded: true,
+      setCurrentGroup: () => {},
+      setGroupLoaded: () => {},
+    }}
+  >
+    {children}
+  </CurrentGroupContext.Provider>
+);
 
 describe('Home', () => {
   beforeEach(() => {
@@ -14,7 +32,11 @@ describe('Home', () => {
 
   const mockAxios = new MockAdapter(axios);
   it('renders without crashing', () => {
-    shallow(<Home />);
+    shallow(
+      <MockGroupContext>
+        <Home />
+      </MockGroupContext>
+    );
   });
 
   it('renders forms, tasks, cases and reports panels', async () => {
@@ -25,10 +47,14 @@ describe('Home', () => {
     mockAxios.onGet('refdata/v2/entities/groups?filter=teamid=eq.21').reply(200, {
       displayname: 'Portsmouth',
       code: 'ABC123',
-      grouptypeid: 1
-    })
+      grouptypeid: 1,
+    });
 
-    const wrapper = mount(<Home />);
+    const wrapper = mount(
+      <MockGroupContext>
+        <Home />
+      </MockGroupContext>
+    );
 
     await act(async () => {
       await Promise.resolve(wrapper);
@@ -36,7 +62,7 @@ describe('Home', () => {
       await wrapper.update();
     });
 
-    console.log(wrapper.debug())
+    console.log(wrapper.debug());
 
     expect(wrapper.find(Card).length).toBe(5);
     const tasksCard = wrapper.find(Card).at(0);
@@ -57,7 +83,11 @@ describe('Home', () => {
   it('handles errors and sets it to zero', async () => {
     mockAxios.onPost('/camunda/engine-rest/task/count').reply(500, {});
 
-    const wrapper = mount(<Home />);
+    const wrapper = mount(
+      <MockGroupContext>
+        <Home />
+      </MockGroupContext>
+    );
 
     await act(async () => {
       await Promise.resolve(wrapper);
@@ -83,7 +113,11 @@ describe('Home', () => {
     mockAxios.onPost('/camunda/engine-rest/task/count').reply(200, {
       count: 10,
     });
-    const wrapper = await mount(<Home />);
+    const wrapper = await mount(
+      <MockGroupContext>
+        <Home />
+      </MockGroupContext>
+    );
 
     await act(async () => {
       await Promise.resolve(wrapper);
