@@ -204,8 +204,10 @@
       }
     },
     "groups": {
-      "user-has-no-team": "Your Team is not set on your profile yet. Please contact COP support to add your Team.",
-      "select-team": "Select Team"
+      "user-has-no-group": "Your Team is not set on your profile yet. Please contact COP support to add your Team.",
+      "select-group": "Select Team",
+      "save-group": "Save",
+      "change-group": "change"
     }
   }
 }

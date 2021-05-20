@@ -151,7 +151,7 @@ const Home = () => {
         </h2>
         <div className="govuk-error-summary__body">
           <ul className="govuk-list govuk-error-summary__list">
-            <li>{t('pages.groups.user-has-no-team')}</li>
+            <li>{t('pages.groups.user-has-no-group')}</li>
           </ul>
         </div>
       </div>
@@ -166,16 +166,18 @@ const Home = () => {
             <h1 className="govuk-heading-l">
               {`${currentGroup.displayname} `}
               {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
-              <a
-                href="#"
-                className="govuk-body govuk-link--no-visited-state"
-                onClick={(e) => {
-                  e.preventDefault();
-                  setGroupChanging(true);
-                }}
-              >
-                change
-              </a>
+              {groups && groups.length > 1 && (
+                <a
+                  href="#change-group"
+                  className="govuk-body govuk-link--no-visited-state"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setGroupChanging(true);
+                  }}
+                >
+                  {t('pages.groups.change-group')}
+                </a>
+              )}
             </h1>
           </div>
         </div>
@@ -186,9 +188,9 @@ const Home = () => {
             <form>
               <div className="govuk-form-group">
                 <label className="govuk-label" htmlFor="sort">
-                  {t('pages.groups.select-team')}
+                  {t('pages.groups.select-group')}
                 </label>
-                <select className="govuk-select" defaultValue={currentGroup.code} ref={selectRef}>
+                <select className="govuk-select" ref={selectRef}>
                   {groups
                     .filter((group) => group.grouptypeid !== GROUP_TYPE_ROLE)
                     .map((group) => (
@@ -207,7 +209,7 @@ const Home = () => {
                   className="govuk-button govuk-!-margin-left-6"
                   data-module="govuk-button"
                 >
-                  Save
+                  {t('pages.groups.save-group')}
                 </button>
               </div>
             </form>
