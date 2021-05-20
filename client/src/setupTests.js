@@ -45,6 +45,7 @@ jest.mock('@react-keycloak/web', () => ({
           roles: ['test'],
         },
         team_id: '21',
+        groups: 'testgroup',
       },
       logout: mockLogout,
     },

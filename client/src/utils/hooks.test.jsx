@@ -3,10 +3,18 @@ import PropTypes from 'prop-types';
 import axios from 'axios';
 import MockAdapter from 'axios-mock-adapter';
 import { renderHook } from '@testing-library/react-hooks';
-import { useAxios, useFetchTeam, useFetchStaffId, useIsMounted } from './hooks';
+import {
+  useAxios,
+  useFetchTeam,
+  useFetchStaffId,
+  useIsMounted,
+  useFetchCurrentGroup,
+} from './hooks';
 import Logger from './logger';
 import { TeamContext } from './TeamContext';
 import { StaffIdContext } from './StaffIdContext';
+import { CurrentGroupContext } from './CurrentGroupContext';
+import { GroupsContext } from './GroupsContext';
 
 jest.mock('./logger', () => ({
   error: jest.fn(),
@@ -68,6 +76,46 @@ describe('axios hooks', () => {
       children: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.node), PropTypes.node]).isRequired,
     };
     renderHook(() => useFetchTeam(), { wrapper });
+  });
+
+  it('can fetch current group', async () => {
+    const group = {
+      displayname: 'Portsmouth',
+      code: 'ABC123',
+      grouptypeid: 1,
+    };
+    mockAxios.onGet('/refdata/v2/entities/groups?filter=id=eq.21').reply(200, {
+      data: [group],
+    });
+    const { Provider } = CurrentGroupContext;
+    const wrapper = ({ children }) => <Provider value={group}>{children}</Provider>;
+    wrapper.propTypes = {
+      children: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.node), PropTypes.node]).isRequired,
+    };
+    renderHook(() => useFetchCurrentGroup(), { wrapper });
+  });
+
+  it('can fetch groups', async () => {
+    const groups = [
+      {
+        displayname: 'Portsmouth',
+        code: 'ABC123',
+        grouptypeid: 1,
+      },
+    ];
+    mockAxios
+      .onGet(
+        '/refdata/v2/entities/groups?mode=dataOnly&select=displayname,code,grouptypeid&filter=keycloakgrouppath=in.(testgroup)'
+      )
+      .reply(200, {
+        data: groups,
+      });
+    const { Provider } = GroupsContext;
+    const wrapper = ({ children }) => <Provider value={groups}>{children}</Provider>;
+    wrapper.propTypes = {
+      children: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.node), PropTypes.node]).isRequired,
+    };
+    renderHook(() => useFetchCurrentGroup(), { wrapper });
   });
 
   it('can fetch staffid', async () => {
