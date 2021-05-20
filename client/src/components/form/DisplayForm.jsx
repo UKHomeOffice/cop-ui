@@ -118,7 +118,8 @@ const DisplayForm = ({
         roles,
         team,
         teamid,
-        currentGroup
+        currentGroup,
+        groups,
       },
       staffDetailsDataContext: {
         adelphi,
@@ -262,8 +263,6 @@ const DisplayForm = ({
       }
     }
   };
-
-  console.log(contexts)
 
   return (
     <Loader

@@ -62,8 +62,6 @@ describe('Home', () => {
       await wrapper.update();
     });
 
-    console.log(wrapper.debug());
-
     expect(wrapper.find(Card).length).toBe(5);
     const tasksCard = wrapper.find(Card).at(0);
     const groupTasksCard = wrapper.find(Card).at(1);

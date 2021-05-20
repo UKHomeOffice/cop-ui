@@ -107,6 +107,7 @@ const CaseAction = ({
         roles,
         team,
         teamid,
+        groups,
       },
       staffDetailsDataContext: {
         adelphi,
