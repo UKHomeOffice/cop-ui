@@ -4,13 +4,29 @@ import Card from './Card';
 
 describe('Card', () => {
   it('renders without crashing', () => {
-    shallow(<Card isLoading={false} title="Test" handleClick={() => {}} footer="test" href="href" count={0} />);
+    shallow(
+      <Card
+        isLoading={false}
+        title="Test"
+        handleClick={() => {}}
+        footer="test"
+        href="href"
+        count={0}
+      />
+    );
   });
 
   it('can handle onclick', () => {
     const mockHandle = jest.fn();
     const wrapper = shallow(
-      <Card isLoading={false} title="Test" handleClick={mockHandle} footer="test" href="href" count={0} />
+      <Card
+        isLoading={false}
+        title="Test"
+        handleClick={mockHandle}
+        footer="test"
+        href="href"
+        count={0}
+      />
     );
     wrapper
       .find('a')
