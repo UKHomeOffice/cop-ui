@@ -40,3 +40,7 @@ body {
 .form-control {
   background-color: #ffffff;
 }
+
+div[ref='input'] {
+  white-space: pre-wrap;
+}
