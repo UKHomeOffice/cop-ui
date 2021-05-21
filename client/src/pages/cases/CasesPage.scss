@@ -1,8 +1,8 @@
-@import "node_modules/govuk-frontend/govuk/base";
+@import 'node_modules/govuk-frontend/govuk/base';
 @import '~govuk-frontend/govuk/settings/_colours-applied.scss';
-$govuk-card-border : govuk-colour('blue');
+$govuk-card-border: govuk-colour('blue');
 
-$govuk-page-width: 1400px; 
+$govuk-page-width: 1400px;
 
 @import '~govuk-frontend/govuk/all';
 
@@ -17,8 +17,8 @@ $govuk-page-width: 1400px;
 }
 
 .govuk-card {
-  @include govuk-responsive-margin(6, "bottom");
-  @include govuk-responsive-padding(6, "bottom");
+  @include govuk-responsive-margin(6, 'bottom');
+  @include govuk-responsive-padding(6, 'bottom');
   border-bottom: 3px solid $govuk-card-border;
   box-sizing: border-box;
 }
@@ -39,9 +39,9 @@ $govuk-page-width: 1400px;
 
 .metrics-card-body {
   display: block;
-  background-color: govuk-colour("blue");
+  background-color: govuk-colour('blue');
   padding: 1em;
-  color: govuk-colour("white");
+  color: govuk-colour('white');
   text-decoration: none;
 
   span {

@@ -74,7 +74,6 @@ describe('onPageChange', () => {
     expect(event.detail.newPage.getVisuals).not.toHaveBeenCalled();
   });
 
-
   it('does not add existing pages to visitedPages', () => {
     const branchName = 'My branch';
     const event = {
