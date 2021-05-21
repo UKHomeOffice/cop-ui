@@ -1,4 +1,4 @@
-FROM digitalpatterns/jre:latest
+FROM quay.io/ukhomeofficedigital/jre:latest
 
 WORKDIR /app
 
