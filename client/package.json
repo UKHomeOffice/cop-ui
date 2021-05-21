@@ -96,10 +96,8 @@
     ]
   },
   "lint-staged": {
-    "./src/**/*.{js,jsx}": [
-      "npx prettier --write",
-      "npm run lint"
-    ]
+    "./src/**/*.{js,jsx}": "npm run lint",
+    "./src/**/*.{js,json,jsx,scss}": "npx prettier --write ./src"
   },
   "proxy": "http://localhost:8004",
   "scripts": {
