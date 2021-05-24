@@ -5,7 +5,7 @@ import TaskList from './TaskList';
 
 describe('TaskList', () => {
   it('renders without crashing', () => {
-    shallow(<TaskList groupBy="category" />);
+    shallow(<TaskList groupBy="category" taskType="groups" />);
   });
 
   it('can click on a task', () => {
@@ -20,6 +20,7 @@ describe('TaskList', () => {
           },
         ]}
         groupBy="category"
+        taskType="groups"
       />
     );
 
