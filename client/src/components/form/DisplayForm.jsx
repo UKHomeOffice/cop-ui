@@ -306,6 +306,7 @@ const DisplayForm = ({
           });
         }}
         onError={(errors) => {
+          window.scrollTo(0, 0);
           setErrorAlert({
             type: 'form-error',
             errors,

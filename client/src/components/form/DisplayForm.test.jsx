@@ -84,6 +84,7 @@ describe('DisplayForm', () => {
 
     expect(wrapper.find(FormErrorsAlert).exists()).toBe(true);
     expect(wrapper.find('.govuk-error-summary')).toHaveLength(1);
+    expect(window.scrollTo).toBeCalledWith(0, 0);
   });
 
   it('removes the error alert when you go to a previous page of the form', async () => {
