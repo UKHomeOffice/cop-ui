@@ -104,6 +104,31 @@ describe('TaskListItem', () => {
     });
   });
 
+  it('can action a task from the tasks assigned to you page', async () => {
+    mockAxios.onPost('/camunda/engine-rest/task/1/assignee').reply(200, {
+      count: 1,
+    });
+    // In the setupTests mocks, the default current user is "test"
+    render(
+      <TaskListItem
+        id="1"
+        due="2020/03/19"
+        name="testName"
+        assignee="testAssignee"
+        taskType="yours"
+        businessKey="testKey"
+      />
+    );
+
+    expect(screen.getByText('Action')).toBeTruthy();
+
+    fireEvent.click(screen.getByText('Action'));
+
+    await waitFor(() => {
+      expect(mockNavigate).toHaveBeenCalledWith('/tasks/1');
+    });
+  });
+
   it('can unclaim a task assigned to the current user', async () => {
     mockAxios.onPost('/camunda/engine-rest/task/1/unclaim').reply(200, {
       count: 1,
