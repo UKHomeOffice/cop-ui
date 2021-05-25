@@ -70,4 +70,9 @@ describe('TaskPageSummary', () => {
     expect(screen.queryByText('Month')).not.toBeInTheDocument();
     expect(screen.queryByText('Year')).not.toBeInTheDocument();
   });
+
+  it('matches snapshot', () => {
+    const { asFragment } = render(<TaskPageSummary {...mockProps} />);
+    expect(asFragment()).toMatchSnapshot();
+  });
 });

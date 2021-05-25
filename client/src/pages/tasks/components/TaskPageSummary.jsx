@@ -55,7 +55,7 @@ const TaskPageSummary = ({
               {businessKey}
             </Link>
           </span>
-          <h2 className="govuk-heading-l">{taskInfo.name}</h2>
+          <h1 className="govuk-heading-l">{taskInfo.name}</h1>
         </div>
       </div>
       <div className="govuk-grid-row">
