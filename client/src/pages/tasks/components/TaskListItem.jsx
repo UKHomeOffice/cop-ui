@@ -11,7 +11,7 @@ import { isOverDue } from './utils';
 
 dayjs.extend(relativeTime);
 
-const TaskListItem = ({ id, due, name, assignee, businessKey }) => {
+const TaskListItem = ({ id, due, name, assignee, businessKey, taskType }) => {
   const axiosInstance = useAxios();
   const [keycloak] = useKeycloak();
   const navigation = useNavigation();
@@ -81,13 +81,36 @@ const TaskListItem = ({ id, due, name, assignee, businessKey }) => {
       </div>
       <div className="govuk-grid-column-one-half">
         <div className="govuk-grid-row">
-          <div className="govuk-grid-column-one-third govuk-!-margin-bottom-3">
-            {isOverDue(due)}
-          </div>
-          <div className="govuk-grid-column-one-third govuk-!-margin-bottom-3">
-            <span className="govuk-!-font-size-19 govuk-!-font-weight-bold">{isAssigned()}</span>
-          </div>
-          <div className="govuk-grid-column-one-third claim-task">{canClaimTask()}</div>
+          {taskType === 'groups' && (
+            <>
+              <div className="govuk-grid-column-one-third govuk-!-margin-bottom-3">
+                {isOverDue(due)}
+              </div>
+              <div className="govuk-grid-column-one-third govuk-!-margin-bottom-3">
+                <span className="govuk-!-font-size-19 govuk-!-font-weight-bold">
+                  {isAssigned()}
+                </span>
+              </div>
+              <div className="govuk-grid-column-one-third claim-task">{canClaimTask()}</div>
+            </>
+          )}
+          {taskType === 'yours' && (
+            <>
+              <div className="govuk-grid-column-two-thirds govuk-!-margin-bottom-3">
+                {isOverDue(due)}
+              </div>
+              <div className="govuk-grid-column-one-third claim-task">
+                <button
+                  type="submit"
+                  id="actionButton"
+                  className="govuk-button"
+                  onClick={handleClaim}
+                >
+                  Action
+                </button>
+              </div>
+            </>
+          )}
         </div>
       </div>
     </div>
@@ -104,6 +127,7 @@ TaskListItem.propTypes = {
   name: PropTypes.string.isRequired,
   assignee: PropTypes.string,
   businessKey: PropTypes.string.isRequired,
+  taskType: PropTypes.string.isRequired,
 };
 
 export default TaskListItem;

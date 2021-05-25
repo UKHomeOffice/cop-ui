@@ -215,6 +215,7 @@ const TasksListPage = ({ taskType }) => {
             <div className="govuk-grid-column-full">
               <TaskList
                 tasks={data.tasks}
+                taskType={taskType}
                 groupBy={filters.groupBy}
                 areTasksLoading={areTasksLoading}
               />

@@ -16,13 +16,27 @@ describe('TaskListItem', () => {
 
   it('can render without error', () => {
     shallow(
-      <TaskListItem id="1" due="2020/03/19" name="test" assignee="test" businessKey="test" />
+      <TaskListItem
+        id="1"
+        due="2020/03/19"
+        name="test"
+        assignee="test"
+        businessKey="test"
+        taskType="groups"
+      />
     );
   });
 
   it('can click on a task', () => {
     const wrapper = mount(
-      <TaskListItem id="1" due="2020/03/19" name="test" assignee="test" businessKey="test" />
+      <TaskListItem
+        id="1"
+        due="2020/03/19"
+        name="test"
+        assignee="test"
+        businessKey="test"
+        taskType="groups"
+      />
     );
 
     expect(wrapper.find(Link).at(0).props().href).toBe('/tasks/1');
@@ -30,7 +44,14 @@ describe('TaskListItem', () => {
 
   it('renders "Overdue" if task due date is in the past', () => {
     const wrapper = mount(
-      <TaskListItem id="1" due="2020/03/19" name="test" assignee="test" businessKey="test" />
+      <TaskListItem
+        id="1"
+        due="2020/03/19"
+        name="test"
+        assignee="test"
+        businessKey="test"
+        taskType="groups"
+      />
     );
     const taskDue = wrapper
       .find('div[className="govuk-grid-column-one-third govuk-!-margin-bottom-3"]')
@@ -42,7 +63,14 @@ describe('TaskListItem', () => {
   it('renders "Due" if task due date is in the future', () => {
     const tomorrow = dayjs().add(1, 'day').format();
     const wrapper = mount(
-      <TaskListItem id="1" due={tomorrow} name="test" assignee="test" businessKey="test" />
+      <TaskListItem
+        id="1"
+        due={tomorrow}
+        name="test"
+        assignee="test"
+        businessKey="test"
+        taskType="groups"
+      />
     );
     const taskDue = wrapper
       .find('div[className="govuk-grid-column-one-third govuk-!-margin-bottom-3"]')
@@ -62,6 +90,7 @@ describe('TaskListItem', () => {
         due="2020/03/19"
         name="testName"
         assignee="testAssignee"
+        taskType="groups"
         businessKey="testKey"
       />
     );
@@ -75,13 +104,45 @@ describe('TaskListItem', () => {
     });
   });
 
+  it('can action a task from the tasks assigned to you page', async () => {
+    mockAxios.onPost('/camunda/engine-rest/task/1/assignee').reply(200, {
+      count: 1,
+    });
+    // In the setupTests mocks, the default current user is "test"
+    render(
+      <TaskListItem
+        id="1"
+        due="2020/03/19"
+        name="testName"
+        assignee="testAssignee"
+        taskType="yours"
+        businessKey="testKey"
+      />
+    );
+
+    expect(screen.getByText('Action')).toBeTruthy();
+
+    fireEvent.click(screen.getByText('Action'));
+
+    await waitFor(() => {
+      expect(mockNavigate).toHaveBeenCalledWith('/tasks/1');
+    });
+  });
+
   it('can unclaim a task assigned to the current user', async () => {
     mockAxios.onPost('/camunda/engine-rest/task/1/unclaim').reply(200, {
       count: 1,
     });
     // In the setupTests mocks, the default current user is "test"
     render(
-      <TaskListItem id="1" due="2020/03/19" name="testName" assignee="test" businessKey="testKey" />
+      <TaskListItem
+        id="1"
+        due="2020/03/19"
+        name="testName"
+        assignee="test"
+        businessKey="testKey"
+        taskType="groups"
+      />
     );
 
     expect(screen.getByText('Unclaim')).toBeTruthy();

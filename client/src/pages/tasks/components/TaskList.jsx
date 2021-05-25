@@ -5,7 +5,7 @@ import _ from 'lodash';
 import TaskListItem from './TaskListItem';
 import determinePriority from '../../../utils/priority';
 
-const TaskList = ({ tasks, groupBy }) => {
+const TaskList = ({ tasks, groupBy, taskType }) => {
   const tasksGroupedBy = _.groupBy(tasks, (x) => x[groupBy]);
   const isPriority = (keyName) => {
     if (groupBy === 'priority') {
@@ -37,6 +37,7 @@ const TaskList = ({ tasks, groupBy }) => {
                     key={task.id}
                     id={task.id}
                     due={task.due}
+                    taskType={taskType}
                     name={task.name}
                     assignee={task.assignee}
                     businessKey={task.businessKey}
@@ -63,6 +64,7 @@ TaskList.propTypes = {
     })
   ),
   groupBy: PropTypes.string.isRequired,
+  taskType: PropTypes.string.isRequired,
 };
 
 export default TaskList;
