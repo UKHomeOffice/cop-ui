@@ -8,6 +8,8 @@ import Logger from './logger';
 import { AlertContext } from './AlertContext';
 import { TeamContext } from './TeamContext';
 import { StaffIdContext } from './StaffIdContext';
+import { CurrentGroupContext } from './CurrentGroupContext';
+import { GroupsContext } from './GroupsContext';
 
 export const useAxios = () => {
   const [keycloak, initialized] = useKeycloak();
@@ -17,39 +19,40 @@ export const useAxios = () => {
   const routeRef = useRef(useCurrentRoute());
   const setAlertRef = useRef(setAlertContext);
   useEffect(() => {
-    const instance = axios.create({
-      baseURL: '/',
-      headers: {
-        Authorization: initialized ? `Bearer ${keycloak.token}` : undefined,
-      },
-    });
+    if (initialized) {
+      const instance = axios.create({
+        baseURL: '/',
+        headers: {
+          Authorization: initialized ? `Bearer ${keycloak.token}` : undefined,
+        },
+      });
 
-    instance.interceptors.response.use(
-      (response) => response,
-      async (error) => {
-        Logger.error({
-          token: keycloak.token,
-          message: error.response.data,
-          path: routeRef.current.url.pathname,
-        });
+      instance.interceptors.response.use(
+        (response) => response,
+        async (error) => {
+          Logger.error({
+            token: keycloak.token,
+            message: error.response.data,
+            path: routeRef.current.url.pathname,
+          });
 
-        setAlertRef.current({
-          type: 'api-error',
-          errors: [
-            {
-              status: error.response.status,
-              message: error.message,
-              path: error.response.config.url,
-            },
-          ],
-        });
+          setAlertRef.current({
+            type: 'api-error',
+            errors: [
+              {
+                status: error.response.status,
+                message: error.message,
+                path: error.response.config.url,
+              },
+            ],
+          });
 
-        return Promise.reject(error);
-      }
-    );
+          return Promise.reject(error);
+        }
+      );
 
-    setAxiosInstance({ instance });
-
+      setAxiosInstance({ instance });
+    }
     return () => {
       setAxiosInstance({});
     };
@@ -72,7 +75,6 @@ export const useIsMounted = () => {
 export const useFetchTeam = () => {
   const [keycloak, initialized] = useKeycloak();
   const axiosInstance = useAxios();
-  const isMounted = useIsMounted();
   const { setTeam } = useContext(TeamContext);
   useEffect(() => {
     const source = axios.CancelToken.source();
@@ -89,21 +91,17 @@ export const useFetchTeam = () => {
                 cancelToken: source.token,
               }
             );
-            if (isMounted.current) {
-              const team = response.data.data[0];
-              // Coerces values of team object from numbers to strings to use in shift
-              const reformattedTeam = _.mapValues(team, (elem) => {
-                return typeof elem === 'number' ? String(elem) : elem;
-              });
-              setTeam(reformattedTeam);
-            }
+            const team = response.data.data[0];
+            // Coerces values of team object from numbers to strings to use in shift
+            const reformattedTeam = _.mapValues(team, (elem) => {
+              return typeof elem === 'number' ? String(elem) : elem;
+            });
+            setTeam(reformattedTeam);
           } else {
             // TODO: Redirect the user here because they have no teamid in KC...
           }
         } catch (error) {
-          if (isMounted.current) {
-            setTeam({});
-          }
+          setTeam({});
         }
       };
       fetchData();
@@ -111,13 +109,83 @@ export const useFetchTeam = () => {
     return () => {
       source.cancel('Cancelling request');
     };
-  }, [axiosInstance, initialized, isMounted, keycloak, setTeam]);
+  }, [axiosInstance, initialized, keycloak, setTeam]);
+};
+
+export const useFetchCurrentGroup = () => {
+  const [keycloak, initialized] = useKeycloak();
+  const axiosInstance = useAxios();
+  const { currentGroup, setCurrentGroup, setGroupLoaded } = useContext(CurrentGroupContext);
+  useEffect(() => {
+    if (currentGroup) {
+      setGroupLoaded(true);
+      return () => {};
+    }
+    const source = axios.CancelToken.source();
+    if (initialized && axiosInstance) {
+      const {
+        tokenParsed: { team_id: teamid },
+      } = keycloak;
+      const fetchData = async () => {
+        try {
+          if (teamid) {
+            const response = await axiosInstance.get(
+              `refdata/v2/entities/groups?filter=teamid=eq.${teamid}`,
+              {
+                cancelToken: source.token,
+              }
+            );
+            setCurrentGroup(response.data.data[0]);
+          }
+        } catch (error) {
+          setCurrentGroup(undefined);
+        } finally {
+          setGroupLoaded(true);
+        }
+      };
+      fetchData();
+    }
+    return () => {
+      source.cancel('Cancelling request');
+    };
+  }, [axiosInstance, initialized]);
+};
+
+export const useFetchGroups = () => {
+  const [keycloak, initialized] = useKeycloak();
+  const axiosInstance = useAxios();
+  const { setGroups } = useContext(GroupsContext);
+
+  useEffect(() => {
+    if (initialized && axiosInstance) {
+      const {
+        tokenParsed: { team_id: teamid },
+      } = keycloak;
+      const allUserGroups = keycloak.tokenParsed.groups.join(',');
+      const fetchData = async () => {
+        try {
+          if (teamid) {
+            const response = await axiosInstance.get('refdata/v2/entities/groups', {
+              params: {
+                mode: 'dataOnly',
+                select: 'displayname,code,grouptypeid',
+                filter: `keycloakgrouppath=in.(${allUserGroups})`,
+              },
+            });
+            setGroups(response.data.data);
+          }
+        } catch (error) {
+          setGroups([]);
+        }
+      };
+      fetchData();
+    }
+  }, [axiosInstance, initialized, keycloak, setGroups]);
 };
 
 export const useFetchStaffId = () => {
   const [keycloak, initialized] = useKeycloak();
   const axiosInstance = useAxios();
-  const isMounted = useIsMounted();
   const { setStaffId } = useContext(StaffIdContext);
   useEffect(() => {
     const source = axios.CancelToken.source();
@@ -130,14 +198,10 @@ export const useFetchStaffId = () => {
           const response = await axiosInstance.get(`opdata/v2/staff?filter=email=eq.${email}`, {
             cancelToken: source.token,
           });
-          if (isMounted.current) {
-            const { staffid: staffId } = response.data[0];
-            setStaffId(staffId);
-          }
+          const { staffid: staffId } = response.data[0];
+          setStaffId(staffId);
         } catch (error) {
-          if (isMounted.current) {
-            setStaffId(null);
-          }
+          setStaffId(null);
         }
       };
       fetchData();
@@ -145,7 +209,7 @@ export const useFetchStaffId = () => {
     return () => {
       source.cancel('Cancelling request');
     };
-  }, [axiosInstance, initialized, isMounted, keycloak, setStaffId]);
+  }, [axiosInstance, initialized, keycloak, setStaffId]);
 };
 
 export default useIsMounted;

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigation } from 'react-navi';
 import { useKeycloak } from '@react-keycloak/web';
@@ -7,24 +7,38 @@ import { useMatomo } from '@datapunt/matomo-tracker-react';
 import Card from './components/Card';
 import { useIsMounted, useAxios } from '../../utils/hooks';
 import SecureLocalStorageManager from '../../utils/SecureLocalStorageManager';
+import { CurrentGroupContext } from '../../utils/CurrentGroupContext';
+import { GroupsContext } from '../../utils/GroupsContext';
+
+const GROUP_TYPE_ROLE = 2;
 
 const Home = () => {
   const { t } = useTranslation();
   const navigation = useNavigation();
   const [keycloak] = useKeycloak();
-
   const axiosInstance = useAxios();
+  const { currentGroup, setCurrentGroup, groupLoaded } = useContext(CurrentGroupContext);
+  const [groupChanging, setGroupChanging] = useState(false);
+  const { groups } = useContext(GroupsContext);
+  const selectRef = React.createRef();
+  const isMounted = useIsMounted();
+  const { trackPageView } = useMatomo();
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    setCurrentGroup(groups.find((group) => group.code === selectRef.current.value));
+    setGroupChanging(false);
+  };
 
   const [groupTasksCount, setGroupTasksCount] = useState({
     isLoading: true,
     count: 0,
   });
+
   const [yourTasksCount, setYourTasksCount] = useState({
     isLoading: true,
     count: 0,
   });
-  const isMounted = useIsMounted();
-  const { trackPageView } = useMatomo();
 
   useEffect(() => {
     trackPageView();
@@ -47,7 +61,7 @@ const Home = () => {
 
   useEffect(() => {
     const source = axios.CancelToken.source();
-    if (axiosInstance) {
+    if (axiosInstance && currentGroup) {
       axiosInstance({
         method: 'POST',
         url: '/camunda/engine-rest/task/count',
@@ -55,7 +69,7 @@ const Home = () => {
         data: {
           orQueries: [
             {
-              candidateGroups: keycloak.tokenParsed.groups,
+              candidateGroups: [currentGroup.code],
               includeAssignedTasks: true,
             },
           ],
@@ -112,6 +126,7 @@ const Home = () => {
     };
   }, [
     axiosInstance,
+    currentGroup,
     setGroupTasksCount,
     setYourTasksCount,
     isMounted,
@@ -119,14 +134,88 @@ const Home = () => {
     keycloak.tokenParsed.email,
   ]);
 
-  return (
-    <div className="govuk-!-margin-top-7">
-      <div className="govuk-grid-row">
-        <div className="govuk-grid-column-full">
-          <span className="govuk-caption-l">{keycloak.tokenParsed.name}</span>
-          <h1 className="govuk-heading-l">{t('pages.home.heading')}</h1>
+  if (!groupLoaded) {
+    return null;
+  }
+  if (groupLoaded && !currentGroup) {
+    return (
+      <div
+        className="govuk-error-summary"
+        aria-labelledby="error-summary-title"
+        role="alert"
+        tabIndex="-1"
+        data-module="govuk-error-summary"
+      >
+        <h2 className="govuk-error-summary__title" id="error-summary-title">
+          {t('pages.form.error.form.title')}
+        </h2>
+        <div className="govuk-error-summary__body">
+          <ul className="govuk-list govuk-error-summary__list">
+            <li>{t('pages.groups.user-has-no-group')}</li>
+          </ul>
         </div>
       </div>
+    );
+  }
+  return (
+    <div className="govuk-!-margin-top-7">
+      {!groupChanging && (
+        <div className="govuk-grid-row">
+          <div className="govuk-grid-column-full">
+            <span className="govuk-caption-l">{keycloak.tokenParsed.name}</span>
+            <h1 className="govuk-heading-l">
+              {`${currentGroup.displayname} `}
+              {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
+              {groups && groups.length > 1 && (
+                <a
+                  href="#change-group"
+                  className="govuk-body govuk-link--no-visited-state"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setGroupChanging(true);
+                  }}
+                >
+                  {t('pages.groups.change-group')}
+                </a>
+              )}
+            </h1>
+          </div>
+        </div>
+      )}
+      {groupChanging && (
+        <div className="govuk-grid-row">
+          <div className="govuk-grid-column-full">
+            <form>
+              <div className="govuk-form-group">
+                <label className="govuk-label" htmlFor="sort">
+                  {t('pages.groups.select-group')}
+                </label>
+                <select className="govuk-select" ref={selectRef}>
+                  {groups
+                    .filter((group) => group.grouptypeid !== GROUP_TYPE_ROLE)
+                    .map((group) => (
+                      <option
+                        key={group.code}
+                        selected={group.code === currentGroup.code}
+                        value={group.code}
+                      >
+                        {group.displayname}
+                      </option>
+                    ))}
+                </select>
+                <button
+                  type="submit"
+                  onClick={handleSubmit}
+                  className="govuk-button govuk-!-margin-left-6"
+                  data-module="govuk-button"
+                >
+                  {t('pages.groups.save-group')}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
       <div className="govuk-grid-row">
         <ul className="govuk-list">
           <li>
