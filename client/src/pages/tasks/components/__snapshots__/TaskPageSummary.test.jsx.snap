@@ -1,0 +1,124 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`TaskPageSummary matches snapshot 1`] = `
+<DocumentFragment>
+  <div
+    class="govuk-grid-row"
+  >
+    <div
+      class="govuk-grid-column-full"
+      id="taskName"
+    >
+      <span
+        class="govuk-caption-l"
+      >
+        businessKey
+      </span>
+      <h1
+        class="govuk-heading-l"
+      >
+        name
+      </h1>
+    </div>
+  </div>
+  <div
+    class="govuk-grid-row"
+  >
+    <div
+      class="govuk-grid-column-one-quarter"
+      id="category"
+    >
+      <span
+        class="govuk-caption-m govuk-!-font-size-19"
+      >
+        pages.task.category
+      </span>
+      <h4
+        class="govuk-heading-m govuk-!-font-size-19"
+      >
+        test
+      </h4>
+    </div>
+    <div
+      class="govuk-grid-column-one-quarter"
+      id="taskDueDate"
+    >
+      <span
+        class="govuk-caption-m govuk-!-font-size-19"
+      >
+        pages.task.due  (
+        <button
+          aria-hidden="true"
+          class="govuk-accordion__open-all"
+          type="button"
+        >
+          change
+        </button>
+        )
+      </span>
+      <h4
+        class="govuk-heading-m govuk-!-font-size-19"
+      >
+        <span
+          aria-label="due 2 months ago"
+          class="govuk-!-font-size-19 govuk-!-font-weight-bold overdue"
+        >
+          Overdue 2 months ago
+        </span>
+      </h4>
+    </div>
+    <div
+      class="govuk-grid-column-one-quarter"
+      id="taskPriority"
+    >
+      <span
+        class="govuk-caption-m govuk-!-font-size-19"
+      >
+        pages.task.priority  (
+        <button
+          aria-hidden="true"
+          class="govuk-accordion__open-all"
+          type="button"
+        >
+          change
+        </button>
+        )
+      </span>
+      <h4
+        class="govuk-heading-m govuk-!-font-size-19"
+      >
+        Medium
+      </h4>
+    </div>
+    <div
+      class="govuk-grid-column-one-quarter"
+      id="taskAssignee"
+    >
+      <span
+        class="govuk-caption-m govuk-!-font-size-19"
+      >
+        pages.task.assignee
+      </span>
+      <h4
+        class="govuk-heading-m govuk-!-font-size-19"
+      >
+        pages.task.unassigned
+      </h4>
+    </div>
+  </div>
+  <div
+    class="govuk-grid-row"
+  >
+    <div
+      class="govuk-grid-column-full"
+      id="description"
+    >
+      <p
+        class="govuk-body"
+      >
+        description
+      </p>
+    </div>
+  </div>
+</DocumentFragment>
+`;
