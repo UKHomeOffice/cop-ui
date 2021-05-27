@@ -15,6 +15,17 @@ const Footer = () => {
             <ul className="govuk-footer__inline-list">
               <li className="govuk-footer__inline-list-item">
                 <a
+                  id="footer-help-link"
+                  className="govuk-footer__link"
+                  href={`${config.get('serviceDeskUrl')}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  {t('footer.help')}
+                </a>
+              </li>
+              <li className="govuk-footer__inline-list-item">
+                <a
                   id="privacy"
                   className="govuk-footer__link"
                   href="/privacy-and-cookie-policy"
@@ -37,16 +48,6 @@ const Footer = () => {
                   }}
                 >
                   {t('footer.accessibility')}
-                </a>
-              </li>
-              <li className="govuk-footer__inline-list-item">
-                <a
-                  className="govuk-footer__link"
-                  href={`${config.get('serviceDeskUrl')}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  {t('footer.help')}
                 </a>
               </li>
             </ul>

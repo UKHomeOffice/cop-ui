@@ -75,17 +75,6 @@ const Header = () => {
                 </li>
                 <li className="govuk-header__navigation-item">
                   <a
-                    id="support"
-                    className="govuk-header__link"
-                    href={config.get('supportUrl')}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    {t('header.support')}
-                  </a>
-                </li>
-                <li className="govuk-header__navigation-item">
-                  <a
                     className="govuk-header__link"
                     href="/logout"
                     id="logout"
