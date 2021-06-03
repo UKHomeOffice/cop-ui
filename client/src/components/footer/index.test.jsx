@@ -8,6 +8,11 @@ describe('Footer', () => {
     shallow(<Footer />);
   });
 
+  it('can access help', () => {
+    const wrapper = shallow(<Footer />);
+    expect(wrapper.find('a[id="footer-help-link"]').exists()).toBeTruthy();
+  });
+
   it('can access accessibility', () => {
     const wrapper = shallow(<Footer />);
     const accessibilityLink = wrapper.find('a[id="accessibility"]').at(0);

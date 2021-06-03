@@ -1,11 +1,21 @@
 import React from 'react';
-import { shallow, mount } from 'enzyme';
+import { mount } from 'enzyme';
 import Header from './index';
 import { mockNavigate } from '../../setupTests';
 
 describe('Header', () => {
   it('renders without crashing', () => {
-    shallow(<Header />);
+    const wrapper = mount(<Header />);
+    expect(wrapper.text()).toEqual(
+      'Skip to main content' +
+        'header.service-name' +
+        'Menu' +
+        'header.my-profile' +
+        'header.sign-out' +
+        'header.new-service-1 ' +
+        'header.new-service-2 ' +
+        'header.new-service-3'
+    );
   });
 
   it('can click my profile', () => {
