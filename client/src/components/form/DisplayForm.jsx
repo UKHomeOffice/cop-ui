@@ -116,7 +116,7 @@ const DisplayForm = ({
         locationid: String(defaultlocationid),
         phone,
         roles,
-        team,
+        team: currentGroup,
         teamid,
         currentGroup,
         groups,
