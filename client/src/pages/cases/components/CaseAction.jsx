@@ -8,6 +8,7 @@ import { useAxios, useIsMounted } from '../../../utils/hooks';
 import { TeamContext } from '../../../utils/TeamContext';
 import { StaffIdContext } from '../../../utils/StaffIdContext';
 import FileService from '../../../utils/FileService';
+import { CurrentGroupContext } from '../../../utils/CurrentGroupContext';
 
 Formio.use(gds);
 
@@ -66,6 +67,7 @@ const CaseAction = ({
 
   const { team } = useContext(TeamContext);
   const { staffId: staffid } = useContext(StaffIdContext);
+  const { currentGroup } = useContext(CurrentGroupContext);
 
   const contexts = {
     data: {
@@ -105,9 +107,10 @@ const CaseAction = ({
         locationid: String(defaultlocationid),
         phone,
         roles,
-        team,
+        team: currentGroup,
         teamid,
         groups,
+        currentGroup,
       },
       staffDetailsDataContext: {
         adelphi,
