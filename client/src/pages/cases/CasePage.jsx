@@ -104,7 +104,7 @@ const CasePage = ({ caseId }) => {
             <input
               onChange={(e) => {
                 const strippedInput = e.target.value.replace(/"/g, '');
-                findCases(strippedInput);
+                findCases(`%22${strippedInput}%22`);
               }}
               spellCheck="false"
               className="govuk-input search__input"

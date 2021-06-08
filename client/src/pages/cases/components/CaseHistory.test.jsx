@@ -18,7 +18,7 @@ describe('Case History page', () => {
   });
 
   it('should show Case History when a case is selected', async () => {
-    mockAxios.onGet('/camunda/cases?query=keyword').reply(200, {
+    mockAxios.onGet('/camunda/cases?query=%22keyword%22').reply(200, {
       page: {
         size: 20,
         totalElements: 3,
