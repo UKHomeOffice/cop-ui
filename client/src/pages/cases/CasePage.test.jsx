@@ -24,7 +24,7 @@ describe('CasePage', () => {
   });
 
   it('should render results of case search when applicable', async () => {
-    mockAxios.onGet('/camunda/cases?query=keyword').reply(200, {
+    mockAxios.onGet('/camunda/cases?query=%22keyword%22').reply(200, {
       page: {
         size: 20,
         totalElements: 3,
@@ -57,7 +57,7 @@ describe('CasePage', () => {
   });
 
   it('should gracefully render when no case search results', async () => {
-    mockAxios.onGet('/camunda/cases?query=noResults').reply(200, {
+    mockAxios.onGet('/camunda/cases?query=%22noResults%22').reply(200, {
       page: {
         size: 20,
         totalElements: 0,
@@ -80,7 +80,7 @@ describe('CasePage', () => {
   });
 
   it('should render error message if case search returns an error', async () => {
-    mockAxios.onGet('/camunda/cases?query=keywordError').reply(500, null);
+    mockAxios.onGet('/camunda/cases?query=%22keywordError%22').reply(500, null);
 
     render(
       <AlertContextProvider>

@@ -60,10 +60,10 @@ exports[`TaskPageSummary matches snapshot 1`] = `
         class="govuk-heading-m govuk-!-font-size-19"
       >
         <span
-          aria-label="due 2 months ago"
+          aria-label="due 3 months ago"
           class="govuk-!-font-size-19 govuk-!-font-weight-bold overdue"
         >
-          Overdue 2 months ago
+          Overdue 3 months ago
         </span>
       </h4>
     </div>

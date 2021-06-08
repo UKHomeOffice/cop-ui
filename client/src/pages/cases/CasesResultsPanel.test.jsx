@@ -17,7 +17,7 @@ describe('CaseResultsPage', () => {
   });
 
   it('should render case results list and displays Case Details when selected ', async () => {
-    mockAxios.onGet('/camunda/cases?query=keyword').reply(200, {
+    mockAxios.onGet('/camunda/cases?query=%22keyword%22').reply(200, {
       page: {
         size: 20,
         totalElements: 3,
@@ -81,8 +81,8 @@ describe('CaseResultsPage', () => {
         cases: [],
       },
       _links: {
-        next: { href: '/camunda/cases?query=multiPageResults&page=1&size=20' },
-        last: { href: '/camunda/cases?query=multiPageResults&page=1&size=20' },
+        next: { href: '/camunda/cases?query=%22multiPageResults%22&page=1&size=20' },
+        last: { href: '/camunda/cases?query=%22multiPageResults%22&page=1&size=20' },
       },
     };
     for (let i = 1; i < 20; i += 1) {
@@ -100,7 +100,7 @@ describe('CaseResultsPage', () => {
         cases: [],
       },
       _links: {
-        last: { href: '/camunda/cases?query=multiPageResults&page=1&size=20' },
+        last: { href: '/camunda/cases?query=%22multiPageResults%22&page=1&size=20' },
       },
     };
 
@@ -108,9 +108,9 @@ describe('CaseResultsPage', () => {
       mockDataPageTwo._embedded.cases.push({ businessKey: `businessKey${i}`, processInstance: [] });
     }
 
-    mockAxios.onGet('/camunda/cases?query=multiPageResults').reply(200, mockData);
+    mockAxios.onGet('/camunda/cases?query=%22multiPageResults%22').reply(200, mockData);
     mockAxios
-      .onGet('/camunda/cases?query=multiPageResults&page=1&size=20')
+      .onGet('/camunda/cases?query=%22multiPageResults%22&page=1&size=20')
       .reply(200, mockDataPageTwo);
 
     render(
@@ -143,7 +143,7 @@ describe('CaseResultsPage', () => {
   });
 
   it('should render error message if Case Details API returns an error', async () => {
-    mockAxios.onGet('/camunda/cases?query=keyword').reply(200, {
+    mockAxios.onGet('/camunda/cases?query=%22keyword%22').reply(200, {
       page: {
         size: 20,
         totalElements: 3,
