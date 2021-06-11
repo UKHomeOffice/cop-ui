@@ -132,6 +132,10 @@ export const useFetchCurrentGroup = () => {
             const response = await axiosInstance.get(
               `refdata/v2/entities/groups?filter=teamid=eq.${teamid}`,
               {
+                params: {
+                  select:
+                    'id,displayname,code,grouptypeid,branchid,keycloakgrouppath,locationid,name,selfmanaged,teamid',
+                },
                 cancelToken: source.token,
               }
             );
@@ -168,7 +172,8 @@ export const useFetchGroups = () => {
             const response = await axiosInstance.get('refdata/v2/entities/groups', {
               params: {
                 mode: 'dataOnly',
-                select: 'displayname,code,grouptypeid',
+                select:
+                  'id,displayname,code,grouptypeid,branchid,keycloakgrouppath,locationid,name,selfmanaged,teamid',
                 filter: `keycloakgrouppath=in.(${allUserGroups})`,
               },
             });

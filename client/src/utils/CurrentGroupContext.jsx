@@ -1,6 +1,5 @@
 import React, { createContext, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import SecureLocalStorageManager from './SecureLocalStorageManager';
 
 export const CurrentGroupContext = createContext({
   currentGroup: undefined,
@@ -10,12 +9,17 @@ export const CurrentGroupContext = createContext({
 });
 
 export const CurrentGroupContextProvider = ({ children }) => {
-  const [currentGroup, setCurrentGroup] = useState(SecureLocalStorageManager.get('currentGroup'));
+  const [currentGroup, setCurrentGroupState] = useState(undefined);
   const [groupLoaded, setGroupLoaded] = useState(false);
 
+  const setCurrentGroup = (group) => {
+    localStorage.setItem('currentGroup', JSON.stringify(group));
+    setCurrentGroupState(group);
+  };
+
   useEffect(() => {
-    SecureLocalStorageManager.set('currentGroup', currentGroup);
-  }, [currentGroup]);
+    setCurrentGroup(JSON.parse(localStorage.getItem('currentGroup')));
+  }, []);
 
   return (
     <CurrentGroupContext.Provider
