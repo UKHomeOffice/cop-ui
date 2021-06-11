@@ -180,7 +180,7 @@
       "actions": {
         "complete": "Complete"
       },
-      "no-form": "There is no form associated with this task",
+      "no-form": "Claim the task to view it",
       "title": "Task",
       "category": "Category",
       "due": "Due",
