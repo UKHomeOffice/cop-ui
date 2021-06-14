@@ -139,20 +139,21 @@ const Home = () => {
   }
   if (groupLoaded && !currentGroup) {
     return (
-      <div
-        className="govuk-error-summary"
-        aria-labelledby="error-summary-title"
-        role="alert"
-        tabIndex="-1"
-        data-module="govuk-error-summary"
-      >
-        <h2 className="govuk-error-summary__title" id="error-summary-title">
-          {t('pages.form.error.form.title')}
-        </h2>
-        <div className="govuk-error-summary__body">
-          <ul className="govuk-list govuk-error-summary__list">
-            <li>{t('pages.groups.user-has-no-group')}</li>
-          </ul>
+      <div className="govuk-grid-row govuk-!-margin-top-7">
+        <div className="govuk-grid-column-two-thirds">
+          <h1 className="govuk-heading-l">{t('pages.groups.error-heading')}</h1>
+          <p className="govuk-body">{t('pages.groups.user-has-no-group')}</p>
+          <p className="govuk-body">
+            <a
+              href="https://lssiprod.service-now.com/ess"
+              className="govuk-link"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {t('pages.groups.support-link')}
+            </a>
+            {t('pages.groups.support-link-message')}
+          </p>
         </div>
       </div>
     );
