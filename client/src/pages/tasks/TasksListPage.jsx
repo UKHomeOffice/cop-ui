@@ -46,7 +46,7 @@ const TasksListPage = ({ taskType }) => {
     trackPageView();
   }, []);
 
-  const { currentGroup } = useContext(CurrentGroupContext)
+  const { currentGroup } = useContext(CurrentGroupContext);
 
   useEffect(() => {
     const source = axios.CancelToken.source();
