@@ -54,6 +54,8 @@ const TaskPage = ({ taskId }) => {
             processDefinition,
             task: taskInfo,
           } = taskData.data;
+
+          document.title = `${taskInfo.name} | ${t('header.service-name')}`;
           const formVariableSubmissionName = form ? `${form.name}::submissionData` : null;
 
           if (taskInfo.variables) {

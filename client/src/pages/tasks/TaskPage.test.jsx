@@ -67,6 +67,7 @@ describe('TaskPage', () => {
 
     const taskDue = wrapper.find('div[id="taskDueDate"]').at(0);
     expect(taskDue.find('h4').at(0).text()).not.toBe('');
+    expect(global.window.document.title).toMatch('task name');
   });
 
   it('renders task data with variables', async () => {
