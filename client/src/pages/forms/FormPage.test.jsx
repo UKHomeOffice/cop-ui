@@ -4,6 +4,7 @@ import MockAdapter from 'axios-mock-adapter';
 import { shallow, mount } from 'enzyme';
 import { act } from '@testing-library/react';
 import { Form } from 'react-formio';
+import { mockNavigate } from '../../setupTests';
 import { testData } from '../../utils/TestData';
 import ApplicationSpinner from '../../components/ApplicationSpinner';
 import FormPage from './FormPage';
@@ -42,6 +43,7 @@ describe('FormPage', () => {
 
   afterEach(() => {
     wrapper.unmount();
+    jest.clearAllMocks();
   });
 
   it('Should render without crashing', () => {
@@ -112,5 +114,21 @@ describe('FormPage', () => {
     expect(wrapper.find(ApplicationSpinner).exists()).toBe(false);
     expect(wrapper.find(Form).exists()).toBe(false);
     // src > components > alert > AlertBanner & ApiErrorAlert test that the alert banner is shown on a 404 error
+  });
+
+  it('Should navigate to dashboard on and only on cancel-form custom event', async () => {
+    mockFetchProcessName();
+    mockFetchForm();
+    wrapper = await mount(<FormPage formId={testData.formData.id} />);
+    await act(async () => {
+      await Promise.resolve(wrapper);
+      await new Promise((resolve) => setImmediate(resolve));
+      await wrapper.update();
+    });
+    const form = wrapper.find('Form');
+    form.props().onCustomEvent(new Event('cancel'));
+    expect(mockNavigate).not.toBeCalled();
+    form.props().onCustomEvent(new Event('cancel-form'));
+    expect(mockNavigate).toBeCalledWith('/');
   });
 });

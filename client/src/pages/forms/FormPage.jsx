@@ -116,6 +116,11 @@ const FormPage = ({ formId }) => {
         handleOnCancel={async () => {
           await navigation.navigate('/forms');
         }}
+        handleOnCustomEvent={({ type }) => {
+          if (type === 'cancel-form') {
+            navigation.navigate('/');
+          }
+        }}
         interpolateContext={{
           businessKey: businessKeyComponent ? businessKeyComponent.defaultValue : null,
         }}
