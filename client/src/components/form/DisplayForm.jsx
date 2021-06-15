@@ -23,6 +23,7 @@ Formio.use(gds);
 const DisplayForm = ({
   form,
   handleOnCancel,
+  handleOnCustomEvent,
   handleOnSubmit,
   interpolateContext,
   submitting,
@@ -309,6 +310,7 @@ const DisplayForm = ({
             metadata: data.metadata,
           });
         }}
+        onCustomEvent={(e) => handleOnCustomEvent(e)}
         onError={(errors) => {
           window.scrollTo(0, 0);
           setErrorAlert({
@@ -375,6 +377,7 @@ DisplayForm.propTypes = {
     components: PropTypes.arrayOf(PropTypes.object).isRequired,
   }).isRequired,
   handleOnCancel: PropTypes.func.isRequired,
+  handleOnCustomEvent: PropTypes.func.isRequired,
   handleOnSubmit: PropTypes.func.isRequired,
   interpolateContext: PropTypes.shape({ taskContext: PropTypes.shape() }),
   submitting: PropTypes.bool,

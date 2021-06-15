@@ -26,6 +26,7 @@ describe('DisplayForm', () => {
         form={testData.formData}
         submitting
         handleOnCancel={jest.fn()}
+        handleOnCustomEvent={jest.fn()}
         handleOnSubmit={jest.fn()}
       />
     );
@@ -46,6 +47,7 @@ describe('DisplayForm', () => {
         form={testData.formData}
         submitting
         handleOnCancel={jest.fn()}
+        handleOnCustomEvent={jest.fn()}
         handleOnSubmit={jest.fn()}
       />
     );
@@ -64,6 +66,7 @@ describe('DisplayForm', () => {
         form={testData.formData}
         submitting
         handleOnCancel={jest.fn()}
+        handleOnCustomEvent={jest.fn()}
         handleOnSubmit={jest.fn()}
       />
     );
@@ -93,6 +96,7 @@ describe('DisplayForm', () => {
         form={testData.formData}
         submitting
         handleOnCancel={jest.fn()}
+        handleOnCustomEvent={jest.fn()}
         handleOnSubmit={jest.fn()}
       />
     );
@@ -125,6 +129,7 @@ describe('DisplayForm', () => {
         form={testData.formData}
         submitting
         handleOnCancel={jest.fn()}
+        handleOnCustomEvent={jest.fn()}
         handleOnSubmit={mockHandleOnSubmit}
       />
     );
