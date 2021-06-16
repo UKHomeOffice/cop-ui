@@ -63,6 +63,7 @@ const RouterView = () => {
         console.log('token refreshed');
       })
       .catch(() => {
+        localStorage.removeItem('currentGroup');
         keycloak.logout();
       });
   };
