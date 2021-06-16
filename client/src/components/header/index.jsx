@@ -60,16 +60,7 @@ const Header = () => {
                 aria-label="Navigation menu"
               >
                 <li className="govuk-header__navigation-item">
-                  <a
-                    href="/forms/edit-your-profile"
-                    id="myprofile"
-                    className="govuk-header__link"
-                    onClick={async (e) => {
-                      e.preventDefault();
-                      toggleMenu(e);
-                      await navigation.navigate('/forms/edit-your-profile');
-                    }}
-                  >
+                  <a href="/forms/edit-your-profile" id="myprofile" className="govuk-header__link">
                     {t('header.my-profile')}
                   </a>
                 </li>

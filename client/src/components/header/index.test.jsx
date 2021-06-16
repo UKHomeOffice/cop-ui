@@ -18,10 +18,9 @@ describe('Header', () => {
     );
   });
 
-  it('can click my profile', () => {
+  it('has correct href for "My profile" link', () => {
     const wrapper = mount(<Header />);
-    wrapper.find('a[id="myprofile"]').at(0).simulate('click');
-    expect(mockNavigate).toBeCalledWith('/forms/edit-your-profile');
+    expect(wrapper.find('a[id="myprofile"]').prop('href')).toBe('/forms/edit-your-profile');
   });
   it('can click logout', () => {
     const wrapper = mount(<Header />);
