@@ -19,10 +19,12 @@ const Home = () => {
   const axiosInstance = useAxios();
   const { currentGroup, setCurrentGroup, groupLoaded } = useContext(CurrentGroupContext);
   const [groupChanging, setGroupChanging] = useState(false);
-  const { groups } = useContext(GroupsContext);
   const selectRef = React.createRef();
   const isMounted = useIsMounted();
   const { trackPageView } = useMatomo();
+  const { groups } = useContext(GroupsContext);
+  const nonRoleGroups =
+    groups.length > 0 ? groups.filter((group) => group.grouptypeid !== GROUP_TYPE_ROLE) : [];
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -167,7 +169,7 @@ const Home = () => {
             <h1 className="govuk-heading-l">
               {`${currentGroup.displayname} `}
               {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
-              {groups && groups.length > 1 && (
+              {nonRoleGroups.length > 1 && (
                 <a
                   href="#change-group"
                   className="govuk-body govuk-link--no-visited-state"
@@ -192,17 +194,15 @@ const Home = () => {
                   {t('pages.groups.select-group')}
                 </label>
                 <select className="govuk-select" ref={selectRef}>
-                  {groups
-                    .filter((group) => group.grouptypeid !== GROUP_TYPE_ROLE)
-                    .map((group) => (
-                      <option
-                        key={group.code}
-                        selected={group.code === currentGroup.code}
-                        value={group.code}
-                      >
-                        {group.displayname}
-                      </option>
-                    ))}
+                  {nonRoleGroups.map((group) => (
+                    <option
+                      key={group.code}
+                      selected={group.code === currentGroup.code}
+                      value={group.code}
+                    >
+                      {group.displayname}
+                    </option>
+                  ))}
                 </select>
                 <button
                   type="submit"
