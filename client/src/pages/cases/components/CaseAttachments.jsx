@@ -31,7 +31,7 @@ const CaseAttachments = ({ businessKey }) => {
     const fetchCaseAttachments = async () => {
       if (axiosInstance) {
         try {
-          const { data } = await axiosInstance.get(`/files/files/${businessKey}`, {
+          const { data } = await axiosInstance.get(`/files/${businessKey}`, {
             cancelToken: source.token,
           });
           setCaseAttachments({
