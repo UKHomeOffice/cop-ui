@@ -83,7 +83,7 @@ const DisplayForm = ({
   const contexts = {
     data: {
       environmentContext: {
-        attachmentServiceUrl: '/files',
+        attachmentServiceUrl: '',
         operationalDataUrl: '/opdata',
         privateUiUrl: window.location.origin,
         referenceDataUrl: '/refdata',

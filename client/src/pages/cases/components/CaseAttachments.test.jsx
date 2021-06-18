@@ -38,7 +38,7 @@ describe('CaseAttachments', () => {
   });
 
   it('should render loading if file service has not responded', async () => {
-    mockAxios.onGet(`/files/files/${testBusinessKey}`).reply(200, []);
+    mockAxios.onGet(`/files/${testBusinessKey}`).reply(200, []);
 
     render(<CaseAttachments businessKey={testBusinessKey} />);
 
@@ -50,7 +50,7 @@ describe('CaseAttachments', () => {
   });
 
   it('should render case attachments without error', async () => {
-    mockAxios.onGet(`/files/files/${testBusinessKey}`).reply(200, mockData);
+    mockAxios.onGet(`/files/${testBusinessKey}`).reply(200, mockData);
 
     await waitFor(() => render(<CaseAttachments businessKey={testBusinessKey} />));
 
@@ -60,7 +60,7 @@ describe('CaseAttachments', () => {
   });
 
   it('should be able to download case attachment without error', async () => {
-    mockAxios.onGet(`/files/files/${testBusinessKey}`).reply(200, mockData);
+    mockAxios.onGet(`/files/${testBusinessKey}`).reply(200, mockData);
 
     await waitFor(() => render(<CaseAttachments businessKey={testBusinessKey} />));
 
@@ -79,7 +79,7 @@ describe('CaseAttachments', () => {
   });
 
   it('should handle no case attachments existing for case gracefully', async () => {
-    mockAxios.onGet(`/files/files/${testBusinessKey}`).reply(500);
+    mockAxios.onGet(`/files/${testBusinessKey}`).reply(500);
 
     await waitFor(() => render(<CaseAttachments businessKey={testBusinessKey} />));
 
