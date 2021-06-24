@@ -1,3 +1,5 @@
+export const caseActionFormPrepopulateKey = 'caseActionPrepopulate';
+
 export const formSubmitPath = 'process-definition/key';
 
 export const mobileWidth = 640;
