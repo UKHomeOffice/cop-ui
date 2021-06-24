@@ -9,6 +9,8 @@ import { TeamContext } from '../../../utils/TeamContext';
 import { StaffIdContext } from '../../../utils/StaffIdContext';
 import FileService from '../../../utils/FileService';
 import { CurrentGroupContext } from '../../../utils/CurrentGroupContext';
+import { caseActionFormPrepopulateKey } from '../../../utils/constants';
+import latestFormDataPath from '../utils/LatestFormDataPath';
 
 Formio.use(gds);
 
@@ -28,6 +30,7 @@ const CaseAction = ({
     isLoading: false,
     data: null,
   });
+  const [latestFormData, setLatestFormData] = useState(null);
   const [keycloak] = useKeycloak();
   const host = `${window.location.protocol}//${window.location.hostname}${
     window.location.port ? `:${window.location.port}` : ''
@@ -189,8 +192,30 @@ const CaseAction = ({
     }
   };
 
+  const fetchLatestFormData = async (formKey) => {
+    try {
+      const {
+        data: { processInstances },
+      } = await axiosInstance.get(`/camunda/cases/${businessKey}`);
+      if (isMounted.current) {
+        const dataPath = latestFormDataPath(processInstances, formKey);
+        if (dataPath) {
+          const { data } = await axiosInstance.get(
+            `/camunda/cases/${businessKey}/submission?key=${dataPath}`
+          );
+          setLatestFormData(data);
+        }
+      }
+    } catch (e) {
+      if (isMounted.current) {
+        setLatestFormData(null);
+      }
+    }
+  };
+
   useEffect(() => {
     fetchForm(selectedAction);
+    fetchLatestFormData(selectedAction);
   }, [axiosInstance, selectedAction]);
 
   useEffect(() => {
@@ -213,6 +238,16 @@ const CaseAction = ({
       });
     }
   }, [form]);
+
+  if (!form.isLoading && form.data) {
+    const isPrepopulated = form.data.components.find((c) => c.key === caseActionFormPrepopulateKey);
+    if (isPrepopulated) {
+      contexts.data = {
+        ...contexts.data,
+        ...latestFormData,
+      };
+    }
+  }
 
   return (
     <>
@@ -269,6 +304,7 @@ const CaseAction = ({
                 /* eslint-enable no-param-reassign, no-shadow */
                 next();
               },
+              beforeCancel: () => fetchLatestFormData(selectedAction),
             },
           }}
         />
