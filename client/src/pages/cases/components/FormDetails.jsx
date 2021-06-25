@@ -21,6 +21,7 @@ const FormDetails = ({ formReferences, businessKey }) => {
   });
 
   const [submissionData, setSubmissionData] = useState(null);
+  const [selectedFormInstance, setSelectedFormInstance] = useState(null);
 
   const fetchForm = async (formName, formVersionId) => {
     if (axiosInstance) {
@@ -66,16 +67,24 @@ const FormDetails = ({ formReferences, businessKey }) => {
     });
   }, []);
 
+  useEffect(() => {
+    if (selectedFormInstance) {
+      fetchForm(selectedFormInstance.name, selectedFormInstance.formVersionId);
+      fetchSubmissionData(selectedFormInstance.dataPath);
+    }
+  }, [selectedFormInstance]);
+
   return (
     <>
       {formReferences.map((formInstance, index) => {
+        const formInstanceKey = `${formInstance.formVersionId}-${formInstance.submissionDate}`;
+        const selectedFormInstanceKey = selectedFormInstance
+          ? `${selectedFormInstance.formVersionId}-${selectedFormInstance.submissionDate}`
+          : null;
+        const isSelectedFormInstance = formInstanceKey === selectedFormInstanceKey;
         return (
-          <React.Fragment key={formInstance.formVersionId}>
-            <details
-              key={formInstance.formVersionId}
-              className="govuk-details"
-              data-module="govuk-details"
-            >
+          <React.Fragment key={formInstanceKey}>
+            <details key={formInstanceKey} className="govuk-details" data-module="govuk-details">
               <summary className="govuk-details__summary">
                 <span className="govuk-details__summary-text">{formInstance.title}</span>
               </summary>
@@ -101,31 +110,19 @@ const FormDetails = ({ formReferences, businessKey }) => {
                         className="govuk-button"
                         onClick={(e) => {
                           e.preventDefault();
-                          if (
-                            !form.formSelected ||
-                            form.formSelected !== formInstance.formVersionId
-                          ) {
-                            fetchForm(formInstance.name, formInstance.formVersionId);
-                            fetchSubmissionData(formInstance.dataPath);
-                          } else if (form.formSelected === formInstance.formVersionId) {
-                            setForm({
-                              formSelected: '',
-                              isLoading: false,
-                              data: null,
-                            });
-                          }
+                          setSelectedFormInstance(
+                            formInstanceKey !== selectedFormInstanceKey ? formInstance : null
+                          );
                         }}
                       >
-                        {form.formSelected === formInstance.formVersionId
-                          ? 'Hide Details'
-                          : 'Show details'}
+                        {isSelectedFormInstance ? 'Hide Details' : 'Show details'}
                       </button>
-                      {form.isLoading && form.formSelected === formInstance.formVersionId && (
+                      {form.isLoading && isSelectedFormInstance && (
                         <h4 className="govuk-body">
                           {t('pages.cases.details-panel.case-history.form-loading')}
                         </h4>
                       )}
-                      {!form.isLoading && form.formSelected === formInstance.formVersionId && (
+                      {!form.isLoading && isSelectedFormInstance && (
                         <Form
                           form={form.data}
                           submission={{ data: submissionData }}
