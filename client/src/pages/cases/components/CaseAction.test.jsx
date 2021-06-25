@@ -47,7 +47,7 @@ describe('Case Action component', () => {
   });
 
   it('should render form for case action', async () => {
-    mockAxios.onGet('/form/name/performIntelActionMvp').reply(200, { recordActionsFormData });
+    mockAxios.onGet('/form/name/performIntelActionMvp').reply(200, recordActionsFormData);
 
     wrapper = mount(
       <CaseAction
@@ -87,7 +87,7 @@ describe('Case Action component', () => {
   });
 
   it('should render completion message when form is submitted', async () => {
-    mockAxios.onGet('/form/name/performIntelActionMvp').reply(200, { recordActionsFormData });
+    mockAxios.onGet('/form/name/performIntelActionMvp').reply(200, recordActionsFormData);
 
     mockAxios
       .onPost(
@@ -127,7 +127,7 @@ describe('Case Action component', () => {
   });
 
   it('should render error message if submitting form throws error', async () => {
-    mockAxios.onGet('/form/name/performIntelActionMvp').reply(200, { recordActionsFormData });
+    mockAxios.onGet('/form/name/performIntelActionMvp').reply(200, recordActionsFormData);
 
     mockAxios
       .onPost(
