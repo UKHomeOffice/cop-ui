@@ -119,7 +119,7 @@ const FormPage = ({ formId }) => {
           }}
           className="govuk-back-link"
         >
-          Back to forms
+          {t('pages.forms.back-link')}
         </a>
       </div>
       <h1 className="govuk-heading-l">{pageHeading}</h1>

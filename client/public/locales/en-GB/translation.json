@@ -117,7 +117,8 @@
         "search": "Search for a form",
         "search-placeholder": "Search form name",
         "search-hint": "Must be greater than 3 characters"
-      }
+      },
+      "back-link": "Back to forms" 
     },
     "home": {
       "title": "Central Operations Platform",
