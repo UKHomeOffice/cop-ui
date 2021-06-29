@@ -193,13 +193,9 @@ const Home = () => {
                 <label className="govuk-label" htmlFor="sort">
                   {t('pages.groups.select-group')}
                 </label>
-                <select className="govuk-select" ref={selectRef}>
+                <select className="govuk-select" ref={selectRef} defaultValue={currentGroup.code}>
                   {nonRoleGroups.map((group) => (
-                    <option
-                      key={group.code}
-                      selected={group.code === currentGroup.code}
-                      value={group.code}
-                    >
+                    <option key={group.code} value={group.code}>
                       {group.displayname}
                     </option>
                   ))}
