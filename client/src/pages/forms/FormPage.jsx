@@ -108,6 +108,20 @@ const FormPage = ({ formId }) => {
 
   return (
     <>
+      <div>
+        {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
+        <a
+          href="#"
+          id="back-to-forms"
+          onClick={async (e) => {
+            e.preventDefault();
+            await navigation.navigate('/forms');
+          }}
+          className="govuk-back-link"
+        >
+          {t('pages.forms.back-link')}
+        </a>
+      </div>
       <h1 className="govuk-heading-l">{pageHeading}</h1>
       <DisplayForm
         submitting={submitting}

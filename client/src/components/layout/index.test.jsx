@@ -2,7 +2,7 @@ import React from 'react';
 import { shallow, mount } from 'enzyme';
 import Layout from './index';
 import Logger from '../../utils/logger';
-import { mockGoBack } from '../../setupTests';
+import { mockNavigate } from '../../setupTests';
 
 jest.mock('../../utils/logger', () => ({
   error: jest.fn(),
@@ -40,17 +40,8 @@ describe('Layout', () => {
   });
 
   it('can click on back button', () => {
-    const wrapper = shallow(
-      <Layout>
-        <div>Hello</div>
-      </Layout>
-    );
-    wrapper
-      .find('a')
-      .at(0)
-      .simulate('click', {
-        preventDefault: () => {},
-      });
-    expect(mockGoBack).toBeCalled();
+    const wrapper = mount(<Layout />);
+    wrapper.find('a[id="back-to-dashboard"]').simulate('click');
+    expect(mockNavigate).toBeCalledWith('/');
   });
 });

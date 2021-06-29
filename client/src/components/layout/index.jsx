@@ -80,10 +80,11 @@ const Layout = ({ children }) => {
                 {route.url.pathname !== '/' ? (
                   // eslint-disable-next-line jsx-a11y/anchor-is-valid
                   <a
-                    href="#"
+                    href="/"
+                    id="back-to-dashboard"
                     onClick={async (e) => {
                       e.preventDefault();
-                      await navigation.goBack();
+                      await navigation.navigate('/');
                     }}
                     className="govuk-back-link"
                   >
