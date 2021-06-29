@@ -2,7 +2,7 @@
   "keycloak": {
     "initialising": "Initialising single sign on"
   },
-  "back": "Back",
+  "back": "Back to dashboard",
   "loading": "Loading...",
   "submitting": "Submitting your form....",
   "warning": "Warning",

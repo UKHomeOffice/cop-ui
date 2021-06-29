@@ -131,4 +131,17 @@ describe('FormPage', () => {
     form.props().onCustomEvent(new Event('cancel-form'));
     expect(mockNavigate).toBeCalledWith('/');
   });
+
+  it('can click on back to forms button', async () => {
+    mockFetchProcessName();
+    mockFetchForm();
+    wrapper = await mount(<FormPage formId={testData.formData.id} />);
+    await act(async () => {
+      await Promise.resolve(wrapper);
+      await new Promise((resolve) => setImmediate(resolve));
+      await wrapper.update();
+    });
+    wrapper.find('a[id="back-to-forms"]').simulate('click');
+    expect(mockNavigate).toBeCalledWith('/forms');
+  });
 });
