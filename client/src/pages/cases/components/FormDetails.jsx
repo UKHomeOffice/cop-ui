@@ -23,10 +23,6 @@ const FormDetails = ({ formReferences, businessKey }) => {
   const [submissionData, setSubmissionData] = useState(null);
   const [selectedFormInstance, setSelectedFormInstance] = useState(null);
 
-  // const sortFormReferenceses = formReferences.sort((a,b) => {
-  //   return new Date(b.submissionDate) - new Date(a.submissionDate)
-  // })
-
   const fetchForm = async (formName, formVersionId) => {
     if (axiosInstance) {
       try {
