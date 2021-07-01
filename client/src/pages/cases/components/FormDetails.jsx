@@ -111,7 +111,7 @@ const FormDetails = ({ formReferences, businessKey }) => {
                     </div>
                     <div className="govuk-summary-list__row">
                       <dt className="govuk-summary-list__key">
-                        {index === 0 ? <span className="govuk-tag">Latest</span> : null}
+                        {!index && <span className="govuk-tag">Latest</span>}
                       </dt>
                       <dd className="govuk-summary-list__value">
                         <button
