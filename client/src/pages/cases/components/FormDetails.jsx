@@ -23,6 +23,10 @@ const FormDetails = ({ formReferences, businessKey }) => {
   const [submissionData, setSubmissionData] = useState(null);
   const [selectedFormInstance, setSelectedFormInstance] = useState(null);
 
+  // const sortFormReferenceses = formReferences.sort((a,b) => {
+  //   return new Date(b.submissionDate) - new Date(a.submissionDate)
+  // })
+
   const fetchForm = async (formName, formVersionId) => {
     if (axiosInstance) {
       try {
@@ -76,77 +80,86 @@ const FormDetails = ({ formReferences, businessKey }) => {
 
   return (
     <>
-      {formReferences.map((formInstance, index) => {
-        const formInstanceKey = `${formInstance.formVersionId}-${formInstance.submissionDate}`;
-        const selectedFormInstanceKey = selectedFormInstance
-          ? `${selectedFormInstance.formVersionId}-${selectedFormInstance.submissionDate}`
-          : null;
-        const isSelectedFormInstance = formInstanceKey === selectedFormInstanceKey;
-        return (
-          <React.Fragment key={formInstanceKey}>
-            <details key={formInstanceKey} className="govuk-details" data-module="govuk-details">
-              <summary className="govuk-details__summary">
-                <span className="govuk-details__summary-text">{formInstance.title}</span>
-              </summary>
-              <div className="govuk-details__text--no-border">
-                <dl className="govuk-summary-list govuk-summary-list--no-border">
-                  <div className="govuk-summary-list__row">
-                    <dt className="govuk-summary-list__key">Submitted by</dt>
-                    <dd className="govuk-summary-list__value">{formInstance.submittedBy}</dd>
-                  </div>
-                  <div className="govuk-summary-list__row">
-                    <dt className="govuk-summary-list__key">Submitted on</dt>
-                    <dd className="govuk-summary-list__value">
-                      {dayjs(formInstance.submissionDate).format('DD/MM/YYYY HH:mm')}
-                    </dd>
-                  </div>
-                  <div className="govuk-summary-list__row">
-                    <dt className="govuk-summary-list__key">
-                      <span className="govuk-tag">Latest</span>
-                    </dt>
-                    <dd className="govuk-summary-list__value">
-                      <button
-                        type="button"
-                        className="govuk-button"
-                        onClick={(e) => {
-                          e.preventDefault();
-                          setSelectedFormInstance(
-                            formInstanceKey !== selectedFormInstanceKey ? formInstance : null
-                          );
-                        }}
-                      >
-                        {isSelectedFormInstance ? 'Hide Details' : 'Show details'}
-                      </button>
-                      {form.isLoading && isSelectedFormInstance && (
-                        <h4 className="govuk-body">
-                          {t('pages.cases.details-panel.case-history.form-loading')}
-                        </h4>
-                      )}
-                      {!form.isLoading && isSelectedFormInstance && (
-                        <Form
-                          form={form.data}
-                          submission={{ data: submissionData }}
-                          options={{
-                            readOnly: true,
-                            noAlerts: true,
-                            buttonSettings: {
-                              showPrevious: true,
-                              showNext: true,
-                              showSubmit: false,
-                              showCancel: false,
-                            },
+      {formReferences
+        .sort((a, b) => {
+          return new Date(b.submissionDate) - new Date(a.submissionDate);
+        })
+        .map((formInstance, index) => {
+          const formInstanceKey = `${formInstance.formVersionId}-${formInstance.submissionDate}`;
+          const selectedFormInstanceKey = selectedFormInstance
+            ? `${selectedFormInstance.formVersionId}-${selectedFormInstance.submissionDate}`
+            : null;
+          const isSelectedFormInstance = formInstanceKey === selectedFormInstanceKey;
+          return (
+            <React.Fragment key={formInstanceKey}>
+              <details
+                key={formInstanceKey}
+                id={`form${index}`}
+                className="govuk-details"
+                data-module="govuk-details"
+              >
+                <summary className="govuk-details__summary">
+                  <span className="govuk-details__summary-text">{formInstance.title}</span>
+                </summary>
+                <div className="govuk-details__text--no-border">
+                  <dl className="govuk-summary-list govuk-summary-list--no-border">
+                    <div className="govuk-summary-list__row">
+                      <dt className="govuk-summary-list__key">Submitted by</dt>
+                      <dd className="govuk-summary-list__value">{formInstance.submittedBy}</dd>
+                    </div>
+                    <div className="govuk-summary-list__row">
+                      <dt className="govuk-summary-list__key">Submitted on</dt>
+                      <dd className="govuk-summary-list__value">
+                        {dayjs(formInstance.submissionDate).format('DD/MM/YYYY HH:mm')}
+                      </dd>
+                    </div>
+                    <div className="govuk-summary-list__row">
+                      <dt className="govuk-summary-list__key">
+                        {index === 0 ? <span className="govuk-tag">Latest</span> : null}
+                      </dt>
+                      <dd className="govuk-summary-list__value">
+                        <button
+                          type="button"
+                          className="govuk-button"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            setSelectedFormInstance(
+                              formInstanceKey !== selectedFormInstanceKey ? formInstance : null
+                            );
                           }}
-                        />
-                      )}
-                    </dd>
-                  </div>
-                </dl>
-              </div>
-            </details>
-            {index < formReferences.length - 1 ? <hr className="form-seperator" /> : null}
-          </React.Fragment>
-        );
-      })}
+                        >
+                          {isSelectedFormInstance ? 'Hide Details' : 'Show details'}
+                        </button>
+                        {form.isLoading && isSelectedFormInstance && (
+                          <h4 className="govuk-body">
+                            {t('pages.cases.details-panel.case-history.form-loading')}
+                          </h4>
+                        )}
+                        {!form.isLoading && isSelectedFormInstance && (
+                          <Form
+                            form={form.data}
+                            submission={{ data: submissionData }}
+                            options={{
+                              readOnly: true,
+                              noAlerts: true,
+                              buttonSettings: {
+                                showPrevious: true,
+                                showNext: true,
+                                showSubmit: false,
+                                showCancel: false,
+                              },
+                            }}
+                          />
+                        )}
+                      </dd>
+                    </div>
+                  </dl>
+                </div>
+              </details>
+              {index < formReferences.length - 1 ? <hr className="form-seperator" /> : null}
+            </React.Fragment>
+          );
+        })}
     </>
   );
 };

@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { render, screen, queryByAttribute } from '@testing-library/react';
 import MockAdapter from 'axios-mock-adapter';
 import axios from 'axios';
 import { mount } from 'enzyme';
@@ -30,13 +30,14 @@ const formReferences = [
     dataPath: 'businessKey-12345/intelReferral/test-file-three.json',
     formVersionId: 'form-id-three',
     name: 'intelReferral',
-    submissionDate: '2021-02-05T16:31:42.224Z',
+    submissionDate: '2021-02-05T16:41:42.224Z',
     submittedBy: 'test3@digital.homeoffice.gov.uk',
     title: 'Intelligence Referral',
   },
 ];
 
 const mockAxios = new MockAdapter(axios);
+const getById = queryByAttribute.bind(null, 'id');
 
 const mockFetchForm = () => {
   mockAxios.onGet('/form/name/detectionInventory').reply(200, { jsonFormFixture });
@@ -70,7 +71,29 @@ describe('Form details component', () => {
     expect(screen.getByText('test1@digital.homeoffice.gov.uk')).toBeTruthy();
     expect(screen.getByText('Record border event')).toBeTruthy();
     expect(screen.getByText('Intelligence Referral')).toBeTruthy();
-    expect(screen.getAllByText('05/02/2021 16:31')).toHaveLength(2);
+    expect(screen.getByText('05/02/2021 16:31')).toBeTruthy();
+  });
+
+  it('should show forms in order of submission date with latest first', () => {
+    const { container } = render(
+      <FormDetails businessKey={businessKey} formReferences={formReferences} />
+    );
+
+    const firstFormDetailComponent = getById(container, 'form0');
+
+    expect(firstFormDetailComponent.textContent).toMatch(/^Intelligence Referral/);
+  });
+
+  it('should only show Latest label on first form detail drop down', () => {
+    const { container } = render(
+      <FormDetails businessKey={businessKey} formReferences={formReferences} />
+    );
+
+    const firstFormDetailComponent = getById(container, 'form0');
+    const secondFormDetailComponent = getById(container, 'form1');
+
+    expect(firstFormDetailComponent.textContent).toMatch(/Latest/g);
+    expect(secondFormDetailComponent.textContent).not.toMatch(/Latest/g);
   });
 
   it('should show a loading message and then the form snapshot when "Show details" is clicked', async () => {
